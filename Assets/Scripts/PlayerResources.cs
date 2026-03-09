@@ -52,8 +52,6 @@ public class PlayerResources : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
 
         GetComponent<PlayerActionsController>().enabled = false;
-
-        Debug.Log("YUOR DED");
     }
 
     private void ShowHealth(float amount)

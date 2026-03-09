@@ -13995,10 +13995,6 @@ PrefabInstance:
       propertyPath: 'patrolPoints.Array.data[2]'
       value: 
       objectReference: {fileID: 348077955}
-    - target: {fileID: 7944648931457534281, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
-      propertyPath: singleShotDelay
-      value: 2
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
