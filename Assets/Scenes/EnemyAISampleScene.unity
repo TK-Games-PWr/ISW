@@ -13935,6 +13935,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3394472783275146617, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: patrolPoints.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3394472783275146617, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: 'patrolPoints.Array.data[0]'
+      value: 
+      objectReference: {fileID: 914563503}
+    - target: {fileID: 3394472783275146617, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: 'patrolPoints.Array.data[1]'
+      value: 
+      objectReference: {fileID: 458053052}
+    - target: {fileID: 3394472783275146617, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: 'patrolPoints.Array.data[2]'
+      value: 
+      objectReference: {fileID: 348077955}
     - target: {fileID: 4169945757394515640, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
       propertyPath: m_Name
       value: Enemy
