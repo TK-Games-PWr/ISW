@@ -2,54 +2,69 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.AI; // Needed to stop agent during reload
 
-public class EnemyCombat : MonoBehaviour
+namespace EnemySystem
 {
-    [Header("Combat Settings")]
-    [SerializeField] float weaponRange = 20f;
-    [SerializeField] float optimalCombatDistancePct = 0.7f;
-    [SerializeField] int maxAmmo = 15;
-    [SerializeField] float reloadTime = 1.7f;
-
-    internal float WeaponRange => weaponRange;
-    internal float OptimalDistance => weaponRange * optimalCombatDistancePct;
-    internal bool IsReloading { get; private set; } = false;
-
-    private int currentAmmo;
-    private NavMeshAgent agent;
-
-    private void Awake()
+    [RequireComponent(typeof(EnemySensors))]
+    public class EnemyCombat : MonoBehaviour
     {
-        agent = GetComponent<NavMeshAgent>();
-        currentAmmo = maxAmmo;
-    }
+        [Header("Combat Settings")]
+        public PlayerShootingSystem.GunInfo gunInfo;
+        public PlayerShootingSystem.Gun currentGun;
+        [SerializeField] float optimalCombatDistancePct = 0.7f;
+        [SerializeField] float reloadTime = 1.7f;
+        [SerializeField] float weaponRange; // todo: replace from guninfo
+        [SerializeField] int maxAmmo = 15; // todo: replace from guninfo
 
-    internal void TryCombatAction()
-    {
-        if (currentAmmo > 0)
+        internal float WeaponRange => weaponRange;
+        internal float OptimalDistance => weaponRange * optimalCombatDistancePct;
+        internal bool IsReloading { get; private set; } = false;
+
+        private int currentAmmo;
+        private NavMeshAgent agent;
+
+        private PlayerResources playerResources;
+
+        private void Awake()
         {
-            Shoot();
+            agent = GetComponent<NavMeshAgent>();
+            playerResources = GetComponent<EnemySensors>().PlayerTransform.GetComponent<PlayerResources>();
+            currentAmmo = maxAmmo;
         }
-        else if (!IsReloading)
+
+        // Assuming player is visible!
+        internal void CombatAction(float distanceToPlayer)
         {
-            StartCoroutine(ReloadRoutine());
+            if (currentAmmo > 0)
+            {
+                TryShootOnce(distanceToPlayer);
+            }
+            else if (!IsReloading)
+            {
+                StartCoroutine(ReloadRoutine());
+            }
         }
-    }
 
-    private void Shoot()
-    {
-        // currentAmmo--;
-        // Debug.Log($"{gameObject.name} is shooting!");
-    }
+        private void TryShootOnce(float distanceToPlayer)
+        {
+            // currentAmmo--;
+            Debug.Log($"{gameObject.name} is shooting!");
+            currentGun.PerformShoot();
 
-    private IEnumerator ReloadRoutine()
-    {
-        IsReloading = true;
-        agent.isStopped = true; 
-        
-        yield return new WaitForSeconds(reloadTime);
+            float multiplier = currentGun.gunInfo.damageFalloff.Evaluate(distanceToPlayer / 100f);
+            float finalDamage = currentGun.gunInfo.flatDamage * multiplier;
+            playerResources.Damage(finalDamage);
+        }
 
-        currentAmmo = maxAmmo;
-        IsReloading = false;
-        agent.isStopped = false;
+        private IEnumerator ReloadRoutine()
+        {
+            IsReloading = true;
+            agent.isStopped = true;
+
+            yield return new WaitForSeconds(reloadTime);
+
+            currentAmmo = maxAmmo;
+            IsReloading = false;
+            agent.isStopped = false;
+        }
     }
 }
