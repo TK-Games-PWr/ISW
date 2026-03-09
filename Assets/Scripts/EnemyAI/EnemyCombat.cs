@@ -16,11 +16,15 @@ namespace EnemySystem
         [SerializeField] float weaponRange; // todo: replace from guninfo
         [SerializeField] int maxAmmo = 15; // todo: replace from guninfo
 
+        [Tooltip("Extra delay added between shots for semi-automatic weapons to simulate an AI's trigger finger.")]
+        [SerializeField] float singleShotDelay = 0.2f;
+
         internal float WeaponRange => weaponRange;
         internal float OptimalDistance => weaponRange * optimalCombatDistancePct;
         internal bool IsReloading { get; private set; } = false;
 
         private int currentAmmo;
+        private float nextFireTime = 0f;
         private NavMeshAgent agent;
 
         private EnemySensors sensors;
@@ -31,7 +35,7 @@ namespace EnemySystem
             sensors = GetComponent<EnemySensors>();
             currentAmmo = maxAmmo;
 
-            if (currentGun.TryGetComponent(out GrabbableObject grabbable))
+            if (currentGun != null && currentGun.TryGetComponent(out GrabbableObject grabbable))
             {
                 grabbable.Grab(GunPivot);
             }
@@ -42,7 +46,19 @@ namespace EnemySystem
         {
             if (currentAmmo > 0)
             {
-                TryShootOnce(distanceToPlayer);
+                if (Time.time >= nextFireTime)
+                {
+                    TryShootOnce(distanceToPlayer);
+
+                    float cooldown = currentGun.gunInfo.fireRate;
+
+                    if (!currentGun.gunInfo.isAutomatic)
+                    {
+                        cooldown += singleShotDelay;
+                    }
+
+                    nextFireTime = Time.time + cooldown;
+                }
             }
             else if (!IsReloading)
             {
@@ -52,13 +68,13 @@ namespace EnemySystem
 
         private void TryShootOnce(float distanceToPlayer)
         {
-            // currentAmmo--;
+            currentAmmo--;
             Debug.Log($"{gameObject.name} is shooting!");
             currentGun.PerformShoot();
 
             float multiplier = currentGun.gunInfo.damageFalloff.Evaluate(distanceToPlayer / 100f);
             float finalDamage = currentGun.gunInfo.flatDamage * multiplier;
-            sensors.PlayerResources.Damage(finalDamage);
+            if (sensors.PlayerResources != null) sensors.PlayerResources.Damage(finalDamage);
         }
 
         private IEnumerator ReloadRoutine()
