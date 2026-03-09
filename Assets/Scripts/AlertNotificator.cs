@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using static AICore;
+using EnemySystem;
+using static EnemySystem.AICore;
 
 [RequireComponent(typeof(CanvasGroup))]
 public class AlertNotificator : MonoBehaviour
