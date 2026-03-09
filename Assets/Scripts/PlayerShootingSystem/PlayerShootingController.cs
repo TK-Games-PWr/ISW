@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
-using TK_Shared._3DPlayerMovement; // assuming this namespace exists
+using TK_Shared._3DPlayerMovement;
+using Unity.VisualScripting; // assuming this namespace exists
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -9,6 +10,8 @@ namespace PlayerShootingSystem
     public class PlayerShootingController : MonoBehaviour
     {
         [SerializeField] Transform cameraTransform;
+        [SerializeField] float throwForce;
+        [SerializeField] float throwUpwardForce;
         public Gun currentGun;
 
         bool _isHoldingShoot;
@@ -31,25 +34,60 @@ namespace PlayerShootingSystem
 
             if (currentGun == null) return;
 
-            if (_isHoldingShoot)
+            if (!currentGun.gunInfo.isExplosive)
             {
-                TryShootOnce();
-
-                if (currentGun.gunInfo.isAutomatic && _autoFireCoroutine == null)
+                if (_isHoldingShoot)
                 {
-                    _autoFireCoroutine = StartCoroutine(AutomaticFireLoop());
+                    TryShootOnce();
+
+                    if (currentGun.gunInfo.isAutomatic && _autoFireCoroutine == null)
+                    {
+                        _autoFireCoroutine = StartCoroutine(AutomaticFireLoop());
+                    }
+                }
+                else
+                {
+                    if (_autoFireCoroutine != null)
+                    {
+                        StopCoroutine(_autoFireCoroutine);
+                        _autoFireCoroutine = null;
+                    }
                 }
             }
             else
             {
-                if (_autoFireCoroutine != null)
+                if (_isHoldingShoot)
                 {
-                    StopCoroutine(_autoFireCoroutine);
-                    _autoFireCoroutine = null;
+                    Rigidbody rb=currentGun.slide.AddComponent<Rigidbody>();
+                    currentGun.slide.AddComponent<BoxCollider>();
+                    currentGun.slide.transform.parent = null;
+                    Vector3 forceToUnpin= rb.transform.forward * throwForce;
+                    rb.AddForce(forceToUnpin, ForceMode.Impulse);
+                    Cook();
+                }
+                else
+                {
+                    Rigidbody rb=currentGun.GetComponent<Rigidbody>();
+                    rb.useGravity = true;
+                    rb.isKinematic = false;
+                    currentGun.GetComponent<BoxCollider>().enabled = true;
+                    currentGun.transform.parent = null;
+                    Vector3 throwingForce = cameraTransform.forward * throwForce + transform.up * throwUpwardForce;
+                    rb.AddForce(throwingForce, ForceMode.Impulse);
+                    currentGun = null;
+
                 }
             }
         }
 
+        void Cook()
+        {
+            currentGun.CookNade();
+        }
+        void Throw()
+        {
+            
+        }
         void TryShootOnce()
         {
             if (!currentGun) return;

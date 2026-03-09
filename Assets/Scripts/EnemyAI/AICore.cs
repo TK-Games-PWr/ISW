@@ -7,7 +7,7 @@ using TK_Shared._3DPlayerMovement;
 
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(Collider))]
-public class AICore : MonoBehaviour
+public class AICore : MonoBehaviour, ICharacter
 {
     // --- Enums ---
     public enum AIState { Patrol, Alert, Combat }
@@ -492,6 +492,7 @@ public class AICore : MonoBehaviour
     // --- Damage Handling ---
     public void Damage(float amount)
     {
+        Debug.Log("GOT HIT ENEMY");
         currentHealth = Mathf.Clamp(currentHealth - amount, 0, maxHealth);
 
         if (currentHealth <= 0)
@@ -516,7 +517,7 @@ public class AICore : MonoBehaviour
         }
     }
 
-    private void Die()
+    public void Die()
     {
         Debug.Log($"{gameObject.name} died.");
         OnEnemyDied?.Invoke(this);

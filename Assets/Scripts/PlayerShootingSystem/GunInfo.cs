@@ -7,6 +7,8 @@ namespace PlayerShootingSystem
     {
         public int flatDamage;
         public bool isAutomatic;
+        public bool isExplosive;
+        public float blastRadius;
         public float fireRate;
         public AnimationCurve damageFalloff;
     }

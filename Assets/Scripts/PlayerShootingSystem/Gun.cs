@@ -1,4 +1,6 @@
 using System.Collections;
+using JetBrains.Annotations;
+using TK_Shared._3DPlayerMovement;
 using UnityEngine;
 
 namespace PlayerShootingSystem
@@ -10,19 +12,22 @@ namespace PlayerShootingSystem
         public float recoilAmount = 8f;       
         public float recoilSide = 2f;         
         public float recoilSpeed = 12f;       
-        public float returnSpeed = 5f;        
+        public float returnSpeed = 5f;
 
-        [Header("Slide Recoil")]
+        [Header("Slide Recoil")] 
+        [SerializeField] [CanBeNull] ParticleSystem gunParticle;
         public Transform slide;
         public float slideBackAmount = 0.12f;
         public float slideBackSpeed = 25f;
         public float slideReturnSpeed = 15f;
         
+        [SerializeField] LayerMask damageLayerMask;
         Vector3 _originalSlidePos;
         Quaternion _restRot;
     
         Coroutine _slideCoroutine;
         Coroutine _recoilCoroutine;
+        Coroutine _cookCoroutine;
 
         void Start()
         {
@@ -38,11 +43,49 @@ namespace PlayerShootingSystem
         }
         public void PerformShoot()
         {
+            if (gunParticle) gunParticle.Play();
             if (_slideCoroutine != null)
                 StopCoroutine(_slideCoroutine);
             _slideCoroutine = StartCoroutine(SlideRecoilCoroutine());
             if (_recoilCoroutine != null) StopCoroutine(_recoilCoroutine);
             _recoilCoroutine = StartCoroutine(RecoilCoroutine());
+        }
+
+        public void CookNade()
+        {
+            _cookCoroutine ??= StartCoroutine(CookCoroutine());
+        }
+
+        void Explode()
+        {
+            Vector3 explosionPoint=transform.position;
+            Collider[] hitColliders=Physics.OverlapSphere(explosionPoint,gunInfo.blastRadius,damageLayerMask,QueryTriggerInteraction.Ignore);
+            if (gunParticle)
+            {
+                gunParticle.Play();
+            }
+            GetComponent<MeshRenderer>().enabled = false;
+            foreach (Collider col in hitColliders)
+            {
+    
+                if (col.TryGetComponent<ICharacter>(out var damageable))
+                {
+                    float distance = Vector3.Distance(explosionPoint, col.bounds.center);
+                    float falloff = 1f - (distance / gunInfo.blastRadius); // 1 → close, 0 → edge
+                    float finalDamage = gunInfo.flatDamage * Mathf.Clamp01(falloff);
+
+                    damageable.Damage(finalDamage);
+                }
+            }
+
+        }
+        
+        IEnumerator CookCoroutine()
+        {
+            yield return new WaitForSecondsRealtime(5f);
+            Explode();
+            yield return new WaitForSecondsRealtime(2f);
+            Destroy(gameObject);
         }
         IEnumerator RecoilCoroutine()
         {
