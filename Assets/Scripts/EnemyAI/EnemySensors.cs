@@ -20,13 +20,18 @@ namespace EnemySystem
 
         internal Transform PlayerTransform { get; private set; }
         internal Vector3 LastKnownPosition { get; private set; }
+        internal PlayerResources PlayerResources { get; private set; }
 
         private float playerEyeLevel => PlayerTransform != null ? PlayerTransform.GetComponent<PlayerActionsController>().eyeLevel : 1.7f;
 
         private void Start()
         {
             GameObject player = GameObject.FindGameObjectWithTag(playerTag);
-            if (player != null) PlayerTransform = player.transform;
+            if (player != null)
+            {
+                PlayerTransform = player.transform;
+                PlayerResources = player.GetComponent<PlayerResources>();
+            }
         }
 
         internal bool HasLineOfSight()

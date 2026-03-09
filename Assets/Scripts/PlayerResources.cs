@@ -14,8 +14,14 @@ public class PlayerResources : MonoBehaviour
     void Awake()
     {
         CurrentHealth = maxHealth;
+        OnHealthChanged += ShowHealth;
     }
-    
+
+    void OnDestroy()
+    {
+        OnHealthChanged -= ShowHealth;
+    }
+
     /// <summary>
     /// Does damage to a player, heals if amount is negative
     /// </summary>
@@ -39,5 +45,10 @@ public class PlayerResources : MonoBehaviour
         OnDeath?.Invoke(); 
         
         Debug.Log("YUOR DED");
+    }
+
+    private void ShowHealth(float amount)
+    {
+        Debug.Log("current player health: " + amount);
     }
 }

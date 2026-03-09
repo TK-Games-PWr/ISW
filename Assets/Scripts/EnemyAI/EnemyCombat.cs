@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.AI; // Needed to stop agent during reload
+using TK_Shared.ObjectInteractions3D;
 
 namespace EnemySystem
 {
@@ -8,8 +9,8 @@ namespace EnemySystem
     public class EnemyCombat : MonoBehaviour
     {
         [Header("Combat Settings")]
-        public PlayerShootingSystem.GunInfo gunInfo;
         public PlayerShootingSystem.Gun currentGun;
+        [SerializeField] Transform GunPivot;
         [SerializeField] float optimalCombatDistancePct = 0.7f;
         [SerializeField] float reloadTime = 1.7f;
         [SerializeField] float weaponRange; // todo: replace from guninfo
@@ -22,13 +23,18 @@ namespace EnemySystem
         private int currentAmmo;
         private NavMeshAgent agent;
 
-        private PlayerResources playerResources;
+        private EnemySensors sensors;
 
         private void Awake()
         {
             agent = GetComponent<NavMeshAgent>();
-            playerResources = GetComponent<EnemySensors>().PlayerTransform.GetComponent<PlayerResources>();
+            sensors = GetComponent<EnemySensors>();
             currentAmmo = maxAmmo;
+
+            if (currentGun.TryGetComponent(out GrabbableObject grabbable))
+            {
+                grabbable.Grab(GunPivot);
+            }
         }
 
         // Assuming player is visible!
@@ -52,7 +58,7 @@ namespace EnemySystem
 
             float multiplier = currentGun.gunInfo.damageFalloff.Evaluate(distanceToPlayer / 100f);
             float finalDamage = currentGun.gunInfo.flatDamage * multiplier;
-            playerResources.Damage(finalDamage);
+            sensors.PlayerResources.Damage(finalDamage);
         }
 
         private IEnumerator ReloadRoutine()
