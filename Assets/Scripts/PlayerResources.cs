@@ -1,4 +1,5 @@
 using System;
+using TK_Shared._3DPlayerMovement;
 using UnityEngine;
 
 public class PlayerResources : MonoBehaviour
@@ -6,6 +7,7 @@ public class PlayerResources : MonoBehaviour
     public event Action<float> OnHealthChanged;
     public event Action OnDeath;
     
+    [SerializeField] GameObject DeathScreen;
     public float CurrentHealth { get; private set; }
     [SerializeField] float maxHealth = 100f;
 
@@ -15,6 +17,7 @@ public class PlayerResources : MonoBehaviour
     {
         CurrentHealth = maxHealth;
         OnHealthChanged += ShowHealth;
+        DeathScreen.SetActive(false);
     }
 
     void OnDestroy()
@@ -44,6 +47,12 @@ public class PlayerResources : MonoBehaviour
         // Notify any listeners (like Game Manager or Animator) that the player died
         OnDeath?.Invoke(); 
         
+        DeathScreen.SetActive(true);
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+
+        GetComponent<PlayerActionsController>().enabled = false;
+
         Debug.Log("YUOR DED");
     }
 
