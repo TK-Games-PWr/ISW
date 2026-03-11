@@ -15,8 +15,11 @@ MonoBehaviour:
   flatDamage: 100
   isAutomatic: 0
   isExplosive: 1
+  isMelee: 0
   blastRadius: 5
   fireRate: 0
+  ammoType: 2
+  maxAmmo: 1
   damageFalloff:
     serializedVersion: 2
     m_Curve: []

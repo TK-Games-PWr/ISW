@@ -1,11 +1,21 @@
 using System;
+using System.Collections.Generic;
+using PlayerShootingSystem;
+using TK_Shared._3DPlayerMovement;
 using UnityEngine;
+[System.Serializable]
+public class AmmoEntry
+{
+    public AmmoType ammoType;
+    public int amount;
+}
 
-public class PlayerResources : MonoBehaviour
+public class PlayerResources : MonoBehaviour, ICharacter
 {
     public event Action<float> OnHealthChanged;
     public event Action OnDeath;
     
+    public List<AmmoEntry> playerAmmo;
     public float CurrentHealth { get; private set; }
     [SerializeField] float maxHealth = 100f;
 
@@ -31,7 +41,7 @@ public class PlayerResources : MonoBehaviour
         }
     }
 
-    private void Die()
+    public void Die()
     {
         isDead = true;
         

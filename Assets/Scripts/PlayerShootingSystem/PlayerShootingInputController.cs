@@ -16,5 +16,10 @@ namespace PlayerShootingSystem
         {
             _shootingController.OnShootInput(inputValue);
         }
+
+        void OnReload(InputValue inputValue)
+        {
+            _shootingController.OnReloadInput(inputValue);
+        }
     }
 }

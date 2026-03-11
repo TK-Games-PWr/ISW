@@ -8,6 +8,7 @@ namespace PlayerShootingSystem
     public class Gun : MonoBehaviour
     {
         public GunInfo gunInfo;
+        public int ammoInMag;
         [Header("Gun Recoil")]
         public float recoilAmount = 8f;       
         public float recoilSide = 2f;         
@@ -22,6 +23,7 @@ namespace PlayerShootingSystem
         public float slideReturnSpeed = 15f;
         
         [SerializeField] LayerMask damageLayerMask;
+        public Nade equippedNade;
         Vector3 _originalSlidePos;
         Quaternion _restRot;
     
@@ -49,43 +51,13 @@ namespace PlayerShootingSystem
             _slideCoroutine = StartCoroutine(SlideRecoilCoroutine());
             if (_recoilCoroutine != null) StopCoroutine(_recoilCoroutine);
             _recoilCoroutine = StartCoroutine(RecoilCoroutine());
+            ammoInMag -= 1;
         }
 
         public void CookNade()
         {
-            _cookCoroutine ??= StartCoroutine(CookCoroutine());
-        }
-
-        void Explode()
-        {
-            Vector3 explosionPoint=transform.position;
-            Collider[] hitColliders=Physics.OverlapSphere(explosionPoint,gunInfo.blastRadius,damageLayerMask,QueryTriggerInteraction.Ignore);
-            if (gunParticle)
-            {
-                gunParticle.Play();
-            }
-            GetComponent<MeshRenderer>().enabled = false;
-            foreach (Collider col in hitColliders)
-            {
-    
-                if (col.TryGetComponent<ICharacter>(out var damageable))
-                {
-                    float distance = Vector3.Distance(explosionPoint, col.bounds.center);
-                    float falloff = 1f - (distance / gunInfo.blastRadius); // 1 → close, 0 → edge
-                    float finalDamage = gunInfo.flatDamage * Mathf.Clamp01(falloff);
-
-                    damageable.Damage(finalDamage);
-                }
-            }
-
-        }
-        
-        IEnumerator CookCoroutine()
-        {
-            yield return new WaitForSecondsRealtime(5f);
-            Explode();
-            yield return new WaitForSecondsRealtime(2f);
-            Destroy(gameObject);
+            StartCoroutine(equippedNade.CookCoroutine(gunInfo, damageLayerMask));
+            ammoInMag -= 1;
         }
         IEnumerator RecoilCoroutine()
         {

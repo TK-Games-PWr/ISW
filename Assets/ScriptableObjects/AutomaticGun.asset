@@ -14,7 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerShootingSystem.GunInfo
   flatDamage: 50
   isAutomatic: 1
+  isExplosive: 0
+  isMelee: 0
+  blastRadius: 0
   fireRate: 0.1
+  ammoType: 1
+  maxAmmo: 30
   damageFalloff:
     serializedVersion: 2
     m_Curve:
