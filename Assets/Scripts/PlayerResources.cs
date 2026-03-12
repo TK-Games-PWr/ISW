@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using PlayerShootingSystem;
 using TK_Shared._3DPlayerMovement;
+using TMPro;
 using UnityEngine;
 [System.Serializable]
 public class AmmoEntry
@@ -16,6 +17,7 @@ public class PlayerResources : MonoBehaviour, ICharacter
     public event Action OnDeath;
     
     [SerializeField] GameObject DeathScreen;
+    [SerializeField] TextMeshProUGUI HealthLabel;
     public List<AmmoEntry> playerAmmo;
     public float CurrentHealth { get; private set; }
     [SerializeField] float maxHealth = 100f;
@@ -26,6 +28,7 @@ public class PlayerResources : MonoBehaviour, ICharacter
     {
         CurrentHealth = maxHealth;
         OnHealthChanged += ShowHealth;
+        ShowHealth(CurrentHealth);
         DeathScreen.SetActive(false);
         Time.timeScale = 1;
     }
@@ -68,6 +71,6 @@ public class PlayerResources : MonoBehaviour, ICharacter
 
     private void ShowHealth(float amount)
     {
-        Debug.Log("current player health: " + amount);
+        HealthLabel.text = (int)CurrentHealth + "hp";
     }
 }
