@@ -157,7 +157,7 @@ namespace PlayerShootingSystem
                 UpdateUI();
                 if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit))
                 {
-                    if (hit.transform.TryGetComponent(out AICore enemy))
+                    if (hit.transform.TryGetComponent(out EnemySystem.EnemyHealth enemy))
                     {
                         float distance = hit.distance;
                         float multiplier = currentGun.gunInfo.damageFalloff.Evaluate(distance / 100f);

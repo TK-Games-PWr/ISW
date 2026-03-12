@@ -1,13 +1,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using static AICore;
+using EnemySystem;
+using static EnemySystem.AICore;
 
 [RequireComponent(typeof(CanvasGroup))]
 public class AlertNotificator : MonoBehaviour
 {
     [SerializeField] Image image1;
     [SerializeField] Image image2;
+
     private Dictionary<AICore, AlertData> activeAlerts = new Dictionary<AICore, AlertData>();
     CanvasGroup cg;
 
@@ -25,13 +27,13 @@ public class AlertNotificator : MonoBehaviour
     private void OnEnable()
     {
         OnAlertChanged += HandleAlertChanged;
-        OnEnemyDied += HandleEnemyDied;
+        EnemyHealth.OnEnemyDied += HandleEnemyDied;
     }
 
     private void OnDisable()
     {
         OnAlertChanged -= HandleAlertChanged;
-        OnEnemyDied -= HandleEnemyDied;
+        EnemyHealth.OnEnemyDied -= HandleEnemyDied;
     }
 
     private void HandleAlertChanged(AICore enemy, float value, AlertLevel alertLevel)
@@ -45,16 +47,17 @@ public class AlertNotificator : MonoBehaviour
         }
         else
         {
-            // Update or add this enemy's current status
             activeAlerts[enemy] = new AlertData { tm = value, level = alertLevel };
         }
 
         RefreshGlobalIndicator();
     }
 
-    private void HandleEnemyDied(AICore enemy)
+    private void HandleEnemyDied(EnemyHealth enemyHealth)
     {
-        if (activeAlerts.ContainsKey(enemy))
+        AICore enemy = enemyHealth.GetComponent<AICore>();
+
+        if (enemy != null && activeAlerts.ContainsKey(enemy))
         {
             activeAlerts.Remove(enemy);
             RefreshGlobalIndicator();
@@ -89,8 +92,8 @@ public class AlertNotificator : MonoBehaviour
     private void SetAlertProgress(float value, AlertLevel alertLevel)
     {
         value = Mathf.Clamp(value, 0, 1);
-        image1.fillAmount = value/5f;
-        image2.fillAmount = value/5f;
+        image1.fillAmount = value / 5f;
+        image2.fillAmount = value / 5f;
         Color newColor = Color.clear;
 
         switch (alertLevel)

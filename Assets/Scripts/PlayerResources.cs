@@ -15,6 +15,7 @@ public class PlayerResources : MonoBehaviour, ICharacter
     public event Action<float> OnHealthChanged;
     public event Action OnDeath;
     
+    [SerializeField] GameObject DeathScreen;
     public List<AmmoEntry> playerAmmo;
     public float CurrentHealth { get; private set; }
     [SerializeField] float maxHealth = 100f;
@@ -24,8 +25,15 @@ public class PlayerResources : MonoBehaviour, ICharacter
     void Awake()
     {
         CurrentHealth = maxHealth;
+        OnHealthChanged += ShowHealth;
+        DeathScreen.SetActive(false);
     }
-    
+
+    void OnDestroy()
+    {
+        OnHealthChanged -= ShowHealth;
+    }
+
     /// <summary>
     /// Does damage to a player, heals if amount is negative
     /// </summary>
@@ -48,6 +56,15 @@ public class PlayerResources : MonoBehaviour, ICharacter
         // Notify any listeners (like Game Manager or Animator) that the player died
         OnDeath?.Invoke(); 
         
-        Debug.Log("YUOR DED");
+        DeathScreen.SetActive(true);
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+
+        GetComponent<PlayerActionsController>().enabled = false;
+    }
+
+    private void ShowHealth(float amount)
+    {
+        Debug.Log("current player health: " + amount);
     }
 }
