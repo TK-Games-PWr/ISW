@@ -303,7 +303,7 @@ MonoBehaviour:
   reloadTime: 1.7
   optimalCombatDistancePct: 0.7
   alertSensitivity: 5
-  hearingRadius: 30
+  hearingRadius: 10
   timeToLoseAlertLevel: 3
   patrolPoints: []
   waitTimeAtWaypoint: 2
