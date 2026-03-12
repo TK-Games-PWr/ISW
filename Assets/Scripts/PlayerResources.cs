@@ -49,7 +49,7 @@ public class PlayerResources : MonoBehaviour, ICharacter
         }
     }
 
-    public void Die()
+    private void Die()
     {
         isDead = true;
         

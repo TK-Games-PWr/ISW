@@ -1,9 +1,10 @@
 using UnityEngine;
 using System;
+using TK_Shared._3DPlayerMovement;
 
 namespace EnemySystem
 {
-    public class EnemyHealth : MonoBehaviour
+    public class EnemyHealth : MonoBehaviour, ICharacter
     {
         public static event Action<EnemyHealth> OnEnemyDied;
 
