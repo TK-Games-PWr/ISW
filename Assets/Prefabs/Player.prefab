@@ -865,8 +865,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerShootingSystem.PlayerShootingController
   cameraTransform: {fileID: 7685606263097007844}
-  throwForce: 0
-  throwUpwardForce: 0
+  throwForce: 15
+  throwUpwardForce: 5
   guns:
   - {fileID: 1146604323103178768}
   - {fileID: 1887723927435915058}
@@ -876,7 +876,7 @@ MonoBehaviour:
   playerResources: {fileID: 8521726943504668858}
   magAmmoAmount: {fileID: 8579607673598029845}
   maxAmmoAmount: {fileID: 3655300790715264007}
-  nadePrefab: {fileID: 0}
+  nadePrefab: {fileID: 2525977546836581753, guid: e67a4dc6286dd5ba09fd83ee95232548, type: 3}
   currentGun: {fileID: 0}
 --- !u!114 &6305359070947738222
 MonoBehaviour:
