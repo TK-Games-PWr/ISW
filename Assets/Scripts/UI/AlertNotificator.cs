@@ -1,28 +1,19 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using EnemySystem;
 using static EnemySystem.AICore;
 
-[RequireComponent(typeof(CanvasGroup))]
 public class AlertNotificator : MonoBehaviour
 {
-    [SerializeField] Image image1;
-    [SerializeField] Image image2;
+    [Header("Setup")]
+    [Tooltip("The player's transform to calculate relative angle (usually the camera or player body).")]
+    [SerializeField] Transform playerTransform;
+    [Tooltip("The prefab that has the AlertIndicatorUI script attached.")]
+    [SerializeField] AlertIndicatorUI indicatorPrefab;
+    [Tooltip("The UI container where these indicators will be spawned.")]
+    [SerializeField] Transform container;
 
-    private Dictionary<AICore, AlertData> activeAlerts = new Dictionary<AICore, AlertData>();
-    CanvasGroup cg;
-
-    private struct AlertData
-    {
-        public float tm;
-        public AlertLevel level;
-    }
-
-    void Awake()
-    {
-        cg = GetComponent<CanvasGroup>();
-    }
+    private Dictionary<AICore, AlertIndicatorUI> activeIndicators = new Dictionary<AICore, AlertIndicatorUI>();
 
     private void OnEnable()
     {
@@ -36,86 +27,66 @@ public class AlertNotificator : MonoBehaviour
         EnemyHealth.OnEnemyDied -= HandleEnemyDied;
     }
 
+    private void Update()
+    {
+        if (playerTransform == null || activeIndicators.Count == 0) return;
+
+        foreach (var kvp in activeIndicators)
+        {
+            AICore enemy = kvp.Key;
+            AlertIndicatorUI indicator = kvp.Value;
+
+            if (enemy != null && indicator != null)
+            {
+                Vector3 directionToEnemy = enemy.transform.position - playerTransform.position;
+                directionToEnemy.y = 0;
+
+                Vector3 playerForward = playerTransform.forward;
+                playerForward.y = 0;
+
+                float angle = Vector3.SignedAngle(playerForward, directionToEnemy, Vector3.up);
+
+                indicator.rectTransform.localEulerAngles = new Vector3(0, 0, -angle);
+            }
+        }
+    }
+
     private void HandleAlertChanged(AICore enemy, float value, AlertLevel alertLevel)
     {
         if (alertLevel == AlertLevel.None && value <= 0f)
         {
-            if (activeAlerts.ContainsKey(enemy))
-            {
-                activeAlerts.Remove(enemy);
-            }
-        }
-        else
-        {
-            activeAlerts[enemy] = new AlertData { tm = value, level = alertLevel };
+            RemoveIndicator(enemy);
+            return;
         }
 
-        RefreshGlobalIndicator();
+        if (!activeIndicators.TryGetValue(enemy, out AlertIndicatorUI indicator))
+        {
+            indicator = Instantiate(indicatorPrefab, container);
+            activeIndicators[enemy] = indicator;
+        }
+
+        indicator.SetAlertProgress(value, alertLevel);
     }
 
     private void HandleEnemyDied(EnemyHealth enemyHealth)
     {
         AICore enemy = enemyHealth.GetComponent<AICore>();
-
-        if (enemy != null && activeAlerts.ContainsKey(enemy))
+        if (enemy != null)
         {
-            activeAlerts.Remove(enemy);
-            RefreshGlobalIndicator();
+            RemoveIndicator(enemy);
         }
     }
 
-    private void RefreshGlobalIndicator()
+    private void RemoveIndicator(AICore enemy)
     {
-        if (activeAlerts.Count == 0)
+        if (activeIndicators.TryGetValue(enemy, out AlertIndicatorUI indicator))
         {
-            cg.alpha = 0;
-            return;
-        }
-
-        cg.alpha = 1;
-
-        float highestTM = 0f;
-        AlertLevel highestLevel = AlertLevel.None;
-
-        foreach (var alert in activeAlerts.Values)
-        {
-            if (alert.tm > highestTM)
+            if (indicator != null)
             {
-                highestTM = alert.tm;
-                highestLevel = alert.level;
+                Destroy(indicator.gameObject);
             }
+            activeIndicators.Remove(enemy);
         }
-
-        SetAlertProgress(highestTM, highestLevel);
     }
 
-    private void SetAlertProgress(float value, AlertLevel alertLevel)
-    {
-        value = Mathf.Clamp(value, 0, 1);
-        image1.fillAmount = value / 5f;
-        image2.fillAmount = value / 5f;
-        Color newColor = Color.clear;
-
-        switch (alertLevel)
-        {
-            case AlertLevel.None:
-                newColor = Color.clear;
-                break;
-            case AlertLevel.Low:
-                newColor = Color.white;
-                break;
-            case AlertLevel.Medium:
-                newColor = Color.gray;
-                break;
-            case AlertLevel.High:
-                newColor = Color.yellow;
-                break;
-            case AlertLevel.Extreme:
-                newColor = Color.red;
-                break;
-        }
-
-        image1.color = newColor;
-        image2.color = newColor;
-    }
 }

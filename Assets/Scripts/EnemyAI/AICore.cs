@@ -50,8 +50,9 @@ namespace EnemySystem
             if (currentState != AIState.Combat)
             {
                 UpdateAlertSystem();
-                OnAlertChanged?.Invoke(this, triggerMultiplier, currentAlertLevel);
             }
+
+            OnAlertChanged?.Invoke(this, triggerMultiplier, currentAlertLevel);
 
             switch (currentState)
             {
@@ -83,7 +84,6 @@ namespace EnemySystem
                 if (triggerMultiplier > 0)
                 {
                     triggerMultiplier -= Time.deltaTime;
-                    OnAlertChanged?.Invoke(this, triggerMultiplier, currentAlertLevel);
                 }
                 else
                 {
