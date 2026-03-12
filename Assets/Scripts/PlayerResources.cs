@@ -27,6 +27,7 @@ public class PlayerResources : MonoBehaviour, ICharacter
         CurrentHealth = maxHealth;
         OnHealthChanged += ShowHealth;
         DeathScreen.SetActive(false);
+        Time.timeScale = 1;
     }
 
     void OnDestroy()
@@ -61,6 +62,8 @@ public class PlayerResources : MonoBehaviour, ICharacter
         Cursor.lockState = CursorLockMode.None;
 
         GetComponent<PlayerActionsController>().enabled = false;
+        Debug.Log("time stop");
+        Time.timeScale = 0; // TODO replace with proper death handling
     }
 
     private void ShowHealth(float amount)

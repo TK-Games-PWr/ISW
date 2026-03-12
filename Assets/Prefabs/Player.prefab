@@ -68,7 +68,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 81.8, y: 3.6721191}
+  m_AnchoredPosition: {x: 71.75098, y: 8.000009}
   m_SizeDelta: {x: 115.9, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4500881448206263915
@@ -369,7 +369,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 58.8, y: 3.6721191}
+  m_AnchoredPosition: {x: 48.75097, y: 8.000009}
   m_SizeDelta: {x: 115.9, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5266333416630280081
@@ -688,7 +688,7 @@ Transform:
   m_GameObject: {fileID: 3395969552154099605}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.35677, y: 0, z: 7.61691}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -745,7 +745,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   maxHealth: 100
-  maxHealth: 100
   gravityScale: 3
 --- !u!114 &8521726943504668858
 MonoBehaviour:
@@ -759,6 +758,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0eff0ac013cb23f73a3f05f4af7435fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerResources
+  DeathScreen: {fileID: 7339707745002749889}
   playerAmmo:
   - ammoType: 0
     amount: 40
@@ -766,7 +766,6 @@ MonoBehaviour:
     amount: 120
   - ammoType: 2
     amount: 4
-  DeathScreen: {fileID: 7339707745002749889}
   maxHealth: 100
 --- !u!114 &3642215617026583933
 MonoBehaviour:
@@ -877,7 +876,7 @@ MonoBehaviour:
   playerResources: {fileID: 8521726943504668858}
   magAmmoAmount: {fileID: 8579607673598029845}
   maxAmmoAmount: {fileID: 3655300790715264007}
-  nade: {fileID: 2525977546836581753, guid: e67a4dc6286dd5ba09fd83ee95232548, type: 3}
+  nadePrefab: {fileID: 0}
   currentGun: {fileID: 0}
 --- !u!114 &6305359070947738222
 MonoBehaviour:
@@ -1563,8 +1562,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -210.0979, y: 111.32788}
-  m_SizeDelta: {x: 420.1963, y: 222.6557}
+  m_AnchoredPosition: {x: -68.3871, y: 41.1185}
+  m_SizeDelta: {x: 136.7747, y: 82.2368}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6230133066946446159
 CanvasRenderer:
@@ -1785,7 +1784,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.CanvasScaler
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 800, y: 600}
@@ -1901,7 +1900,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.CanvasScaler
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 800, y: 600}
@@ -1963,7 +1962,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -57.951, y: 3.6721191}
+  m_AnchoredPosition: {x: -68, y: 8}
   m_SizeDelta: {x: 115.9, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4320899225142366716
