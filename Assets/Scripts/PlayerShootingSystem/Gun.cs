@@ -57,7 +57,6 @@ namespace PlayerShootingSystem
         public void CookNade()
         {
             StartCoroutine(equippedNade.CookCoroutine(gunInfo, damageLayerMask));
-            ammoInMag -= 1;
         }
         IEnumerator RecoilCoroutine()
         {
