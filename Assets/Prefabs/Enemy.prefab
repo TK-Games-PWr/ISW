@@ -295,8 +295,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 247
   eyeLevel: 1.7
-  fieldOfViewAngle: 120
-  maxSightDistance: 40
+  fieldOfViewAngle: 100
+  maxSightDistance: 30
   maxHealth: 75
   weaponRange: 20
   maxAmmo: 15
