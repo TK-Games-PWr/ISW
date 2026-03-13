@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using TK_Shared._3DPlayerMovement;
 using TK_Shared.ObjectInteractions3D;
 using TMPro;
-using Unity.VisualScripting; // assuming this namespace exists
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -93,23 +93,33 @@ namespace PlayerShootingSystem
         {
             if (value.isPressed)
             {
-                int amount = currentGun.gunInfo.maxAmmo - currentGun.ammoInMag;
-                if (amount <= 0)
+                int neededAmount = currentGun.gunInfo.maxAmmo - currentGun.ammoInMag;
+                if (neededAmount <= 0)
                     return;
+
                 AmmoEntry ammoEntry = playerResources.playerAmmo.Find(a => a.ammoType == currentGun.gunInfo.ammoType);
-                ammoEntry.amount -= amount;
-                currentGun.ammoInMag += amount;
+        
+                if (ammoEntry == null)
+                    return;
+
+                int reloadAmount = Mathf.Min(neededAmount, ammoEntry.amount);
+                if (reloadAmount <= 0)
+                    return;
+
+                ammoEntry.amount -= reloadAmount;
+                currentGun.ammoInMag += reloadAmount;
+
                 if (currentGun.gunInfo.ammoType == AmmoType.Nade)
                 {
-                    GameObject granade = Instantiate(nadePrefab,currentGun.transform.position,currentGun.transform.rotation);
+                    GameObject granade = Instantiate(nadePrefab, currentGun.transform.position, currentGun.transform.rotation);
                     granade.transform.SetParent(currentGun.transform);
                     Nade nade = granade.GetComponent<Nade>();
                     currentGun.slide = nade.pin;
-                    currentGun.equippedNade=nade;
+                    currentGun.equippedNade = nade;
                 }
+
                 UpdateUI();
             }
-
         }
         public void OnInvSlot1(InputValue input)
         {
@@ -199,6 +209,14 @@ namespace PlayerShootingSystem
                     StopCoroutine(_autoFireCoroutine);
                     _autoFireCoroutine = null;
                 }
+            }
+
+            if (pickedObject.TryGetComponent(out AmmoPickup ammoPickup))
+            {
+                AmmoEntry ammoEntry = playerResources.playerAmmo.Find(a => a.ammoType == ammoPickup.ammoType);
+                ammoEntry.amount += ammoPickup.amount;
+                UpdateUI();
+                Destroy(pickedObject.gameObject);
             }
         }
     }
