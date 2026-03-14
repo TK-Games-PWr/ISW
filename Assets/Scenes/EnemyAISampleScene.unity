@@ -13741,15 +13741,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 242277741912297780, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3.290001
+      value: -10.709999
       objectReference: {fileID: 0}
     - target: {fileID: 242277741912297780, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.11591464
+      value: 3.8840854
       objectReference: {fileID: 0}
     - target: {fileID: 242277741912297780, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 14.93
+      value: 10.93
       objectReference: {fileID: 0}
     - target: {fileID: 242277741912297780, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
       propertyPath: m_LocalRotation.w
@@ -13786,6 +13786,10 @@ PrefabInstance:
     - target: {fileID: 4169945757394515640, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5232498721366191019, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: fieldOfViewAngle
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
       propertyPath: patrolPoints.Array.size

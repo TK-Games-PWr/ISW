@@ -12,7 +12,8 @@ namespace EnemySystem
         [Header("Vision Settings")]
         [SerializeField] LayerMask sightObstaclesMask;
         [SerializeField] float eyeLevel = 1.7f;
-        [SerializeField] float fieldOfViewAngle = 120f;
+        [SerializeField] float horizontalFOV = 100f;
+        [SerializeField] float verticalFOV = 40f;
         [SerializeField] float maxSightDistance = 40f;
 
         [Header("Hearing Settings")]
@@ -45,16 +46,23 @@ namespace EnemySystem
             Vector3 targetPosition = PlayerTransform.position + Vector3.up * playerEyeLevel;
             Vector3 directionToPlayer = (targetPosition - rayStartOrigin).normalized;
 
-            float angleToPlayer = Vector3.Angle(transform.forward, directionToPlayer);
-            if (angleToPlayer > fieldOfViewAngle / 2f)
+            Vector3 localDirToPlayer = transform.InverseTransformDirection(directionToPlayer);
+
+            float horizontalAngle = Mathf.Abs(Mathf.Atan2(localDirToPlayer.x, localDirToPlayer.z) * Mathf.Rad2Deg);
+
+            float flatDistance = Mathf.Sqrt(localDirToPlayer.x * localDirToPlayer.x + localDirToPlayer.z * localDirToPlayer.z);
+            float verticalAngle = Mathf.Abs(Mathf.Atan2(localDirToPlayer.y, flatDistance) * Mathf.Rad2Deg);
+
+            if (horizontalAngle > horizontalFOV / 2f || verticalAngle > verticalFOV / 2f)
             {
-                return false; // Player is outside the vision cone
+                return false;
             }
 
             if (Physics.Raycast(rayStartOrigin, directionToPlayer, out RaycastHit hit, maxSightDistance, sightObstaclesMask))
             {
                 if (hit.collider.CompareTag(playerTag)) return true;
             }
+
             return false;
         }
 
@@ -85,13 +93,18 @@ namespace EnemySystem
             Vector3 rayStartOrigin = transform.position + Vector3.up * eyeLevel;
             Vector3 targetPosition = PlayerTransform.position + Vector3.up * playerEyeLevel;
             Vector3 directionToPlayer = (targetPosition - rayStartOrigin).normalized;
-            float angleToPlayer = Vector3.Angle(transform.forward, directionToPlayer);
+
+            Vector3 localDirToPlayer = transform.InverseTransformDirection(directionToPlayer);
+
+            float horizontalAngle = Mathf.Abs(Mathf.Atan2(localDirToPlayer.x, localDirToPlayer.z) * Mathf.Rad2Deg);
+            float flatDistance = Mathf.Sqrt(localDirToPlayer.x * localDirToPlayer.x + localDirToPlayer.z * localDirToPlayer.z);
+            float verticalAngle = Mathf.Abs(Mathf.Atan2(localDirToPlayer.y, flatDistance) * Mathf.Rad2Deg);
 
             Gizmos.color = Color.black;
 
             if (Physics.Raycast(rayStartOrigin, directionToPlayer, out RaycastHit hit, maxSightDistance, sightObstaclesMask))
             {
-                DrawVisibilityRaycast(rayStartOrigin, hit, angleToPlayer);
+                DrawVisibilityRaycast(rayStartOrigin, hit, horizontalAngle, verticalAngle);
             }
             else
             {
@@ -100,11 +113,60 @@ namespace EnemySystem
             }
         }
 
-        private void DrawVisibilityRaycast(Vector3 rayStartOrigin, RaycastHit hit, float angleToPlayer)
+        private void OnDrawGizmosSelected()
+        {
+            Vector3 rayStartOrigin = transform.position + Vector3.up * eyeLevel;
+
+            Gizmos.color = new Color(1f, 1f, 0f, 0.5f);
+
+            float halfV = verticalFOV / 2f;
+            float halfH = horizontalFOV / 2f;
+
+            Vector3 topLeftDir = transform.rotation * Quaternion.Euler(-halfV, -halfH, 0) * Vector3.forward;
+            Vector3 topRightDir = transform.rotation * Quaternion.Euler(-halfV, halfH, 0) * Vector3.forward;
+            Vector3 bottomLeftDir = transform.rotation * Quaternion.Euler(halfV, -halfH, 0) * Vector3.forward;
+            Vector3 bottomRightDir = transform.rotation * Quaternion.Euler(halfV, halfH, 0) * Vector3.forward;
+
+            Vector3 topLeft = rayStartOrigin + topLeftDir * maxSightDistance;
+            Vector3 topRight = rayStartOrigin + topRightDir * maxSightDistance;
+            Vector3 bottomLeft = rayStartOrigin + bottomLeftDir * maxSightDistance;
+            Vector3 bottomRight = rayStartOrigin + bottomRightDir * maxSightDistance;
+
+            // edges
+            Gizmos.DrawLine(rayStartOrigin, topLeft);
+            Gizmos.DrawLine(rayStartOrigin, topRight);
+            Gizmos.DrawLine(rayStartOrigin, bottomLeft);
+            Gizmos.DrawLine(rayStartOrigin, bottomRight);
+
+            // far plane rectangle
+            Gizmos.DrawLine(topLeft, topRight);
+            Gizmos.DrawLine(topRight, bottomRight);
+            Gizmos.DrawLine(bottomRight, bottomLeft);
+            Gizmos.DrawLine(bottomLeft, topLeft);
+
+            // visibility shadow
+            UnityEditor.Handles.color = new Color(0f, 0f, 0f, 0.1f);
+
+            Vector3 flatForward = transform.forward;
+            flatForward.y = 0;
+
+            if (flatForward.sqrMagnitude > 0.001f)
+            {
+                flatForward.Normalize();
+
+                Vector3 groundPos = transform.position;
+
+                Vector3 leftBoundary = Quaternion.Euler(0, -horizontalFOV / 2f, 0) * flatForward;
+
+                UnityEditor.Handles.DrawSolidArc(groundPos, Vector3.up, leftBoundary, horizontalFOV, maxSightDistance);
+            }
+        }
+
+        private void DrawVisibilityRaycast(Vector3 rayStartOrigin, RaycastHit hit, float horizontalAngle, float verticalAngle)
         {
             if (hit.collider.CompareTag(playerTag))
             {
-                if (angleToPlayer > fieldOfViewAngle / 2f)
+                if (horizontalAngle > horizontalFOV / 2f || verticalAngle > verticalFOV / 2f)
                 {
                     Gizmos.color = Color.blue; // Blue: Player behind field of view
                 }
