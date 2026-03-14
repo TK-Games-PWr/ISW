@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc5496a18bb9692b6a7cc67528f8a12e, type: 3}
   m_Name: Granade
   m_EditorClassIdentifier: Assembly-CSharp::PlayerShootingSystem.GunInfo
-  flatDamage: 100
+  flatDamage: 150
   isAutomatic: 0
   isExplosive: 1
   isMelee: 0
-  blastRadius: 5
+  blastRadius: 8
   fireRate: 0
   ammoType: 2
   maxAmmo: 1

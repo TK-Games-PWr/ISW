@@ -313,8 +313,10 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 759
   eyeLevel: 1.7
-  maxSightDistance: 30
-  hearingRadius: 10
+  horizontalFOV: 90
+  verticalFOV: 40
+  maxSightDistance: 25
+  hearingRadius: 15
 --- !u!114 &3394472783275146617
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -330,7 +332,7 @@ MonoBehaviour:
   basePlayerVelocity: 4
   patrolSpeedMultiplier: 1
   combatSpeedMultiplier: 1.3
-  retreatSpeedMultiplier: 0.3
+  retreatSpeedMultiplier: 0.5
   patrolPoints: []
   waitTimeAtWaypoint: 2
 --- !u!114 &7944648931457534281
@@ -348,9 +350,11 @@ MonoBehaviour:
   currentGun: {fileID: 8862762591890864933}
   GunPivot: {fileID: 6296989899685151540}
   optimalCombatDistancePct: 0.7
+  totalMagazines: 1
   reloadTime: 1.7
   weaponRange: 20
-  maxAmmo: 15
+  magazineAmmo: 15
+  singleShotDelay: 0.6
 --- !u!114 &7587119339273579207
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -363,7 +367,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e00554a8c75ef14c88ed7751f8138ed9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
-  maxHealth: 75
+  maxHealth: 50
 --- !u!136 &1666939224196214089
 CapsuleCollider:
   m_ObjectHideFlags: 0
