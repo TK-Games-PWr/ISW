@@ -313,9 +313,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 759
   eyeLevel: 1.7
-  fieldOfViewAngle: 120
-  maxSightDistance: 40
-  hearingRadius: 30
+  maxSightDistance: 30
+  hearingRadius: 10
 --- !u!114 &3394472783275146617
 MonoBehaviour:
   m_ObjectHideFlags: 0
