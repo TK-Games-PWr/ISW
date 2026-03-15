@@ -162,6 +162,7 @@ namespace PlayerShootingSystem
             gun.GetComponent<GrabbableObject>().Grab(holdPivot);
             UpdateUI();
         }
+        
 
         void Cook()
         {

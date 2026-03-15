@@ -448232,6 +448232,14 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: -0.12
       objectReference: {fileID: 0}
+    - target: {fileID: 8918833937651877119, guid: cf27e03cd87a0c5a6b40af4ded14c0cd, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8918833937651877119, guid: cf27e03cd87a0c5a6b40af4ded14c0cd, type: 3}
+      propertyPath: m_IsKinematic
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5943779443868422150}
   - component: {fileID: 3155738402522365272}
   - component: {fileID: -4902164607026165030}
+  - component: {fileID: -2171928917364412178}
   m_Layer: 0
   m_Name: NadeRoot
   m_TagString: Untagged
@@ -109,3 +110,15 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &-2171928917364412178
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5268867286166660254}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad85bb9e7d608b612be55d1395552326, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TK_Shared.ObjectInteractions3D.GrabbableObject
