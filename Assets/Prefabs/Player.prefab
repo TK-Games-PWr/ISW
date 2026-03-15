@@ -619,6 +619,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7685606263097007844}
+  - {fileID: 269325774018538927}
   - {fileID: 3626531652512954655}
   - {fileID: 3279266702035352912}
   - {fileID: 225684412732341757}
@@ -804,6 +805,7 @@ MonoBehaviour:
   magAmmoAmount: {fileID: 8579607673598029845}
   maxAmmoAmount: {fileID: 3655300790715264007}
   nadePrefab: {fileID: 2525977546836581753, guid: e67a4dc6286dd5ba09fd83ee95232548, type: 3}
+  nadeRoot: {fileID: 7391511477473819313}
   currentGun: {fileID: 0}
 --- !u!114 &6305359070947738222
 MonoBehaviour:
@@ -1995,12 +1997,17 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+<<<<<<< refs/remotes/origin/weapon-overhaul
 --- !u!1001 &7088105063390715566
+=======
+--- !u!1001 &3814381137036798647
+>>>>>>> local
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
+<<<<<<< refs/remotes/origin/weapon-overhaul
     m_TransformParent: {fileID: 3279266702035352912}
     m_Modifications:
     - target: {fileID: 3986724923832534808, guid: 71b4849e664c36c8d838c6a4ea3258e0, type: 3}
@@ -2014,6 +2021,25 @@ PrefabInstance:
     - target: {fileID: 3986724923832534808, guid: 71b4849e664c36c8d838c6a4ea3258e0, type: 3}
       propertyPath: m_LocalPosition.z
       value: -7.61691
+=======
+    m_TransformParent: {fileID: 7744008168814191168}
+    m_Modifications:
+    - target: {fileID: -4902164607026165030, guid: 71b4849e664c36c8d838c6a4ea3258e0, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3986724923832534808, guid: 71b4849e664c36c8d838c6a4ea3258e0, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1377.8523
+      objectReference: {fileID: 0}
+    - target: {fileID: 3986724923832534808, guid: 71b4849e664c36c8d838c6a4ea3258e0, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 720
+      objectReference: {fileID: 0}
+    - target: {fileID: 3986724923832534808, guid: 71b4849e664c36c8d838c6a4ea3258e0, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+>>>>>>> local
       objectReference: {fileID: 0}
     - target: {fileID: 3986724923832534808, guid: 71b4849e664c36c8d838c6a4ea3258e0, type: 3}
       propertyPath: m_LocalRotation.w
@@ -2047,6 +2073,7 @@ PrefabInstance:
       propertyPath: m_Name
       value: NadeRoot
       objectReference: {fileID: 0}
+<<<<<<< refs/remotes/origin/weapon-overhaul
     - target: {fileID: 5268867286166660254, guid: 71b4849e664c36c8d838c6a4ea3258e0, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -2143,10 +2170,32 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 7957610682121406012}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
+=======
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5268867286166660254, guid: 71b4849e664c36c8d838c6a4ea3258e0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5950585479730668475}
+  m_SourcePrefab: {fileID: 100100000, guid: 71b4849e664c36c8d838c6a4ea3258e0, type: 3}
+--- !u!4 &269325774018538927 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3986724923832534808, guid: 71b4849e664c36c8d838c6a4ea3258e0, type: 3}
+  m_PrefabInstance: {fileID: 3814381137036798647}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &7391511477473819313 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5943779443868422150, guid: 71b4849e664c36c8d838c6a4ea3258e0, type: 3}
+  m_PrefabInstance: {fileID: 3814381137036798647}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9075212359003573801}
+>>>>>>> local
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 78521b6289d531405902c1d05f80e95f, type: 3}
   m_Name: 
+<<<<<<< refs/remotes/origin/weapon-overhaul
   m_EditorClassIdentifier: Assembly-CSharp::Gun
 --- !u!4 &2343431916254705950 stripped
 Transform:
@@ -2234,3 +2283,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78521b6289d531405902c1d05f80e95f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Gun
+=======
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerShootingSystem.Gun
+--- !u!1 &9075212359003573801 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5268867286166660254, guid: 71b4849e664c36c8d838c6a4ea3258e0, type: 3}
+  m_PrefabInstance: {fileID: 3814381137036798647}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5950585479730668475
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9075212359003573801}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad85bb9e7d608b612be55d1395552326, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TK_Shared.ObjectInteractions3D.GrabbableObject
+>>>>>>> local

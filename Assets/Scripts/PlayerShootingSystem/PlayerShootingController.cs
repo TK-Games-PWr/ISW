@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TK_Shared._3DPlayerMovement;
 using TK_Shared.ObjectInteractions3D;
 using TMPro;
@@ -21,6 +22,12 @@ namespace PlayerShootingSystem
         [SerializeField] TMP_Text magAmmoAmount;
         [SerializeField] TMP_Text maxAmmoAmount;
         [SerializeField] GameObject nadePrefab;
+<<<<<<< refs/remotes/origin/weapon-overhaul
+=======
+        [SerializeField] Gun nadeRoot;
+
+        int _currentSlot=0;
+>>>>>>> local
         public Gun currentGun;
 
         bool _isHoldingShoot;
@@ -123,22 +130,49 @@ namespace PlayerShootingSystem
         }
         public void OnInvSlot1(InputValue input)
         {
+<<<<<<< refs/remotes/origin/weapon-overhaul
             SwitchWeapons(guns[0]);
+=======
+            _currentSlot = 0;
+            SwitchWeapons(playerResources.weapons[0]);
+            UpdateUI();
+
+>>>>>>> local
         }
 
         public void OnInvSlot2(InputValue input)
         {
+<<<<<<< refs/remotes/origin/weapon-overhaul
             SwitchWeapons(guns[1]);
+=======
+            _currentSlot = 1;
+            SwitchWeapons(playerResources.weapons[1]);
+            UpdateUI();
+
+>>>>>>> local
         }
 
         public void OnInvSlot3(InputValue input)
         {
+<<<<<<< refs/remotes/origin/weapon-overhaul
             SwitchWeapons(guns[2]);
+=======
+            _currentSlot = 2;
+            SwitchWeapons(playerResources.weapons[2]);
+            UpdateUI();
+
+>>>>>>> local
         }
 
         public void OnInvSlot4(InputValue input)
         {
+<<<<<<< refs/remotes/origin/weapon-overhaul
             SwitchWeapons(guns[3]); 
+=======
+            _currentSlot = 3;
+            SwitchWeapons(playerResources.weapons[3]); 
+            UpdateUI();
+>>>>>>> local
         }
 
         void SwitchWeapons(Gun gun)
@@ -179,8 +213,13 @@ namespace PlayerShootingSystem
 
         void UpdateUI()
         {
-            if(!currentGun)
+            if (!currentGun)
+            {
+                maxAmmoAmount.text = 0.ToString();
+                magAmmoAmount.text = 0.ToString();
                 return;
+            }
+
             AmmoEntry ammoEntry = playerResources.playerAmmo.Find(a => a.ammoType == currentGun.gunInfo.ammoType);
             maxAmmoAmount.text=ammoEntry.amount.ToString();
             magAmmoAmount.text=currentGun.ammoInMag.ToString();
@@ -202,6 +241,24 @@ namespace PlayerShootingSystem
             if (pickedObject.TryGetComponent(out Gun gun))
             {
                 currentGun = gun;
+<<<<<<< refs/remotes/origin/weapon-overhaul
+=======
+                Gun weaponInCurrentSlot = playerResources.weapons[_currentSlot];
+                if (weaponInCurrentSlot)
+                {
+                    if (!weaponInCurrentSlot.gunInfo.isExplosive)
+                        weaponInCurrentSlot.GetComponent<GrabbableObject>().Drop();
+                    else if (weaponInCurrentSlot.gunInfo.isExplosive)
+                    {
+                        DropNade(weaponInCurrentSlot);
+                    }
+                }
+
+                playerResources.weapons[_currentSlot] = gun;
+                playerResources.PutWeaponInInventoryObject(gun.gameObject);
+                currentGun = null;
+                SwitchWeapons(playerResources.weapons[_currentSlot]);
+>>>>>>> local
                 gun.PickedUp();
 
                 if (_autoFireCoroutine != null)
@@ -210,13 +267,63 @@ namespace PlayerShootingSystem
                     _autoFireCoroutine = null;
                 }
             }
-
             if (pickedObject.TryGetComponent(out AmmoPickup ammoPickup))
             {
                 AmmoEntry ammoEntry = playerResources.playerAmmo.Find(a => a.ammoType == ammoPickup.ammoType);
                 ammoEntry.amount += ammoPickup.amount;
                 UpdateUI();
                 Destroy(pickedObject.gameObject);
+            }
+
+            if (pickedObject.TryGetComponent(out Nade nade))
+            {
+                nadeRoot.equippedNade = nade;
+                Gun weaponInCurrentSlot= playerResources.weapons[_currentSlot];
+                if (weaponInCurrentSlot)
+                {
+                    if (!weaponInCurrentSlot.gunInfo.isExplosive)
+                        weaponInCurrentSlot.GetComponent<GrabbableObject>().Drop();
+                    else
+                    {
+                        DropNade(weaponInCurrentSlot);
+                    }
+                }
+
+                if(playerResources.weapons.Any(a=> a != null && 
+                                                a.gunInfo != null && 
+                                                a.gunInfo.isExplosive))
+                {
+                    AmmoEntry ammoEntry = playerResources.playerAmmo.Find(a => a.ammoType == AmmoType.Nade);
+                    ammoEntry.amount++;
+                    UpdateUI();
+                }
+                else
+                {
+                    playerResources.weapons[_currentSlot] = nadeRoot;
+                    currentGun = null;
+                    SwitchWeapons(playerResources.weapons[_currentSlot]);
+                    nadeRoot.PickedUp();
+                }
+                Destroy(pickedObject.gameObject);
+                
+            }
+        }
+
+        void DropNade(Gun weaponInCurrentSlot)
+        {
+            weaponInCurrentSlot.transform.parent = transform;
+            if (weaponInCurrentSlot.ammoInMag > 0)
+            {
+                weaponInCurrentSlot.ammoInMag = 0;
+                AmmoEntry ammoEntry = playerResources.playerAmmo.Find(a => a.ammoType == AmmoType.Nade);
+                ammoEntry.amount++;
+                GameObject equippedNade=weaponInCurrentSlot.equippedNade.gameObject;
+                equippedNade.transform.parent = null;
+                Rigidbody rb = equippedNade.GetComponent<Rigidbody>();
+                rb.isKinematic = false;
+                rb.useGravity = true;
+                equippedNade.GetComponent<Collider>().enabled = true;
+
             }
         }
     }

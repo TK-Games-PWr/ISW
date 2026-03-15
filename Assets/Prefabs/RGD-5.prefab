@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 5625907239224425075}
   - component: {fileID: 1649256107224429155}
   - component: {fileID: 3845573722416104497}
+  - component: {fileID: -2366408263645999039}
   m_Layer: 9
   m_Name: RGD-5
   m_TagString: Untagged
@@ -158,6 +159,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Nade
   pin: {fileID: 8232438181451551755}
   gunParticle: {fileID: 3527225193454454649}
+--- !u!114 &-2366408263645999039
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2525977546836581753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad85bb9e7d608b612be55d1395552326, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TK_Shared.ObjectInteractions3D.GrabbableObject
 --- !u!1 &5472707539601942741
 GameObject:
   m_ObjectHideFlags: 0
