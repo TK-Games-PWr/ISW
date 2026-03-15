@@ -15,12 +15,14 @@ namespace PlayerShootingSystem
         [SerializeField] Transform cameraTransform;
         [SerializeField] float throwForce;
         [SerializeField] float throwUpwardForce;
-        [SerializeField] List<Gun> guns;
+        //[SerializeField] List<Gun> guns;
         [SerializeField] Transform holdPivot;
         [SerializeField] PlayerResources playerResources;
         [SerializeField] TMP_Text magAmmoAmount;
         [SerializeField] TMP_Text maxAmmoAmount;
         [SerializeField] GameObject nadePrefab;
+
+        int _currentSlot=0;
         public Gun currentGun;
 
         bool _isHoldingShoot;
@@ -123,28 +125,33 @@ namespace PlayerShootingSystem
         }
         public void OnInvSlot1(InputValue input)
         {
-            SwitchWeapons(guns[0]);
+            _currentSlot = 0;
+            SwitchWeapons(playerResources.weapons[0]);
         }
 
         public void OnInvSlot2(InputValue input)
         {
-            SwitchWeapons(guns[1]);
+            _currentSlot = 1;
+            SwitchWeapons(playerResources.weapons[1]);
         }
 
         public void OnInvSlot3(InputValue input)
         {
-            SwitchWeapons(guns[2]);
+            _currentSlot = 2;
+            SwitchWeapons(playerResources.weapons[2]);
         }
 
         public void OnInvSlot4(InputValue input)
         {
-            SwitchWeapons(guns[3]); 
+            _currentSlot = 3;
+            SwitchWeapons(playerResources.weapons[3]); 
         }
 
         void SwitchWeapons(Gun gun)
         {
             if(currentGun)
                 currentGun.gameObject.SetActive(false);
+            if (!gun) return;
             gun.gameObject.SetActive(true);
             currentGun = gun;
             gun.GetComponent<GrabbableObject>().Grab(holdPivot);
@@ -202,6 +209,11 @@ namespace PlayerShootingSystem
             if (pickedObject.TryGetComponent(out Gun gun))
             {
                 currentGun = gun;
+                if(playerResources.weapons[_currentSlot])
+                   playerResources.weapons[_currentSlot].GetComponent<GrabbableObject>().Drop();
+                playerResources.weapons[_currentSlot] = gun;
+                playerResources.PutWeaponInInventoryObject(gun.gameObject);
+                SwitchWeapons(playerResources.weapons[_currentSlot]);
                 gun.PickedUp();
 
                 if (_autoFireCoroutine != null)

@@ -18,12 +18,19 @@ public class PlayerResources : MonoBehaviour, ICharacter
     
     [SerializeField] GameObject DeathScreen;
     [SerializeField] TextMeshProUGUI HealthLabel;
+    [SerializeField] GameObject WeaponHolder;
+    public List<Gun> weapons;
     public List<AmmoEntry> playerAmmo;
     public float CurrentHealth { get; private set; }
     [SerializeField] float maxHealth = 100f;
 
     private bool isDead = false;
-
+    public void PutWeaponInInventoryObject(GameObject weapon)
+    {
+        weapon.transform.parent = WeaponHolder.transform;
+        weapon.transform.localPosition = Vector3.zero;
+        
+    }
     void Awake()
     {
         CurrentHealth = maxHealth;
@@ -53,7 +60,7 @@ public class PlayerResources : MonoBehaviour, ICharacter
         }
     }
 
-    private void Die()
+    void Die()
     {
         isDead = true;
         
@@ -69,8 +76,10 @@ public class PlayerResources : MonoBehaviour, ICharacter
         Time.timeScale = 0; // TODO replace with proper death handling
     }
 
-    private void ShowHealth(float amount)
+    void ShowHealth(float amount)
     {
         HealthLabel.text = (int)CurrentHealth + "hp";
     }
+
+
 }
