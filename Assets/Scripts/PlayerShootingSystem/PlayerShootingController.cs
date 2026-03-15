@@ -22,12 +22,8 @@ namespace PlayerShootingSystem
         [SerializeField] TMP_Text magAmmoAmount;
         [SerializeField] TMP_Text maxAmmoAmount;
         [SerializeField] GameObject nadePrefab;
-<<<<<<< refs/remotes/origin/weapon-overhaul
-=======
         [SerializeField] Gun nadeRoot;
-
         int _currentSlot=0;
->>>>>>> local
         public Gun currentGun;
 
         bool _isHoldingShoot;
@@ -130,49 +126,32 @@ namespace PlayerShootingSystem
         }
         public void OnInvSlot1(InputValue input)
         {
-<<<<<<< refs/remotes/origin/weapon-overhaul
-            SwitchWeapons(guns[0]);
-=======
             _currentSlot = 0;
             SwitchWeapons(playerResources.weapons[0]);
             UpdateUI();
 
->>>>>>> local
         }
 
         public void OnInvSlot2(InputValue input)
         {
-<<<<<<< refs/remotes/origin/weapon-overhaul
-            SwitchWeapons(guns[1]);
-=======
             _currentSlot = 1;
             SwitchWeapons(playerResources.weapons[1]);
             UpdateUI();
-
->>>>>>> local
         }
 
         public void OnInvSlot3(InputValue input)
         {
-<<<<<<< refs/remotes/origin/weapon-overhaul
-            SwitchWeapons(guns[2]);
-=======
             _currentSlot = 2;
             SwitchWeapons(playerResources.weapons[2]);
             UpdateUI();
-
->>>>>>> local
+            
         }
 
         public void OnInvSlot4(InputValue input)
         {
-<<<<<<< refs/remotes/origin/weapon-overhaul
-            SwitchWeapons(guns[3]); 
-=======
             _currentSlot = 3;
             SwitchWeapons(playerResources.weapons[3]); 
             UpdateUI();
->>>>>>> local
         }
 
         void SwitchWeapons(Gun gun)
@@ -241,8 +220,6 @@ namespace PlayerShootingSystem
             if (pickedObject.TryGetComponent(out Gun gun))
             {
                 currentGun = gun;
-<<<<<<< refs/remotes/origin/weapon-overhaul
-=======
                 Gun weaponInCurrentSlot = playerResources.weapons[_currentSlot];
                 if (weaponInCurrentSlot)
                 {
@@ -258,7 +235,6 @@ namespace PlayerShootingSystem
                 playerResources.PutWeaponInInventoryObject(gun.gameObject);
                 currentGun = null;
                 SwitchWeapons(playerResources.weapons[_currentSlot]);
->>>>>>> local
                 gun.PickedUp();
 
                 if (_autoFireCoroutine != null)
