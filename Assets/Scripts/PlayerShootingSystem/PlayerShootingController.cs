@@ -16,7 +16,6 @@ namespace PlayerShootingSystem
         [SerializeField] Transform cameraTransform;
         [SerializeField] float throwForce;
         [SerializeField] float throwUpwardForce;
-        //[SerializeField] List<Gun> guns;
         [SerializeField] Transform holdPivot;
         [SerializeField] PlayerResources playerResources;
         [SerializeField] TMP_Text magAmmoAmount;
@@ -247,7 +246,7 @@ namespace PlayerShootingSystem
                     _autoFireCoroutine = null;
                 }
             }
-            if (pickedObject.TryGetComponent(out AmmoPickup ammoPickup))
+            else if (pickedObject.TryGetComponent(out AmmoPickup ammoPickup))
             {
                 AmmoEntry ammoEntry = playerResources.playerAmmo.Find(a => a.ammoType == ammoPickup.ammoType);
                 ammoEntry.amount += ammoPickup.amount;
@@ -255,7 +254,7 @@ namespace PlayerShootingSystem
                 Destroy(pickedObject.gameObject);
             }
 
-            if (pickedObject.TryGetComponent(out Nade nade))
+            else if (pickedObject.TryGetComponent(out Nade nade))
             {
                 nadeRoot.equippedNade = nade;
                 Gun weaponInCurrentSlot= playerResources.weapons[_currentSlot];
