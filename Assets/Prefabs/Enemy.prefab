@@ -350,7 +350,7 @@ MonoBehaviour:
   currentGun: {fileID: 8862762591890864933}
   GunPivot: {fileID: 6296989899685151540}
   optimalCombatDistancePct: 0.7
-  totalMagazines: 1
+  totalMagazines: 99999
   reloadTime: 1.7
   weaponRange: 20
   magazineAmmo: 15

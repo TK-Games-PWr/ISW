@@ -31,7 +31,7 @@ public class AlertIndicatorUI : MonoBehaviour
                 newColor = Color.white;
                 break;
             case AlertLevel.Medium:
-                newColor = Color.gray;
+                newColor = Color.royalBlue;
                 break;
             case AlertLevel.High:
                 newColor = Color.yellow;

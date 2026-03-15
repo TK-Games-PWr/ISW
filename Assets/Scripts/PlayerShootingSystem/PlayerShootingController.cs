@@ -16,7 +16,7 @@ namespace PlayerShootingSystem
         [SerializeField] Transform cameraTransform;
         [SerializeField] float throwForce;
         [SerializeField] float throwUpwardForce;
-        [SerializeField] List<Gun> guns;
+        //[SerializeField] List<Gun> guns;
         [SerializeField] Transform holdPivot;
         [SerializeField] PlayerResources playerResources;
         [SerializeField] TMP_Text magAmmoAmount;
@@ -129,7 +129,6 @@ namespace PlayerShootingSystem
             _currentSlot = 0;
             SwitchWeapons(playerResources.weapons[0]);
             UpdateUI();
-
         }
 
         public void OnInvSlot2(InputValue input)
@@ -144,7 +143,6 @@ namespace PlayerShootingSystem
             _currentSlot = 2;
             SwitchWeapons(playerResources.weapons[2]);
             UpdateUI();
-            
         }
 
         public void OnInvSlot4(InputValue input)
@@ -158,6 +156,7 @@ namespace PlayerShootingSystem
         {
             if(currentGun)
                 currentGun.gameObject.SetActive(false);
+            if (!gun) return;
             gun.gameObject.SetActive(true);
             currentGun = gun;
             gun.GetComponent<GrabbableObject>().Grab(holdPivot);
@@ -234,6 +233,10 @@ namespace PlayerShootingSystem
                 playerResources.weapons[_currentSlot] = gun;
                 playerResources.PutWeaponInInventoryObject(gun.gameObject);
                 currentGun = null;
+                if(playerResources.weapons[_currentSlot])
+                   playerResources.weapons[_currentSlot].GetComponent<GrabbableObject>().Drop();
+                playerResources.weapons[_currentSlot] = gun;
+                playerResources.PutWeaponInInventoryObject(gun.gameObject);
                 SwitchWeapons(playerResources.weapons[_currentSlot]);
                 gun.PickedUp();
 
