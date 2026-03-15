@@ -692,11 +692,11 @@ MonoBehaviour:
   - {fileID: 0}
   playerAmmo:
   - ammoType: 0
-    amount: 40
+    amount: 30
   - ammoType: 1
-    amount: 120
+    amount: 60
   - ammoType: 2
-    amount: 4
+    amount: 2
   maxHealth: 100
 --- !u!114 &3642215617026583933
 MonoBehaviour:
