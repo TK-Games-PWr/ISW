@@ -5,7 +5,7 @@ using UnityEngine.Pool;
 public class PooledParticle : MonoBehaviour
 {
     private IObjectPool<PooledParticle> pool;
-    private ParticleSystem particleSystem;
+    private new ParticleSystem particleSystem;
 
     private void Awake()
     {
