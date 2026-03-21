@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc5496a18bb9692b6a7cc67528f8a12e, type: 3}
   m_Name: Handgun
   m_EditorClassIdentifier: Assembly-CSharp::PlayerShootingSystem.GunInfo
-  flatDamage: 12
+  flatDamage: 15
   isAutomatic: 0
   isExplosive: 0
   isMelee: 0
@@ -33,8 +33,17 @@ MonoBehaviour:
       inWeight: 0
       outWeight: 0
     - serializedVersion: 3
-      time: 0.7398771
-      value: 0.88435215
+      time: 0.39218825
+      value: 0.9371352
+      inSlope: -0.39534608
+      outSlope: -0.39534608
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.11603873
+    - serializedVersion: 3
+      time: 0.74720883
+      value: 0.55037326
       inSlope: -0.5910583
       outSlope: -0.5910583
       tangentMode: 0

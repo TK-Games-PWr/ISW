@@ -669,7 +669,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   maxHealth: 100
-  gravityScale: 5
+  gravityScale: 3
 --- !u!114 &8521726943504668858
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -692,11 +692,11 @@ MonoBehaviour:
   - {fileID: 0}
   playerAmmo:
   - ammoType: 0
-    amount: 0
+    amount: 5
   - ammoType: 1
-    amount: 0
+    amount: 10
   - ammoType: 2
-    amount: 0
+    amount: 2
   maxHealth: 100
 --- !u!114 &3642215617026583933
 MonoBehaviour:

@@ -441,18 +441,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Gun
   gunInfo: {fileID: 11400000, guid: 2c713a3d208cca4ee9f3ec65e4e69e2c, type: 2}
-  recoilAmount: 8
-  recoilSide: 2
-  recoilSpeed: 12
-  returnSpeed: 5
+  ammoInMag: 0
+  recoilAmount: 15
+  recoilSide: 5
+  recoilSpeed: 10
+  returnSpeed: 6
   gunParticle: {fileID: 6551618260576842850}
   slide: {fileID: 2867977183675792995}
-  slideBackAmount: 0.08
+  slideBackAmount: 0.1
   slideBackSpeed: 80
   slideReturnSpeed: 60
   damageLayerMask:
     serializedVersion: 2
     m_Bits: 0
+  equippedNade: {fileID: 0}
 --- !u!1001 &6353526902151358776
 PrefabInstance:
   m_ObjectHideFlags: 0

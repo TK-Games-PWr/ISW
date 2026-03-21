@@ -314,7 +314,7 @@ MonoBehaviour:
     m_Bits: 759
   eyeLevel: 1.7
   horizontalFOV: 90
-  verticalFOV: 40
+  verticalFOV: 45
   maxSightDistance: 25
   hearingRadius: 15
 --- !u!114 &3394472783275146617
@@ -367,7 +367,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e00554a8c75ef14c88ed7751f8138ed9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
-  maxHealth: 50
+  maxHealth: 20
 --- !u!136 &1666939224196214089
 CapsuleCollider:
   m_ObjectHideFlags: 0

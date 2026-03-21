@@ -35,7 +35,7 @@ public class Nade : MonoBehaviour
         
     public IEnumerator CookCoroutine(GunInfo gunInfo, LayerMask damageLayerMask)
     {
-        yield return new WaitForSecondsRealtime(5f);
+        yield return new WaitForSecondsRealtime(3f);
         Explode(gunInfo,damageLayerMask);
         yield return new WaitForSecondsRealtime(2f);
         Destroy(gameObject);
