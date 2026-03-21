@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Linq;
 using JetBrains.Annotations;
 using TK_Shared._3DPlayerMovement;
 using UnityEngine;
@@ -9,6 +10,9 @@ namespace PlayerShootingSystem
     {
         public GunInfo gunInfo;
         public int ammoInMag;
+        [SerializeField] private AudioSource fireSound;
+        private AudioSource[] fireSoundInstances =  new AudioSource[5];
+        private int fireSoundIter = 0;
         [Header("Gun Recoil")]
         public float recoilAmount = 8f;       
         public float recoilSide = 2f;         
@@ -37,6 +41,16 @@ namespace PlayerShootingSystem
             {
                 _originalSlidePos = slide.localPosition;
             }
+            if(fireSound)
+            {
+                fireSoundInstances[0] = fireSound;
+                for (int i = 0; i < 4; i++)
+                {
+                    GameObject copy = Instantiate(fireSound.gameObject, fireSound.transform.parent);
+                    copy.GetComponent<AudioSource>().pitch = Random.Range(0.9f, 1.1f);
+                    fireSoundInstances[i+1] = copy.GetComponent<AudioSource>();
+                }
+            }
         }
 
         public void PickedUp()
@@ -46,6 +60,7 @@ namespace PlayerShootingSystem
         public void PerformShoot()
         {
             if (gunParticle) gunParticle.Play();
+            if (fireSound) PlayShootSound();
             if (_slideCoroutine != null)
                 StopCoroutine(_slideCoroutine);
             _slideCoroutine = StartCoroutine(SlideRecoilCoroutine());
@@ -98,6 +113,11 @@ namespace PlayerShootingSystem
             }
             slide.localPosition = _originalSlidePos;
         }
-        
+
+        private void PlayShootSound()
+        {
+            fireSoundInstances[fireSoundIter].Play();
+            fireSoundIter = (fireSoundIter + 1) % fireSoundInstances.Length;
+        }
     }
 }

@@ -181,10 +181,15 @@ namespace PlayerShootingSystem
                 {
                     if (hit.transform.TryGetComponent(out EnemySystem.EnemyHealth enemy))
                     {
+                        BulletImpactManager.Instance.SpawnImpact(hit.point, hit.normal, BulletImpactManager.ImpactType.Flesh);
                         float distance = hit.distance;
                         float multiplier = currentGun.gunInfo.damageFalloff.Evaluate(distance / 100f);
                         float finalDamage = currentGun.gunInfo.flatDamage * multiplier;
                         enemy.Damage(finalDamage);
+                    }
+                    else
+                    {
+                        BulletImpactManager.Instance.SpawnImpact(hit.point, hit.normal, BulletImpactManager.ImpactType.Ground);
                     }
                 }
         }
