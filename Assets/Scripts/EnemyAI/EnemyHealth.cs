@@ -1,6 +1,7 @@
 using UnityEngine;
 using System;
 using TK_Shared._3DPlayerMovement;
+using UnityEngine.AI;
 
 namespace EnemySystem
 {
@@ -50,7 +51,15 @@ namespace EnemySystem
         private void Die()
         {
             OnEnemyDied?.Invoke(this);
-            Destroy(gameObject);
+            // imitation of ragdoll
+            GetComponent<EnemyCombat>().enabled = false;
+            GetComponent<EnemySensors>().enabled = false;
+            GetComponent<AICore>().enabled = false;
+            GetComponent<NavMeshAgent>().enabled = false;
+            Rigidbody rb = gameObject.AddComponent<Rigidbody>();
+            rb.AddForceAtPosition(Vector3.back * 2, transform.position + new Vector3(0, 0.5f, 0), ForceMode.Impulse);
+            // uncomment if is supposed to disappear, maybe add some delay
+            // Destroy(gameObject);
         }
     }
 }
