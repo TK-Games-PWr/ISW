@@ -20,7 +20,6 @@ public class DamageEffect : MonoBehaviour
             return;
         }
         Instance = this;
-        DontDestroyOnLoad(gameObject);
     }
     
     public void OnPlayerHit(float damage)

@@ -38,6 +38,8 @@ public class PlayerResources : MonoBehaviour, ICharacter
         OnDeath += LevelManager.Instance.OnPlayerDeath;
         ShowHealth(CurrentHealth);
         Time.timeScale = 1;
+
+        LevelManager.Instance.player = gameObject;
     }
 
     void OnDestroy()

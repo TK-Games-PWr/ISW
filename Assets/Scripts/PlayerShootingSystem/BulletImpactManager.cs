@@ -26,10 +26,14 @@ public class BulletImpactManager : MonoBehaviour
             return;
         }
         Instance = this;
-        DontDestroyOnLoad(gameObject);
+    }
+
+    void Start()
+    {
+        Reset();
     }
     
-    private void Start()
+    public void Reset()
     {
         groundImpactPool = new ObjectPool<PooledParticle>(
             createFunc: () => 

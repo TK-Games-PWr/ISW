@@ -8,7 +8,6 @@ public class FinishZone : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             LevelManager.Instance.Win();
-            Time.timeScale = 0;
         }
     }
 }

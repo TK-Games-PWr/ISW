@@ -635,8 +635,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3604899088855785236}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.65, y: 1.5870847, z: 8.445}
+  m_LocalRotation: {x: 0, y: 0.5735764, z: 0, w: 0.8191521}
+  m_LocalPosition: {x: -2.35677, y: 1.703, z: 7.61691}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -666,7 +666,7 @@ MonoBehaviour:
     DefaultMode: 2
   DefaultBlend:
     Style: 1
-    Time: 2
+    Time: 10
     CustomCurve:
       serializedVersion: 2
       m_Curve: []
@@ -1324,6 +1324,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   DeathScreen: {fileID: 2218721389303159601}
   SuccessScreen: {fileID: 2803026560593869270}
+  player: {fileID: 0}
+  camObstacleLayers:
+    serializedVersion: 2
+    m_Bits: 65
+  targetFOV: 100
 --- !u!1 &7368160001615029979
 GameObject:
   m_ObjectHideFlags: 0
