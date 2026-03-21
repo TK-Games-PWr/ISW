@@ -35,6 +35,7 @@ public class PlayerResources : MonoBehaviour, ICharacter
     {
         CurrentHealth = maxHealth;
         OnHealthChanged += ShowHealth;
+        OnHealthChanged += DamageEffect.Instance.OnPlayerHit;
         ShowHealth(CurrentHealth);
         DeathScreen.SetActive(false);
         Time.timeScale = 1;
@@ -43,6 +44,7 @@ public class PlayerResources : MonoBehaviour, ICharacter
     void OnDestroy()
     {
         OnHealthChanged -= ShowHealth;
+        OnHealthChanged -= DamageEffect.Instance.OnPlayerHit;
     }
 
     /// <summary>
