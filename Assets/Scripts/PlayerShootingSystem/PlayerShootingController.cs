@@ -13,7 +13,8 @@ namespace PlayerShootingSystem
 {
     public class PlayerShootingController : MonoBehaviour
     {
-        [SerializeField] Transform cameraTransform;
+        Camera fpsCam;
+        [SerializeField] UICrosshairRecoil uiRecoil;
         [SerializeField] float throwForce;
         [SerializeField] float throwUpwardForce;
         [SerializeField] Transform holdPivot;
@@ -31,6 +32,11 @@ namespace PlayerShootingSystem
         void Awake()
         {
             PlayerActionsController.OnPickedUp += HandlePickup;
+        }
+
+        private void Start()
+        {
+            fpsCam = LevelManager.Instance.playerCamera;
         }
 
         void OnDestroy()
@@ -84,7 +90,7 @@ namespace PlayerShootingSystem
                     rb.isKinematic = false;
                     currentGun.equippedNade.GetComponent<BoxCollider>().enabled = true;
                     currentGun.equippedNade.transform.parent = null;
-                    Vector3 throwingForce = cameraTransform.forward * throwForce + transform.up * throwUpwardForce;
+                    Vector3 throwingForce = fpsCam.transform.forward * throwForce + transform.up * throwUpwardForce;
                     rb.AddForce(throwingForce, ForceMode.Impulse);
                     currentGun.equippedNade = null;
                 }
@@ -172,26 +178,37 @@ namespace PlayerShootingSystem
         }
         void TryShootOnce()
         {
-
-                if (!currentGun) return;
-                if (currentGun.ammoInMag <= 0) return;
-                currentGun.PerformShoot();
-                UpdateUI();
-                if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit))
+            if (!currentGun) return;
+            if (currentGun.ammoInMag <= 0) return;
+            currentGun.PerformShoot();
+            UpdateUI();
+            
+            Ray ray = fpsCam.ScreenPointToRay(uiRecoil.crosshairRect.position);
+            Vector3 direction = ray.direction;
+            
+            // spread
+            float x = UnityEngine.Random.Range(-currentGun.gunInfo.spread, currentGun.gunInfo.spread);
+            float y = UnityEngine.Random.Range(-currentGun.gunInfo.spread, currentGun.gunInfo.spread);
+            direction += fpsCam.transform.right * x + fpsCam.transform.up * y;
+            direction.Normalize();
+            
+            if (Physics.Raycast(ray.origin, direction, out RaycastHit hit))
+            {
+                if (hit.transform.TryGetComponent(out EnemySystem.EnemyHealth enemy))
                 {
-                    if (hit.transform.TryGetComponent(out EnemySystem.EnemyHealth enemy))
-                    {
-                        BulletImpactManager.Instance.SpawnImpact(hit.point, hit.normal, BulletImpactManager.ImpactType.Flesh);
-                        float distance = hit.distance;
-                        float multiplier = currentGun.gunInfo.damageFalloff.Evaluate(distance / 100f);
-                        float finalDamage = currentGun.gunInfo.flatDamage * multiplier;
-                        enemy.Damage(finalDamage);
-                    }
-                    else
-                    {
-                        BulletImpactManager.Instance.SpawnImpact(hit.point, hit.normal, BulletImpactManager.ImpactType.Ground);
-                    }
+                    BulletImpactManager.Instance.SpawnImpact(hit.point, hit.normal, BulletImpactManager.ImpactType.Flesh);
+                    float distance = hit.distance;
+                    float multiplier = currentGun.gunInfo.damageFalloff.Evaluate(distance / 100f);
+                    float finalDamage = currentGun.gunInfo.flatDamage * multiplier;
+                    enemy.Damage(finalDamage);
                 }
+                else
+                {
+                    BulletImpactManager.Instance.SpawnImpact(hit.point, hit.normal, BulletImpactManager.ImpactType.Ground);
+                }
+            }
+            // apply recoil after shooting, so first shoot is accurate
+            uiRecoil.ApplyRecoil(currentGun.gunInfo);
         }
 
         void UpdateUI()

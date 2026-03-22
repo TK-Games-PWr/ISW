@@ -14,6 +14,7 @@ public class LevelManager : MonoBehaviour
     [SerializeField] GameObject SuccessScreen;
 
     public GameObject player;
+    public Camera playerCamera;
     private CinemachineCamera flyingCamera;
     [Header("Camera Settings")]
     [Tooltip("Select the layers that the camera should not pass through")]

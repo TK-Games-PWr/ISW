@@ -1325,6 +1325,7 @@ MonoBehaviour:
   DeathScreen: {fileID: 2218721389303159601}
   SuccessScreen: {fileID: 2803026560593869270}
   player: {fileID: 0}
+  playerCamera: {fileID: 6434877209452237976}
   camObstacleLayers:
     serializedVersion: 2
     m_Bits: 65
