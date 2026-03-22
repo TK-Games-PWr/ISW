@@ -484,7 +484,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1255,7 +1255,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AlertNotificator
   playerTransform: {fileID: 7744008168814191168}
-  indicatorPrefab: {fileID: 8078293565089775468, guid: ac4e26ae698576ca7afdca41f6e8d774, type: 3}
+  indicatorPrefab: {fileID: 8078293565089775468, guid: cb9c2e9a5618a14c08425ca3035c399b, type: 3}
   container: {fileID: 4742668316649132397}
 --- !u!1 &8656035740664256095
 GameObject:
