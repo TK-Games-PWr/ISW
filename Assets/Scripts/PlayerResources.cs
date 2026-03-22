@@ -34,11 +34,15 @@ public class PlayerResources : MonoBehaviour, ICharacter
     {
         CurrentHealth = maxHealth;
         OnHealthChanged += ShowHealth;
-        OnHealthChanged += DamageEffect.Instance.OnPlayerHit;
-        OnDeath += LevelManager.Instance.OnPlayerDeath;
         ShowHealth(CurrentHealth);
         Time.timeScale = 1;
+    }
 
+    private void Start()
+    {
+        OnHealthChanged += DamageEffect.Instance.OnPlayerHit;
+        OnDeath += LevelManager.Instance.OnPlayerDeath;
+        
         LevelManager.Instance.player = gameObject;
     }
 
