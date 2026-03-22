@@ -13,6 +13,14 @@ namespace PlayerShootingSystem
 {
     public class PlayerShootingController : MonoBehaviour
     {
+        /*
+         * Classification data section
+         */
+        [HideInInspector] 
+        public int shots=0;
+        [HideInInspector]
+        public int hits = 0;
+        
         [SerializeField] Transform cameraTransform;
         [SerializeField] float throwForce;
         [SerializeField] float throwUpwardForce;
@@ -176,6 +184,8 @@ namespace PlayerShootingSystem
                 if (!currentGun) return;
                 if (currentGun.ammoInMag <= 0) return;
                 currentGun.PerformShoot();
+                currentGun.ammoInMag -= 1;
+                shots++;
                 UpdateUI();
                 if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit))
                 {
@@ -185,6 +195,7 @@ namespace PlayerShootingSystem
                         float multiplier = currentGun.gunInfo.damageFalloff.Evaluate(distance / 100f);
                         float finalDamage = currentGun.gunInfo.flatDamage * multiplier;
                         enemy.Damage(finalDamage);
+                        hits++;
                     }
                 }
         }

@@ -51,7 +51,6 @@ namespace PlayerShootingSystem
             _slideCoroutine = StartCoroutine(SlideRecoilCoroutine());
             if (_recoilCoroutine != null) StopCoroutine(_recoilCoroutine);
             _recoilCoroutine = StartCoroutine(RecoilCoroutine());
-            ammoInMag -= 1;
         }
 
         public void CookNade()

@@ -24,7 +24,7 @@ public class Nade : MonoBehaviour
             if (col.TryGetComponent<ICharacter>(out var damageable))
             {
                 float distance = Vector3.Distance(explosionPoint, col.bounds.center);
-                float falloff = 1f - (distance / gunInfo.blastRadius); // 1 → close, 0 → edge
+                float falloff = 1f - (distance / gunInfo.blastRadius);
                 float finalDamage = gunInfo.flatDamage * Mathf.Clamp01(falloff);
 
                 damageable.Damage(finalDamage);

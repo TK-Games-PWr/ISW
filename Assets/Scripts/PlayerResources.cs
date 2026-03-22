@@ -23,8 +23,8 @@ public class PlayerResources : MonoBehaviour, ICharacter
     public List<AmmoEntry> playerAmmo;
     public float CurrentHealth { get; private set; }
     [SerializeField] float maxHealth = 100f;
+    [SerializeField] bool godMode;
 
-    private bool isDead = false;
     public void PutWeaponInInventoryObject(GameObject weapon)
     {
         weapon.transform.parent = WeaponHolder.transform;
@@ -50,21 +50,21 @@ public class PlayerResources : MonoBehaviour, ICharacter
     /// </summary>
     public void Damage(float amount)
     {
-        CurrentHealth = Mathf.Clamp(CurrentHealth - amount, 0, maxHealth);
-        
-        OnHealthChanged?.Invoke(CurrentHealth);
-        
-        if (CurrentHealth <= 0)
+        if (!godMode)
         {
-            Die();
+            CurrentHealth = Mathf.Clamp(CurrentHealth - amount, 0, maxHealth);
+
+            OnHealthChanged?.Invoke(CurrentHealth);
+
+            if (CurrentHealth <= 0)
+            {
+                Die();
+            }
         }
     }
 
     void Die()
     {
-        isDead = true;
-        
-        // Notify any listeners (like Game Manager or Animator) that the player died
         OnDeath?.Invoke(); 
         
         DeathScreen.SetActive(true);
