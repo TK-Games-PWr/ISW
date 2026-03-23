@@ -13,6 +13,15 @@ namespace PlayerShootingSystem
 {
     public class PlayerShootingController : MonoBehaviour
     {
+        /*
+         * Classification data section
+         */
+        [HideInInspector] 
+        public int shots=0;
+        [HideInInspector]
+        public int hits = 0;
+        
+        [SerializeField] Transform cameraTransform;
         Camera fpsCam;
         [SerializeField] UICrosshair uiCrosshair;
         [SerializeField] AudioSource hitDing;
@@ -34,7 +43,7 @@ namespace PlayerShootingSystem
         Coroutine _autoFireCoroutine;
 
         private float currentSpread;
-
+        
         void Awake()
         {
             PlayerActionsController.OnPickedUp += HandlePickup;
@@ -205,6 +214,8 @@ namespace PlayerShootingSystem
             if (!currentGun) return;
             if (currentGun.ammoInMag <= 0) return;
             currentGun.PerformShoot();
+            currentGun.ammoInMag -= 1;
+            shots++;
             UpdateUI();
             
             Ray ray = fpsCam.ScreenPointToRay(uiCrosshair.crosshairRect.position);
@@ -228,6 +239,7 @@ namespace PlayerShootingSystem
                     float multiplier = currentGun.gunInfo.damageFalloff.Evaluate(distance / 100f);
                     float finalDamage = currentGun.gunInfo.flatDamage * multiplier;
                     enemy.Damage(finalDamage);
+                    hits++;
                 }
                 else
                 {
