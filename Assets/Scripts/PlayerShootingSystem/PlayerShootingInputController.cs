@@ -23,6 +23,11 @@ namespace PlayerShootingSystem
         {
             _shootingController.OnReloadInput(inputValue);
         }
+        
+        void OnMelee(InputValue inputValue)
+        {
+            _shootingController.OnMeleeInput(inputValue);
+        }
 
         void OnInteract(InputValue inputValue)
         {

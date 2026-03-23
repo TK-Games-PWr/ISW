@@ -27,6 +27,10 @@ namespace PlayerShootingSystem
         [SerializeField] AudioSource hitDing;
         private AudioSource[] hitDingInstances =  new AudioSource[5];
         private int hitDingIter = 0;
+
+        [SerializeField] GunInfo meleeInfo;
+        [SerializeField] float meleeRange = 2.5f;
+        [SerializeField] Animation meleeAnim;
         
         [SerializeField] float throwForce;
         [SerializeField] float throwUpwardForce;
@@ -126,6 +130,29 @@ namespace PlayerShootingSystem
                     Vector3 throwingForce = fpsCam.transform.forward * throwForce + transform.up * throwUpwardForce;
                     rb.AddForce(throwingForce, ForceMode.Impulse);
                     currentGun.equippedNade = null;
+                }
+            }
+        }
+
+        public void OnMeleeInput(InputValue value)
+        {
+            if (value.isPressed)
+            {
+                meleeAnim.Play();
+            }
+        }
+
+        internal void OnMeleeAnimEnd()
+        {
+            if(Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out RaycastHit hit, meleeRange))
+            {
+                if (hit.transform.TryGetComponent(out EnemySystem.EnemyHealth enemy))
+                {
+                    if (enemy.IsDead) return;
+                    if (hitDing) PlayHitSound();
+                    uiCrosshair.ShowHit();
+                    enemy.Damage(meleeInfo.flatDamage);
+                    hits++;
                 }
             }
         }
@@ -232,14 +259,16 @@ namespace PlayerShootingSystem
                 if (hit.transform.TryGetComponent(out EnemySystem.EnemyHealth enemy))
                 {
                     BulletImpactManager.Instance.SpawnImpact(hit.point, hit.normal, BulletImpactManager.ImpactType.Flesh);
-                    if (enemy.IsDead) return;
-                    if (hitDing) PlayHitSound();
-                    uiCrosshair.ShowHit();
-                    float distance = hit.distance;
-                    float multiplier = currentGun.gunInfo.damageFalloff.Evaluate(distance / 100f);
-                    float finalDamage = currentGun.gunInfo.flatDamage * multiplier;
-                    enemy.Damage(finalDamage);
-                    hits++;
+                    if (!enemy.IsDead)
+                    {
+                        if (hitDing) PlayHitSound();
+                        uiCrosshair.ShowHit();
+                        float distance = hit.distance;
+                        float multiplier = currentGun.gunInfo.damageFalloff.Evaluate(distance / 100f);
+                        float finalDamage = currentGun.gunInfo.flatDamage * multiplier;
+                        enemy.Damage(finalDamage);
+                        hits++;
+                    }
                 }
                 else
                 {

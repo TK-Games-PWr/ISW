@@ -554,6 +554,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1844550111215921797}
+  - component: {fileID: 7529757729605098505}
+  - component: {fileID: 1321096896613726460}
   m_Layer: 7
   m_Name: HoldPivot
   m_TagString: Untagged
@@ -576,6 +578,36 @@ Transform:
   m_Children: []
   m_Father: {fileID: 7685606263097007844}
   m_LocalEulerAnglesHint: {x: 0, y: 195, z: 0}
+--- !u!111 &7529757729605098505
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2138563590868534861}
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Animation: {fileID: 7400000, guid: e03408cec6566f3d19e1f549b07b7fa9, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: e03408cec6566f3d19e1f549b07b7fa9, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_UpdateMode: 0
+  m_CullingType: 0
+--- !u!114 &1321096896613726460
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2138563590868534861}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 998a0126374246548adc6d0269d20b7e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerShootingSystem.MeleeAnimCallback
+  playerShootingController: {fileID: 7801038540504485839}
 --- !u!1 &2211987939353375997
 GameObject:
   m_ObjectHideFlags: 0
@@ -1013,7 +1045,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::StealthKill
   killDistance: 2.5
   behindThreshold: -0.5
-  playerCamera: {fileID: 0}
 --- !u!114 &7801038540504485839
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1031,6 +1062,9 @@ MonoBehaviour:
   cameraTransform: {fileID: 7685606263097007844}
   uiCrosshair: {fileID: 3772505715605633744}
   hitDing: {fileID: 8656975728489504990}
+  meleeInfo: {fileID: 11400000, guid: 4959894a42797baadb33a352db6b74fb, type: 2}
+  meleeRange: 2.5
+  meleeAnim: {fileID: 7529757729605098505}
   throwForce: 15
   throwUpwardForce: 5
   holdPivot: {fileID: 1844550111215921797}
