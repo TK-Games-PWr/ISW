@@ -59,7 +59,7 @@ public class PlayerResources : MonoBehaviour, ICharacter
     {
         CurrentHealth = Mathf.Clamp(CurrentHealth - amount, 0, maxHealth);
         
-        OnHealthChanged?.Invoke(CurrentHealth);
+        OnHealthChanged?.Invoke(amount);
         
         if (CurrentHealth <= 0)
         {
@@ -75,7 +75,7 @@ public class PlayerResources : MonoBehaviour, ICharacter
         OnDeath?.Invoke(); 
     }
 
-    void ShowHealth(float amount)
+    void ShowHealth(float damage)
     {
         HealthLabel.text = (int)CurrentHealth + "hp";
     }

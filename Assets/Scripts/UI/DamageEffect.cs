@@ -12,6 +12,11 @@ public class DamageEffect : MonoBehaviour
     [Tooltip("How long the fade out takes in seconds")]
     [SerializeField] float fadeDuration = 0.5f;
     
+    [Tooltip("What is considered lowest damage for vignette")]
+    [SerializeField] float lowDmgAmount = 10f;
+    [Tooltip("What is considered high damage for boldest vignette")]
+    [SerializeField] float highDmgAmount = 60f;
+    
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -24,21 +29,21 @@ public class DamageEffect : MonoBehaviour
     
     public void OnPlayerHit(float damage)
     {
-        if (damage <= 0) return;
+        if (damage < lowDmgAmount) return;
         StopAllCoroutines(); 
-        StartCoroutine(FadeOutVignette());
+        StartCoroutine(FadeOutVignette(damage));
     }
 
-    private IEnumerator FadeOutVignette()
+    private IEnumerator FadeOutVignette(float damage)
     {
         float elapsedTime = 0f;
-        
-        damageVolume.weight = 1f;
+        float baseMult = Mathf.Lerp(0.6f, 1f, Mathf.InverseLerp(lowDmgAmount, highDmgAmount, damage));
+        damageVolume.weight = baseMult;
         
         while (elapsedTime < fadeDuration)
         {
             elapsedTime += Time.deltaTime;
-            damageVolume.weight = Mathf.Lerp(1f, 0f, elapsedTime / fadeDuration);
+            damageVolume.weight = Mathf.Lerp(baseMult, 0f, elapsedTime / fadeDuration);
             yield return null;
         }
         
