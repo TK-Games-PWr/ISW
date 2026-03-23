@@ -3,19 +3,26 @@ using JetBrains.Annotations;
 using PlayerShootingSystem;
 using TK_Shared._3DPlayerMovement;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class Nade : MonoBehaviour
 {
     public Transform pin;
-    [SerializeField] [CanBeNull] ParticleSystem gunParticle;
+    [SerializeField] [CanBeNull] AudioSource explosionSound;
+    [FormerlySerializedAs("gunParticle")] [SerializeField] [CanBeNull] ParticleSystem explosionParticle;
 
     void Explode(GunInfo  gunInfo, LayerMask damageLayerMask)
     {
         Vector3 explosionPoint=transform.position;
         Collider[] hitColliders=Physics.OverlapSphere(explosionPoint,gunInfo.blastRadius,damageLayerMask,QueryTriggerInteraction.Ignore);
-        if (gunParticle)
+        if (explosionParticle)
         {
-            gunParticle.Play();
+            explosionParticle.Play();
+        }
+
+        if (explosionSound)
+        {
+            explosionSound.Play();
         }
         GetComponent<MeshRenderer>().enabled = false;
         foreach (Collider col in hitColliders)
@@ -39,7 +46,7 @@ public class Nade : MonoBehaviour
     {
         yield return new WaitForSecondsRealtime(3f);
         Explode(gunInfo,damageLayerMask);
-        yield return new WaitForSecondsRealtime(2f);
+        yield return new WaitForSecondsRealtime(4f);
         Destroy(gameObject);
     }
 }
