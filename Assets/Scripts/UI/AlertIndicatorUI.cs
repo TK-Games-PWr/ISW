@@ -6,7 +6,8 @@ using static EnemySystem.AICore;
 public class AlertIndicatorUI : MonoBehaviour
 {
     public RectTransform rectTransform;
-
+    
+    [SerializeField] float maxFillAmount = .2f;
     [SerializeField] Image image1;
     [SerializeField] Image image2;
 
@@ -18,8 +19,8 @@ public class AlertIndicatorUI : MonoBehaviour
     public void SetAlertProgress(float value, AlertLevel alertLevel)
     {
         value = Mathf.Clamp(value, 0, 1);
-        image1.fillAmount = value / 5f;
-        image2.fillAmount = value / 5f;
+        image1.fillAmount = value * maxFillAmount;
+        image2.fillAmount = value * maxFillAmount;
         Color newColor = Color.clear;
 
         switch (alertLevel)

@@ -16,7 +16,6 @@ public class PlayerResources : MonoBehaviour, ICharacter
     public event Action<float> OnHealthChanged;
     public event Action OnDeath;
     
-    [SerializeField] GameObject DeathScreen;
     [SerializeField] TextMeshProUGUI HealthLabel;
     [SerializeField] GameObject WeaponHolder;
     public List<Gun> weapons;
@@ -36,13 +35,21 @@ public class PlayerResources : MonoBehaviour, ICharacter
         CurrentHealth = maxHealth;
         OnHealthChanged += ShowHealth;
         ShowHealth(CurrentHealth);
-        DeathScreen.SetActive(false);
         Time.timeScale = 1;
+    }
+
+    private void Start()
+    {
+        OnHealthChanged += DamageEffect.Instance.OnPlayerHit;
+        OnDeath += LevelManager.Instance.OnPlayerDeath;
+        
+        LevelManager.Instance.player = gameObject;
     }
 
     void OnDestroy()
     {
         OnHealthChanged -= ShowHealth;
+        OnHealthChanged -= DamageEffect.Instance.OnPlayerHit;
     }
 
     /// <summary>
@@ -54,7 +61,7 @@ public class PlayerResources : MonoBehaviour, ICharacter
         {
             CurrentHealth = Mathf.Clamp(CurrentHealth - amount, 0, maxHealth);
 
-            OnHealthChanged?.Invoke(CurrentHealth);
+            OnHealthChanged?.Invoke(amount);
 
             if (CurrentHealth <= 0)
             {
@@ -66,17 +73,9 @@ public class PlayerResources : MonoBehaviour, ICharacter
     void Die()
     {
         OnDeath?.Invoke(); 
-        
-        DeathScreen.SetActive(true);
-        Cursor.visible = true;
-        Cursor.lockState = CursorLockMode.None;
-
-        GetComponent<PlayerActionsController>().enabled = false;
-        Debug.Log("time stop");
-        Time.timeScale = 0; // TODO replace with proper death handling
     }
 
-    void ShowHealth(float amount)
+    void ShowHealth(float damage)
     {
         HealthLabel.text = (int)CurrentHealth + "hp";
     }

@@ -62,3 +62,6 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  recoilUpward: 50
+  recoilHorizontal: 15
+  spread: 0.01

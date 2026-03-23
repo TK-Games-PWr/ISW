@@ -1,6 +1,7 @@
 using UnityEngine;
 using System;
 using TK_Shared._3DPlayerMovement;
+using UnityEngine.AI;
 
 namespace EnemySystem
 {
@@ -13,7 +14,7 @@ namespace EnemySystem
         private float currentHealth;
         private AICore brain;
 
-        internal bool IsDead => currentHealth <= 0;
+        public bool IsDead => currentHealth <= 0;
 
         private void Awake()
         {
@@ -50,7 +51,22 @@ namespace EnemySystem
         private void Die()
         {
             OnEnemyDied?.Invoke(this);
-            Destroy(gameObject);
+            // imitation of ragdoll
+            Lobotomize();
+            Rigidbody rb = gameObject.AddComponent<Rigidbody>();
+            rb.AddForceAtPosition(Vector3.back * 2, transform.position + new Vector3(0, 0.5f, 0), ForceMode.Impulse);
+            // uncomment if is supposed to disappear, maybe add some delay
+            // Destroy(gameObject);
+        }
+
+        public void Lobotomize()
+        {
+            GetComponent<EnemyCombat>().enabled = false;
+            GetComponent<EnemySensors>().enabled = false;
+            GetComponent<EnemyMovement>().StopAllCoroutines();
+            GetComponent<EnemyMovement>().enabled = false;
+            GetComponent<AICore>().enabled = false;
+            GetComponent<NavMeshAgent>().enabled = false;
         }
     }
 }

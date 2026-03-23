@@ -14,5 +14,10 @@ namespace PlayerShootingSystem
         public AmmoType ammoType;
         public int maxAmmo;
         public AnimationCurve damageFalloff;
+        
+        public float recoilUpward = 30f;
+        public float recoilHorizontal = 15f;
+        public float spread = 0.01f;
+        public float movementSpreadPenalty = 0.05f;
     }
 }
