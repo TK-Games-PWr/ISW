@@ -1,6 +1,9 @@
+using System;
 using System.Collections;
 using PlayerShootingSystem;
 using UnityEngine;
+using UnityEngine.Serialization;
+using Random = UnityEngine.Random;
 
 public class UICrosshair : MonoBehaviour
 {
@@ -13,9 +16,25 @@ public class UICrosshair : MonoBehaviour
     private Vector2 currentPos;
     private Vector2 targetPos;
 
+    [Header("Crosshair leaves")]
+    [SerializeField] RectTransform leafTR;
+    [SerializeField] RectTransform leafTL;
+    [SerializeField] RectTransform leafBR;
+    [SerializeField] RectTransform leafBL;
+    [SerializeField] private float baseLeafDistance = 10;
+    [SerializeField] private float maxLeafDistance = 20;
+    private float leafTargetPos;
+    private float leafCurrentPos;
+
     [Header("Smoothing")]
     public float snappiness = 15f;
     public float returnSpeed = 5f;
+
+    private void Awake()
+    {
+        leafCurrentPos = baseLeafDistance;
+        leafTargetPos = baseLeafDistance;
+    }
 
     void Update()
     {
@@ -24,6 +43,14 @@ public class UICrosshair : MonoBehaviour
         
         // anchoredPosition assumes crosshair is anchored to the center of the screen
         crosshairRect.anchoredPosition = currentPos;
+        
+        leafTargetPos = Mathf.Lerp(leafTargetPos, baseLeafDistance, returnSpeed * Time.deltaTime);
+        leafCurrentPos = Mathf.Lerp(leafCurrentPos, leafTargetPos, snappiness * Time.deltaTime);
+            
+        leafTR.anchoredPosition = new Vector2(leafCurrentPos, leafCurrentPos);
+        leafTL.anchoredPosition = new Vector2(-leafCurrentPos, leafCurrentPos);
+        leafBR.anchoredPosition = new Vector2(leafCurrentPos, -leafCurrentPos);
+        leafBL.anchoredPosition = new Vector2(-leafCurrentPos, -leafCurrentPos);
     }
 
     public void ApplyRecoil(GunInfo gunInfo)
@@ -32,6 +59,12 @@ public class UICrosshair : MonoBehaviour
             Random.Range(-gunInfo.recoilHorizontal, gunInfo.recoilHorizontal), 
             gunInfo.recoilUpward
         );
+    }
+
+    public void SetSpread(float value)
+    {
+        value = Mathf.Clamp01(value*10f);
+        leafTargetPos = baseLeafDistance + value * (maxLeafDistance - baseLeafDistance);
     }
 
     public void ShowHit()

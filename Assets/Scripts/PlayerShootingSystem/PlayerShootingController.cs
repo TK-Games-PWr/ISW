@@ -18,6 +18,7 @@ namespace PlayerShootingSystem
         [SerializeField] AudioSource hitDing;
         private AudioSource[] hitDingInstances =  new AudioSource[5];
         private int hitDingIter = 0;
+        
         [SerializeField] float throwForce;
         [SerializeField] float throwUpwardForce;
         [SerializeField] Transform holdPivot;
@@ -31,6 +32,8 @@ namespace PlayerShootingSystem
 
         bool _isHoldingShoot;
         Coroutine _autoFireCoroutine;
+
+        private float currentSpread;
 
         void Awake()
         {
@@ -50,6 +53,13 @@ namespace PlayerShootingSystem
                     hitDingInstances[i+1] = copy.GetComponent<AudioSource>();
                 }
             }
+        }
+
+        private void Update()
+        {
+            if (!currentGun) return;
+            currentSpread = currentGun.gunInfo.spread + Mathf.Clamp01(PlayerActionsController.Speed/6f) * currentGun.gunInfo.movementSpreadPenalty;
+            uiCrosshair.SetSpread(currentSpread);
         }
 
         void OnDestroy()
@@ -200,8 +210,8 @@ namespace PlayerShootingSystem
             Vector3 direction = ray.direction;
             
             // spread
-            float x = UnityEngine.Random.Range(-currentGun.gunInfo.spread, currentGun.gunInfo.spread);
-            float y = UnityEngine.Random.Range(-currentGun.gunInfo.spread, currentGun.gunInfo.spread);
+            float x = UnityEngine.Random.Range(-currentSpread, currentSpread);
+            float y = UnityEngine.Random.Range(-currentSpread, currentSpread);
             direction += fpsCam.transform.right * x + fpsCam.transform.up * y;
             direction.Normalize();
             
