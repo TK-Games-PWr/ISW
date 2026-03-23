@@ -297,11 +297,6 @@ Mesh:
       - serializedVersion: 1
         m_IndexStart: 0
         m_IndexCount: 0
---- !u!224 &47957949 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 2628441920306205675, guid: cf27e03cd87a0c5a6b40af4ded14c0cd, type: 3}
-  m_PrefabInstance: {fileID: 1710865557}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &67701437
 GameObject:
   m_ObjectHideFlags: 0
@@ -12279,17 +12274,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7801038540504485839, guid: cf27e03cd87a0c5a6b40af4ded14c0cd, type: 3}
-      propertyPath: uiRecoil
-      value: 
-      objectReference: {fileID: 1970041243}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 8247457369858407598, guid: cf27e03cd87a0c5a6b40af4ded14c0cd, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1970041243}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cf27e03cd87a0c5a6b40af4ded14c0cd, type: 3}
 --- !u!43 &1796728369
 Mesh:
@@ -12999,26 +12987,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1879999439}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &1970041237 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8247457369858407598, guid: cf27e03cd87a0c5a6b40af4ded14c0cd, type: 3}
-  m_PrefabInstance: {fileID: 1710865557}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1970041243
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1970041237}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e951c18f30cab242fa5ed4123af35309, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UICrosshairRecoil
-  crosshairRect: {fileID: 47957949}
-  snappiness: 15
-  returnSpeed: 5
 --- !u!1 &1977720367
 GameObject:
   m_ObjectHideFlags: 0
