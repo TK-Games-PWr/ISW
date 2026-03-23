@@ -14,7 +14,10 @@ namespace PlayerShootingSystem
     public class PlayerShootingController : MonoBehaviour
     {
         Camera fpsCam;
-        [SerializeField] UICrosshairRecoil uiRecoil;
+        [SerializeField] UICrosshair uiCrosshair;
+        [SerializeField] AudioSource hitDing;
+        private AudioSource[] hitDingInstances =  new AudioSource[5];
+        private int hitDingIter = 0;
         [SerializeField] float throwForce;
         [SerializeField] float throwUpwardForce;
         [SerializeField] Transform holdPivot;
@@ -37,6 +40,16 @@ namespace PlayerShootingSystem
         private void Start()
         {
             fpsCam = LevelManager.Instance.playerCamera;
+            if(hitDing)
+            {
+                hitDingInstances[0] = hitDing;
+                for (int i = 0; i < 4; i++)
+                {
+                    GameObject copy = Instantiate(hitDing.gameObject, hitDing.transform.parent);
+                    copy.GetComponent<AudioSource>().pitch = UnityEngine.Random.Range(0.6f, 0.8f);
+                    hitDingInstances[i+1] = copy.GetComponent<AudioSource>();
+                }
+            }
         }
 
         void OnDestroy()
@@ -183,7 +196,7 @@ namespace PlayerShootingSystem
             currentGun.PerformShoot();
             UpdateUI();
             
-            Ray ray = fpsCam.ScreenPointToRay(uiRecoil.crosshairRect.position);
+            Ray ray = fpsCam.ScreenPointToRay(uiCrosshair.crosshairRect.position);
             Vector3 direction = ray.direction;
             
             // spread
@@ -197,6 +210,9 @@ namespace PlayerShootingSystem
                 if (hit.transform.TryGetComponent(out EnemySystem.EnemyHealth enemy))
                 {
                     BulletImpactManager.Instance.SpawnImpact(hit.point, hit.normal, BulletImpactManager.ImpactType.Flesh);
+                    if (enemy.IsDead) return;
+                    if (hitDing) PlayHitSound();
+                    uiCrosshair.ShowHit();
                     float distance = hit.distance;
                     float multiplier = currentGun.gunInfo.damageFalloff.Evaluate(distance / 100f);
                     float finalDamage = currentGun.gunInfo.flatDamage * multiplier;
@@ -208,7 +224,7 @@ namespace PlayerShootingSystem
                 }
             }
             // apply recoil after shooting, so first shoot is accurate
-            uiRecoil.ApplyRecoil(currentGun.gunInfo);
+            uiCrosshair.ApplyRecoil(currentGun.gunInfo);
         }
 
         void UpdateUI()
@@ -326,6 +342,12 @@ namespace PlayerShootingSystem
                 equippedNade.GetComponent<Collider>().enabled = true;
 
             }
+        }
+        
+        private void PlayHitSound()
+        {
+            hitDingInstances[hitDingIter].Play();
+            hitDingIter = (hitDingIter + 1) % hitDingInstances.Length;
         }
     }
 }

@@ -14,7 +14,7 @@ namespace EnemySystem
         private float currentHealth;
         private AICore brain;
 
-        internal bool IsDead => currentHealth <= 0;
+        public bool IsDead => currentHealth <= 0;
 
         private void Awake()
         {
