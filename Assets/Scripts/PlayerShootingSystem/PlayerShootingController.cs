@@ -58,6 +58,7 @@ namespace PlayerShootingSystem
         private void Update()
         {
             if (!currentGun) return;
+            // TODO: more spread variables, like reducing it when crouching or scoping
             currentSpread = currentGun.gunInfo.spread + Mathf.Clamp01(PlayerActionsController.Speed/6f) * currentGun.gunInfo.movementSpreadPenalty;
             uiCrosshair.SetSpread(currentSpread);
         }
