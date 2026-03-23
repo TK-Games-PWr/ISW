@@ -101,3 +101,6 @@ InitTestScene*.unity*
 # TextMesh Pro
 Assets/TextMesh Pro/
 Assets/TextMesh Pro.meta
+
+# Extraction data
+*.csv
