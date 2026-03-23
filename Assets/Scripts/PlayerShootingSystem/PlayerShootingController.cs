@@ -13,7 +13,12 @@ namespace PlayerShootingSystem
 {
     public class PlayerShootingController : MonoBehaviour
     {
-        [SerializeField] Transform cameraTransform;
+        Camera fpsCam;
+        [SerializeField] UICrosshair uiCrosshair;
+        [SerializeField] AudioSource hitDing;
+        private AudioSource[] hitDingInstances =  new AudioSource[5];
+        private int hitDingIter = 0;
+        
         [SerializeField] float throwForce;
         [SerializeField] float throwUpwardForce;
         [SerializeField] Transform holdPivot;
@@ -28,9 +33,34 @@ namespace PlayerShootingSystem
         bool _isHoldingShoot;
         Coroutine _autoFireCoroutine;
 
+        private float currentSpread;
+
         void Awake()
         {
             PlayerActionsController.OnPickedUp += HandlePickup;
+        }
+
+        private void Start()
+        {
+            fpsCam = LevelManager.Instance.playerCamera;
+            if(hitDing)
+            {
+                hitDingInstances[0] = hitDing;
+                for (int i = 0; i < 4; i++)
+                {
+                    GameObject copy = Instantiate(hitDing.gameObject, hitDing.transform.parent);
+                    copy.GetComponent<AudioSource>().pitch = UnityEngine.Random.Range(0.6f, 0.8f);
+                    hitDingInstances[i+1] = copy.GetComponent<AudioSource>();
+                }
+            }
+        }
+
+        private void Update()
+        {
+            if (!currentGun) return;
+            // TODO: more spread variables, like reducing it when crouching or scoping
+            currentSpread = currentGun.gunInfo.spread + Mathf.Clamp01(PlayerActionsController.Speed/6f) * currentGun.gunInfo.movementSpreadPenalty;
+            uiCrosshair.SetSpread(currentSpread);
         }
 
         void OnDestroy()
@@ -84,7 +114,7 @@ namespace PlayerShootingSystem
                     rb.isKinematic = false;
                     currentGun.equippedNade.GetComponent<BoxCollider>().enabled = true;
                     currentGun.equippedNade.transform.parent = null;
-                    Vector3 throwingForce = cameraTransform.forward * throwForce + transform.up * throwUpwardForce;
+                    Vector3 throwingForce = fpsCam.transform.forward * throwForce + transform.up * throwUpwardForce;
                     rb.AddForce(throwingForce, ForceMode.Impulse);
                     currentGun.equippedNade = null;
                 }
@@ -172,21 +202,40 @@ namespace PlayerShootingSystem
         }
         void TryShootOnce()
         {
-
-                if (!currentGun) return;
-                if (currentGun.ammoInMag <= 0) return;
-                currentGun.PerformShoot();
-                UpdateUI();
-                if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit))
+            if (!currentGun) return;
+            if (currentGun.ammoInMag <= 0) return;
+            currentGun.PerformShoot();
+            UpdateUI();
+            
+            Ray ray = fpsCam.ScreenPointToRay(uiCrosshair.crosshairRect.position);
+            Vector3 direction = ray.direction;
+            
+            // spread
+            float x = UnityEngine.Random.Range(-currentSpread, currentSpread);
+            float y = UnityEngine.Random.Range(-currentSpread, currentSpread);
+            direction += fpsCam.transform.right * x + fpsCam.transform.up * y;
+            direction.Normalize();
+            
+            if (Physics.Raycast(ray.origin, direction, out RaycastHit hit))
+            {
+                if (hit.transform.TryGetComponent(out EnemySystem.EnemyHealth enemy))
                 {
-                    if (hit.transform.TryGetComponent(out EnemySystem.EnemyHealth enemy))
-                    {
-                        float distance = hit.distance;
-                        float multiplier = currentGun.gunInfo.damageFalloff.Evaluate(distance / 100f);
-                        float finalDamage = currentGun.gunInfo.flatDamage * multiplier;
-                        enemy.Damage(finalDamage);
-                    }
+                    BulletImpactManager.Instance.SpawnImpact(hit.point, hit.normal, BulletImpactManager.ImpactType.Flesh);
+                    if (enemy.IsDead) return;
+                    if (hitDing) PlayHitSound();
+                    uiCrosshair.ShowHit();
+                    float distance = hit.distance;
+                    float multiplier = currentGun.gunInfo.damageFalloff.Evaluate(distance / 100f);
+                    float finalDamage = currentGun.gunInfo.flatDamage * multiplier;
+                    enemy.Damage(finalDamage);
                 }
+                else
+                {
+                    BulletImpactManager.Instance.SpawnImpact(hit.point, hit.normal, BulletImpactManager.ImpactType.Ground);
+                }
+            }
+            // apply recoil after shooting, so first shoot is accurate
+            uiCrosshair.ApplyRecoil(currentGun.gunInfo);
         }
 
         void UpdateUI()
@@ -304,6 +353,12 @@ namespace PlayerShootingSystem
                 equippedNade.GetComponent<Collider>().enabled = true;
 
             }
+        }
+        
+        private void PlayHitSound()
+        {
+            hitDingInstances[hitDingIter].Play();
+            hitDingIter = (hitDingIter + 1) % hitDingInstances.Length;
         }
     }
 }
