@@ -57,16 +57,16 @@ public class PlayerResources : MonoBehaviour, ICharacter
     /// </summary>
     public void Damage(float amount)
     {
-        if (!godMode)
+#if UNITY_EDITOR
+        if (godMode) return;
+#endif
+        CurrentHealth = Mathf.Clamp(CurrentHealth - amount, 0, maxHealth);
+
+        OnHealthChanged?.Invoke(amount);
+
+        if (CurrentHealth <= 0)
         {
-            CurrentHealth = Mathf.Clamp(CurrentHealth - amount, 0, maxHealth);
-
-            OnHealthChanged?.Invoke(amount);
-
-            if (CurrentHealth <= 0)
-            {
-                Die();
-            }
+            Die();
         }
     }
 
