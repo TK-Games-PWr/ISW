@@ -7,10 +7,12 @@ namespace PlayerShootingSystem
     public class PlayerShootingInputController : MonoBehaviour
     {
         PlayerShootingController _shootingController;
+        StealthKillController _stealthKillController;
 
         void Awake()
         {
             _shootingController = GetComponent<PlayerShootingController>();
+            _stealthKillController =  GetComponent<StealthKillController>();
         }
         void OnShoot(InputValue inputValue)
         {
@@ -20,6 +22,11 @@ namespace PlayerShootingSystem
         void OnReload(InputValue inputValue)
         {
             _shootingController.OnReloadInput(inputValue);
+        }
+
+        void OnInteract(InputValue inputValue)
+        {
+            _stealthKillController.OnInteractInput(inputValue);
         }
     }
 }

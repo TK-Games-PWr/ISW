@@ -806,6 +806,7 @@ GameObject:
   - component: {fileID: 5372773990926496297}
   - component: {fileID: 7834882761824425139}
   - component: {fileID: 6246916651599479197}
+  - component: {fileID: 19465667308891232}
   - component: {fileID: 7801038540504485839}
   - component: {fileID: 6305359070947738222}
   m_Layer: 7
@@ -995,6 +996,21 @@ MonoBehaviour:
   frequency: 10
   cameraT: {fileID: 3626531652512954655}
   cameraHolder: {fileID: 225684412732341757}
+--- !u!114 &19465667308891232
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3395969552154099605}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 119651e8ba7a38a778a439def09ae1a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StealthKill
+  killDistance: 2.5
+  behindThreshold: -0.5
+  playerCamera: {fileID: 0}
 --- !u!114 &7801038540504485839
 MonoBehaviour:
   m_ObjectHideFlags: 0
