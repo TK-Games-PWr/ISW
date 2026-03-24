@@ -23,6 +23,10 @@ namespace PlayerShootingSystem
         {
             _shootingController.OnReloadInput(inputValue);
         }
+        void OnZoom(InputValue inputValue)
+        {
+            _shootingController.Zoom(inputValue);
+        }
         
         void OnMelee(InputValue inputValue)
         {

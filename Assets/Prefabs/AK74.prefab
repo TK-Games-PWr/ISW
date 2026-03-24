@@ -573,6 +573,7 @@ MonoBehaviour:
   gunInfo: {fileID: 11400000, guid: 2c713a3d208cca4ee9f3ec65e4e69e2c, type: 2}
   ammoInMag: 0
   fireSound: {fileID: 1862846131758237775}
+  scopeQuad: {fileID: 0}
   recoilAmount: 15
   recoilSide: 5
   recoilSpeed: 10

@@ -901,6 +901,9 @@ MonoBehaviour:
   baseHeadBobbingFreq: 10
   baseHeadBobbingAmpl: 0.002
   crouchToggle: 1
+  leanAngle: 15
+  leanHorizontalOffset: 0.3
+  leanSpeed: 8
   crouchHeight: 1.5
   uncrouchCeilingLayer:
     serializedVersion: 2
@@ -1060,8 +1063,11 @@ MonoBehaviour:
   shots: 0
   hits: 0
   cameraTransform: {fileID: 7685606263097007844}
+  crosshair: {fileID: 2211987939353375997}
   uiCrosshair: {fileID: 3772505715605633744}
   hitDing: {fileID: 8656975728489504990}
+  aimSpeed: 12
+  aimDistance: 0.2
   meleeInfo: {fileID: 11400000, guid: 4959894a42797baadb33a352db6b74fb, type: 2}
   meleeRange: 2.5
   meleeAnim: {fileID: 7529757729605098505}
