@@ -12,15 +12,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc5496a18bb9692b6a7cc67528f8a12e, type: 3}
   m_Name: Melee
   m_EditorClassIdentifier: Assembly-CSharp::PlayerShootingSystem.GunInfo
-  flatDamage: 30
+  flatDamage: 10
   isAutomatic: 0
   isExplosive: 0
   isMelee: 1
   blastRadius: 0
   fireRate: 0
+  ammoType: 0
+  maxAmmo: 0
   damageFalloff:
     serializedVersion: 2
     m_Curve: []
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  recoilUpward: 30
+  recoilHorizontal: 15
+  spread: 0.01
+  movementSpreadPenalty: 0.05
+  reloadTime: 1

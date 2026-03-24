@@ -37,6 +37,7 @@ namespace PlayerShootingSystem
         [SerializeField] GunInfo meleeInfo;
         [SerializeField] float meleeRange = 2.5f;
         [SerializeField] Animation meleeAnim;
+        [SerializeField] float stealthKillBehindThreshold = -0.4f; // -1 is exactly behind, 0 is exactly to the side
         [Space(8)]
         [SerializeField] float throwForce;
         [SerializeField] float throwUpwardForce;
@@ -158,12 +159,24 @@ namespace PlayerShootingSystem
         {
             if(Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out RaycastHit hit, meleeRange))
             {
-                if (hit.transform.TryGetComponent(out EnemySystem.EnemyHealth enemy))
+                if (hit.transform.TryGetComponent(out EnemyHitbox hitbox))
                 {
+                    EnemyHealth enemy = hitbox.GetEnemyHealth();
                     if (enemy.IsDead) return;
                     if (hitDing) PlayHitSound();
                     uiCrosshair.ShowHit();
-                    enemy.Damage(meleeInfo.flatDamage);
+                    
+                    Vector3 dirFromEnemyToPlayer = (transform.position - enemy.transform.position).normalized;
+                    float dotProduct = Vector3.Dot(enemy.transform.forward, dirFromEnemyToPlayer);
+                    bool isStealthKill = dotProduct < stealthKillBehindThreshold;
+                    if (isStealthKill)
+                    {
+                        enemy.StealthKill();
+                    }
+                    else
+                    {
+                        enemy.Damage(meleeInfo.flatDamage);
+                    }
                     hits++;
                 }
             }
