@@ -434825,7 +434825,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2078602088
 Transform:
   m_ObjectHideFlags: 0
@@ -448656,12 +448656,28 @@ PrefabInstance:
       value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 8521726943504668858, guid: cf27e03cd87a0c5a6b40af4ded14c0cd, type: 3}
+      propertyPath: playerAmmo.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8521726943504668858, guid: cf27e03cd87a0c5a6b40af4ded14c0cd, type: 3}
       propertyPath: playerAmmo.Array.data[0].amount
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 8521726943504668858, guid: cf27e03cd87a0c5a6b40af4ded14c0cd, type: 3}
       propertyPath: playerAmmo.Array.data[1].amount
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8521726943504668858, guid: cf27e03cd87a0c5a6b40af4ded14c0cd, type: 3}
+      propertyPath: playerAmmo.Array.data[3].amount
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8521726943504668858, guid: cf27e03cd87a0c5a6b40af4ded14c0cd, type: 3}
+      propertyPath: playerAmmo.Array.data[2].ammoType
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8521726943504668858, guid: cf27e03cd87a0c5a6b40af4ded14c0cd, type: 3}
+      propertyPath: playerAmmo.Array.data[3].ammoType
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8538334609046303313, guid: cf27e03cd87a0c5a6b40af4ded14c0cd, type: 3}
       propertyPath: m_LocalPosition.z

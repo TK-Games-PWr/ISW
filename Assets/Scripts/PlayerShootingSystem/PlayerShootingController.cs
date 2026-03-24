@@ -192,8 +192,10 @@ namespace PlayerShootingSystem
                     Nade nade = granade.GetComponent<Nade>();
                     currentGun.slide = nade.pin;
                     currentGun.equippedNade = nade;
+                    Reload();
                 }
-                _reloadCoroutine ??= StartCoroutine(ReloadCoroutine(currentGun.gunInfo.reloadTime));
+                else
+                    _reloadCoroutine ??= StartCoroutine(ReloadCoroutine(currentGun.gunInfo.reloadTime));
 
             }
         }
@@ -458,9 +460,8 @@ namespace PlayerShootingSystem
                 else
                 {
                     playerResources.weapons[_currentSlot] = nadeRoot;
-                    currentGun = null;
-                    SwitchWeapons(playerResources.weapons[_currentSlot]);
                     nadeRoot.PickedUp();
+                    SwitchWeapons(playerResources.weapons[_currentSlot]);
                 }
                 Destroy(pickedObject.gameObject);
 

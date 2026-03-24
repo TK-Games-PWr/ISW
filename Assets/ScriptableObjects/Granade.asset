@@ -18,7 +18,7 @@ MonoBehaviour:
   isMelee: 0
   blastRadius: 10
   fireRate: 0
-  ammoType: 2
+  ammoType: 3
   maxAmmo: 1
   damageFalloff:
     serializedVersion: 2
@@ -62,3 +62,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  recoilUpward: 30
+  recoilHorizontal: 15
+  spread: 0.01
+  movementSpreadPenalty: 0.05
+  reloadTime: 1
