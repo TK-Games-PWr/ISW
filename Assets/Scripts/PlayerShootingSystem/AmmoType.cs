@@ -4,6 +4,7 @@ namespace PlayerShootingSystem
     {
         Pistol,
         Rifle,
+        Snipe,
         Nade
     }
 }

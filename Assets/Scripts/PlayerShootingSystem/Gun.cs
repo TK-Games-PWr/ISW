@@ -11,6 +11,7 @@ namespace PlayerShootingSystem
         public GunInfo gunInfo;
         public int ammoInMag;
         [SerializeField] private AudioSource fireSound;
+        [SerializeField] public Transform scopeQuad;
         private AudioSource[] fireSoundInstances =  new AudioSource[5];
         private int fireSoundIter = 0;
         [Header("Gun Recoil")]
@@ -30,7 +31,7 @@ namespace PlayerShootingSystem
         public Nade equippedNade;
         Vector3 _originalSlidePos;
         Quaternion _restRot;
-    
+        public bool IsRecoiling { get; private set; }
         Coroutine _slideCoroutine;
         Coroutine _recoilCoroutine;
         Coroutine _cookCoroutine;
@@ -52,7 +53,10 @@ namespace PlayerShootingSystem
                 }
             }
         }
-
+        public void SetRestRotation(Quaternion rot)
+        {
+            _restRot = rot;
+        }
         public void PickedUp()
         {
             _restRot = transform.localRotation;
@@ -74,22 +78,27 @@ namespace PlayerShootingSystem
         }
         IEnumerator RecoilCoroutine()
         {
-            float side = Random.Range(-recoilSide, recoilSide);
-            Quaternion recoilTarget = _restRot * Quaternion.Euler(recoilAmount, side, 0);
+            IsRecoiling = true;
+            float side = UnityEngine.Random.Range(-recoilSide, recoilSide);
+            
+            Quaternion kickRotation = Quaternion.Euler(recoilAmount, side, 0);
 
-            while (Quaternion.Angle(transform.localRotation, recoilTarget) > 0.1f)
+            float elapsed = 0;
+            while (elapsed < 0.1f)
             {
-                transform.localRotation = Quaternion.Lerp(transform.localRotation, recoilTarget, Time.deltaTime * recoilSpeed);
+                elapsed += Time.deltaTime;
+                transform.localRotation = Quaternion.Slerp(transform.localRotation, _restRot * kickRotation, Time.deltaTime * recoilSpeed);
                 yield return null;
             }
-            transform.localRotation = recoilTarget;
 
             while (Quaternion.Angle(transform.localRotation, _restRot) > 0.1f)
             {
-                transform.localRotation = Quaternion.Lerp(transform.localRotation, _restRot, Time.deltaTime * returnSpeed);
+                transform.localRotation = Quaternion.Slerp(transform.localRotation, _restRot, Time.deltaTime * returnSpeed);
                 yield return null;
             }
+
             transform.localRotation = _restRot;
+            IsRecoiling = false;
         }
 
         IEnumerator SlideRecoilCoroutine()
