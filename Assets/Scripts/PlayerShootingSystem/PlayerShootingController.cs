@@ -507,6 +507,7 @@ namespace PlayerShootingSystem
         }
         IEnumerator ReloadCoroutine(float reloadTime)
         {
+            currentGun.Reload(reloadTime);
             yield return new WaitForSecondsRealtime(reloadTime);
             Reload();
             _reloadCoroutine = null;

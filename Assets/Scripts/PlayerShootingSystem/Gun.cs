@@ -8,12 +8,17 @@ namespace PlayerShootingSystem
 {
     public class Gun : MonoBehaviour
     {
+        static readonly int ReloadAnimation = Animator.StringToHash("Reload");
         public GunInfo gunInfo;
         public int ammoInMag;
-        [SerializeField] private AudioSource fireSound;
+        [SerializeField] AudioSource fireSound;
         [SerializeField] public Transform scopeQuad;
-        private AudioSource[] fireSoundInstances =  new AudioSource[5];
-        private int fireSoundIter = 0;
+        AudioSource[] fireSoundInstances =  new AudioSource[5];
+        int fireSoundIter = 0;
+        [SerializeField] AudioSource reloadStartSound;
+        [SerializeField] AudioSource reloadEndSound;
+        [SerializeField] Animator animator;
+        
         [Header("Gun Recoil")]
         public float recoilAmount = 8f;       
         public float recoilSide = 2f;         
@@ -52,6 +57,8 @@ namespace PlayerShootingSystem
                     fireSoundInstances[i+1] = copy.GetComponent<AudioSource>();
                 }
             }
+
+            TryGetComponent(out animator);
         }
         public void SetRestRotation(Quaternion rot)
         {
@@ -70,6 +77,23 @@ namespace PlayerShootingSystem
             _slideCoroutine = StartCoroutine(SlideRecoilCoroutine());
             if (_recoilCoroutine != null) StopCoroutine(_recoilCoroutine);
             _recoilCoroutine = StartCoroutine(RecoilCoroutine());
+        }
+
+        public void Reload(float reloadTime=1f)
+        {
+            if (!animator) return;
+            animator.speed = 1f / reloadTime;
+            animator.SetTrigger(ReloadAnimation);
+        }
+
+        public void ReloadStartAnimCallback()
+        {
+            reloadStartSound.Play();
+        }
+        
+        public void ReloadEndAnimCallback()
+        {
+            reloadEndSound.Play();
         }
 
         public void CookNade()
