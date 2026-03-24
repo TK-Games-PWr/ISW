@@ -16,7 +16,6 @@ namespace Classification
          * References to scripts needed for classification
          */
         [Header("References")]
-        [SerializeField]
         //ClassificationText classificationText;
         [SerializeField]
         PlayerShootingController playerShootingController;
