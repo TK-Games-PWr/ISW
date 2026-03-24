@@ -6,6 +6,7 @@ using PlayerShootingSystem;
 using Unity.VisualScripting;
 using UnityEngine;
 
+
 namespace Classification
 {
     public class MoveWriter : MonoBehaviour
@@ -15,6 +16,8 @@ namespace Classification
          * References to scripts needed for classification
          */
         [Header("References")]
+        [SerializeField]
+        //ClassificationText classificationText;
         [SerializeField]
         PlayerShootingController playerShootingController;
         [SerializeField]
@@ -36,14 +39,19 @@ namespace Classification
         {
             _datapoint = new ExtractedData
             {
-                avgAccuracy = Mathf.Max((float)playerShootingController.hits/(playerShootingController.hits+ 
-                                                                              playerShootingController.shots),0),
+                avgAccuracy = Mathf.Max((float)playerShootingController.hits/(playerShootingController.shots),0),
                 avgY = moveDataExtractor.yPositions.Average(),
                 avgDetection = float.IsNaN(detectionDataExtractor.detectionData.Average())?
                     0:detectionDataExtractor.detectionData.Average(),
                 avgSpeed = moveDataExtractor.speeds.Average(),
                 shots = playerShootingController.shots
             };
+            Debug.Log($"[ExtractedData Debug]\n" +
+          $"avgAccuracy: {_datapoint.avgAccuracy}\n" +
+          $"avgY: {_datapoint.avgY}\n" +
+          $"avgDetection: {_datapoint.avgDetection}\n" +
+          $"avgSpeed: {_datapoint.avgSpeed}\n" +
+          $"shots: {_datapoint.shots}");
             ClearData();
             
         }
@@ -57,7 +65,10 @@ namespace Classification
         }
         void SetNewDatapoint()
         {
-            _datapointList.RemoveAt(0);
+            if (_datapointList.Count > setSize)
+            {
+                _datapointList.RemoveAt(0);
+            }
             _datapointList.Add(_datapoint);
         }
 
@@ -89,10 +100,6 @@ namespace Classification
         {
             _datapointList = new List<ExtractedData>();
 
-            for (int i = 0; i <= setSize; i++)
-            {
-                _datapointList.Add(_datapoint);
-            }
             if (File.Exists(_fullPath))
             {
                 File.Delete(_fullPath);
@@ -110,6 +117,7 @@ namespace Classification
                 SetNewDatapoint();
                 SaveToCsv();
                 timer = 0f;
+                //classificationText.UpdateClassificationResult();
             }
         
         }

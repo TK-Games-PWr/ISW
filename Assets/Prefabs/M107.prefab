@@ -268,6 +268,9 @@ MonoBehaviour:
   ammoInMag: 0
   fireSound: {fileID: 8405343339424433085}
   scopeQuad: {fileID: 2147623076326921081}
+  reloadStartSound: {fileID: 0}
+  reloadEndSound: {fileID: 0}
+  animator: {fileID: 0}
   recoilAmount: 8
   recoilSide: 2
   recoilSpeed: 12
@@ -510,7 +513,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6315667336045514825}
   - component: {fileID: 5232918178710681555}
-  - component: {fileID: 5001348193635000019}
   - component: {fileID: 4604399028678269558}
   m_Layer: 0
   m_Name: Camera
@@ -585,14 +587,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!81 &5001348193635000019
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7371088462299918778}
-  m_Enabled: 1
 --- !u!114 &4604399028678269558
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using EnemySystem;
 using UnityEngine;
 
@@ -14,6 +15,10 @@ namespace Classification
         List<AICore> aiData;
 
         List<int> _toRemove=new List<int>();
+        void Awake()
+        {
+           aiData = FindObjectsByType<AICore>(FindObjectsSortMode.None).ToList();
+        }
         void Start()
         {
             StartCoroutine(Extractor());

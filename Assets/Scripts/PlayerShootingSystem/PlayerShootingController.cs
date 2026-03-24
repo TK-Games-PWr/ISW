@@ -185,14 +185,18 @@ namespace PlayerShootingSystem
         {
             if (value.isPressed)
             {
-                if (currentGun.gunInfo.ammoType == AmmoType.Nade)
+                if (currentGun.gunInfo.ammoType == AmmoType.Nade )
                 {
-                    GameObject granade = Instantiate(nadePrefab, currentGun.transform.position, currentGun.transform.rotation);
-                    granade.transform.SetParent(currentGun.transform);
-                    Nade nade = granade.GetComponent<Nade>();
-                    currentGun.slide = nade.pin;
-                    currentGun.equippedNade = nade;
-                    Reload();
+                    AmmoEntry ammoEntry = playerResources.playerAmmo.Find(a => a.ammoType == currentGun.gunInfo.ammoType);
+                    if (ammoEntry.amount > 0)
+                    {
+                        GameObject granade = Instantiate(nadePrefab, currentGun.transform.position, currentGun.transform.rotation);
+                        granade.transform.SetParent(currentGun.transform);
+                        Nade nade = granade.GetComponent<Nade>();
+                        currentGun.slide = nade.pin;
+                        currentGun.equippedNade = nade;
+                        Reload();
+                    }
                 }
                 else
                     _reloadCoroutine ??= StartCoroutine(ReloadCoroutine(currentGun.gunInfo.reloadTime));
