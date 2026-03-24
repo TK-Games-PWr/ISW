@@ -87,4 +87,9 @@ public class UICrosshair : MonoBehaviour
         
         crosshairHitIndicator.alpha = 0f;
     }
+
+    public void SetActive(bool active)
+    {
+        gameObject.SetActive(active);
+    }
 }

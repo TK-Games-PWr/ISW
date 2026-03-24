@@ -23,7 +23,6 @@ namespace PlayerShootingSystem
         public int hits = 0;
         
         [SerializeField] Transform cameraTransform;
-        [SerializeField] GameObject crosshair;
         Camera fpsCam;
         [SerializeField] UICrosshair uiCrosshair;
         [SerializeField] AudioSource hitDing;
@@ -206,7 +205,7 @@ namespace PlayerShootingSystem
         
                 if(_isActuallyAiming)
                 {
-                    crosshair.SetActive(false);
+                    uiCrosshair.SetActive(false);
                     _hipfireLocalPos = currentGun.transform.localPosition;
                     _hipfireLocalRot = currentGun.transform.localRotation;
                     _scopeLocalRot = Quaternion.Inverse(currentGun.transform.rotation) * currentGun.scopeQuad.rotation;
@@ -214,12 +213,12 @@ namespace PlayerShootingSystem
                 }
                 else
                 {
-                    crosshair.SetActive(true);
+                    uiCrosshair.SetActive(true);
                 }
             }
             else
             {
-                crosshair.SetActive(true);
+                uiCrosshair.SetActive(true);
             }
         }
         void LateUpdate()
