@@ -21,6 +21,8 @@ namespace EnemySystem
         [Header("Alert System")]
         [SerializeField] float alertSensitivity = 1f;
         [SerializeField] float timeToLoseAlertLevel = 3f;
+        [Tooltip("Delay before agents starts shooting in seconds")]
+        [SerializeField] private float fightDelay = 1f;
 
         // --- State Variables ---
         public AIState currentState = AIState.Patrol;
@@ -34,6 +36,7 @@ namespace EnemySystem
         private EnemyHealth health;
 
         private float lastAlertTime = 0f;
+        public float timeInCombat { get; private set; } = 0f;
 
         private void Awake()
         {
@@ -160,6 +163,7 @@ namespace EnemySystem
 
         private void UpdateCombatLogic()
         {
+            timeInCombat += Time.deltaTime;
             if (sensors.PlayerTransform == null || combat.IsReloading) return;
 
             bool hasLOS = sensors.HasLineOfSight();
@@ -168,6 +172,8 @@ namespace EnemySystem
             // Handle Movement
             movement.HandleCombatMovement(sensors.PlayerTransform, distanceToPlayer, combat.WeaponRange, combat.OptimalDistance, hasLOS);
 
+            if (fightDelay > timeInCombat) return;
+            
             // Handle Shooting
             if (distanceToPlayer <= combat.WeaponRange && hasLOS)
             {

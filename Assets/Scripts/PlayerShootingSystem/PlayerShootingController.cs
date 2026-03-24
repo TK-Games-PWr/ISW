@@ -23,7 +23,6 @@ namespace PlayerShootingSystem
         public int hits = 0;
         
         [SerializeField] Transform cameraTransform;
-        [SerializeField] GameObject crosshair;
         Camera fpsCam;
         [SerializeField] UICrosshair uiCrosshair;
         [SerializeField] AudioSource hitDing;
@@ -33,6 +32,12 @@ namespace PlayerShootingSystem
         AudioSource[] hitDingInstances =  new AudioSource[5];
         int hitDingIter = 0;
         
+        [Header("Melee")]
+        [SerializeField] GunInfo meleeInfo;
+        [SerializeField] float meleeRange = 2.5f;
+        [SerializeField] Animation meleeAnim;
+        [SerializeField] float stealthKillBehindThreshold = -0.4f; // -1 is exactly behind, 0 is exactly to the side
+        [Space(8)]
         [SerializeField] float throwForce;
         [SerializeField] float throwUpwardForce;
         [SerializeField] Transform holdPivot;
@@ -141,6 +146,41 @@ namespace PlayerShootingSystem
             }
         }
 
+        public void OnMeleeInput(InputValue value)
+        {
+            if (value.isPressed)
+            {
+                meleeAnim.Play();
+            }
+        }
+
+        internal void OnMeleeAnimEnd()
+        {
+            if(Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out RaycastHit hit, meleeRange))
+            {
+                if (hit.transform.TryGetComponent(out EnemyHitbox hitbox))
+                {
+                    EnemyHealth enemy = hitbox.GetEnemyHealth();
+                    if (enemy.IsDead) return;
+                    if (hitDing) PlayHitSound();
+                    uiCrosshair.ShowHit();
+                    
+                    Vector3 dirFromEnemyToPlayer = (transform.position - enemy.transform.position).normalized;
+                    float dotProduct = Vector3.Dot(enemy.transform.forward, dirFromEnemyToPlayer);
+                    bool isStealthKill = dotProduct < stealthKillBehindThreshold;
+                    if (isStealthKill)
+                    {
+                        enemy.StealthKill();
+                    }
+                    else
+                    {
+                        enemy.Damage(meleeInfo.flatDamage);
+                    }
+                    hits++;
+                }
+            }
+        }
+
         public void OnReloadInput(InputValue value)
         {
             if (value.isPressed)
@@ -165,7 +205,7 @@ namespace PlayerShootingSystem
         
                 if(_isActuallyAiming)
                 {
-                    crosshair.SetActive(false);
+                    uiCrosshair.SetActive(false);
                     _hipfireLocalPos = currentGun.transform.localPosition;
                     _hipfireLocalRot = currentGun.transform.localRotation;
                     _scopeLocalRot = Quaternion.Inverse(currentGun.transform.rotation) * currentGun.scopeQuad.rotation;
@@ -173,12 +213,12 @@ namespace PlayerShootingSystem
                 }
                 else
                 {
-                    crosshair.SetActive(true);
+                    uiCrosshair.SetActive(true);
                 }
             }
             else
             {
-                crosshair.SetActive(true);
+                uiCrosshair.SetActive(true);
             }
         }
         void LateUpdate()
@@ -288,18 +328,18 @@ namespace PlayerShootingSystem
                     BulletImpactManager.Instance.SpawnImpact(hit.point, hit.normal, BulletImpactManager.ImpactType.Flesh);
 
                     EnemyHealth enemy = hitbox.GetEnemyHealth();
-                    if (enemy == null || enemy.IsDead) return;
+                    if (!(enemy == null || enemy.IsDead))
+                    {
+                        if (hitDing) PlayHitSound();
+                        uiCrosshair.ShowHit();
 
-                    if (hitDing) PlayHitSound();
-                    uiCrosshair.ShowHit();
-
-                    float distance = hit.distance;
-                    float falloff = currentGun.gunInfo.damageFalloff.Evaluate(distance / 100f);
-                    float finalDamage = currentGun.gunInfo.flatDamage * falloff * hitbox.GetDamageMultiplier();
-                    Debug.Log(hitbox.hitboxType);
-                    enemy.Damage(finalDamage);
-                    hits++;
-                    
+                        float distance = hit.distance;
+                        float falloff = currentGun.gunInfo.damageFalloff.Evaluate(distance / 100f);
+                        float finalDamage = currentGun.gunInfo.flatDamage * falloff * hitbox.GetDamageMultiplier();
+                        Debug.Log(hitbox.hitboxType);
+                        enemy.Damage(finalDamage);
+                        hits++;
+                    }
                 }
                 else
                 {

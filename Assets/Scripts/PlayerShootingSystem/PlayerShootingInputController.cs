@@ -25,5 +25,10 @@ namespace PlayerShootingSystem
         {
             _shootingController.Zoom(inputValue);
         }
+        
+        void OnMelee(InputValue inputValue)
+        {
+            _shootingController.OnMeleeInput(inputValue);
+        }
     }
 }
