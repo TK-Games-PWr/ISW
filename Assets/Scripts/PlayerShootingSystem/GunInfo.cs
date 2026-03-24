@@ -19,5 +19,6 @@ namespace PlayerShootingSystem
         public float recoilHorizontal = 15f;
         public float spread = 0.01f;
         public float movementSpreadPenalty = 0.05f;
+        public float reloadTime = 1f;
     }
 }

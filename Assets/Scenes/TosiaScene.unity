@@ -103452,6 +103452,11 @@ Mesh:
       - serializedVersion: 1
         m_IndexStart: 0
         m_IndexCount: 0
+--- !u!1 &635756087 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2211987939353375997, guid: cf27e03cd87a0c5a6b40af4ded14c0cd, type: 3}
+  m_PrefabInstance: {fileID: 5481426889695969608}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &636592337
 GameObject:
   m_ObjectHideFlags: 0
@@ -448518,6 +448523,38 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 379227340926306092, guid: 6cd1fa7741d8df6a18f79341cf97b992, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -2.35677
+      objectReference: {fileID: 0}
+    - target: {fileID: 379227340926306092, guid: 6cd1fa7741d8df6a18f79341cf97b992, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.703
+      objectReference: {fileID: 0}
+    - target: {fileID: 379227340926306092, guid: 6cd1fa7741d8df6a18f79341cf97b992, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 7.61691
+      objectReference: {fileID: 0}
+    - target: {fileID: 379227340926306092, guid: 6cd1fa7741d8df6a18f79341cf97b992, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.8191521
+      objectReference: {fileID: 0}
+    - target: {fileID: 379227340926306092, guid: 6cd1fa7741d8df6a18f79341cf97b992, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 379227340926306092, guid: 6cd1fa7741d8df6a18f79341cf97b992, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.5735764
+      objectReference: {fileID: 0}
+    - target: {fileID: 379227340926306092, guid: 6cd1fa7741d8df6a18f79341cf97b992, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6434877209452237976, guid: 6cd1fa7741d8df6a18f79341cf97b992, type: 3}
+      propertyPath: field of view
+      value: 60.000004
+      objectReference: {fileID: 0}
     - target: {fileID: 7202533678562181328, guid: 6cd1fa7741d8df6a18f79341cf97b992, type: 3}
       propertyPath: m_Name
       value: Core Systems
@@ -448622,6 +448659,14 @@ PrefabInstance:
     - target: {fileID: 7744008168814191168, guid: cf27e03cd87a0c5a6b40af4ded14c0cd, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7801038540504485839, guid: cf27e03cd87a0c5a6b40af4ded14c0cd, type: 3}
+      propertyPath: crosshair
+      value: 
+      objectReference: {fileID: 635756087}
+    - target: {fileID: 7801038540504485839, guid: cf27e03cd87a0c5a6b40af4ded14c0cd, type: 3}
+      propertyPath: aimDistance
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 8521726943504668858, guid: cf27e03cd87a0c5a6b40af4ded14c0cd, type: 3}
       propertyPath: maxHealth
