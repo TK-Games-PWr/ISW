@@ -67,10 +67,7 @@ namespace Classification
             var sb = new StringBuilder();
             string path = _fullPath;
             
-            if (!File.Exists(path))
-            {
-                sb.AppendLine("avgAccuracy;shots;avgY;avgDetection;avgSpeed;timestamp");
-            }
+            sb.AppendLine("avgAccuracy;shots;avgY;avgDetection;avgSpeed;timestamp");
             string timestamp=System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
             foreach (var dp in _datapointList)
             {
@@ -83,8 +80,8 @@ namespace Classification
                     timestamp
                 ));
             }
-            File.AppendAllText(path, sb.ToString());
-            Debug.Log($"Appended to {path}");
+            File.WriteAllText(path, sb.ToString());
+            Debug.Log($"Written to {path}");
             
         }
 
