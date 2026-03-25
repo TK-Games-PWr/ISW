@@ -41,6 +41,14 @@ namespace Classification
             string modulePath = Path.Combine(Application.dataPath, "Scripts/Classification/.PythonModule");
             string venvPath = Path.Combine(modulePath, "venv");
             
+            if (!Directory.Exists(modulePath))
+            {
+                UnityEngine.Debug.Log("Module directory doesn't exist at " + modulePath);
+                if (text != null) text.text = "Module directory doesn't exist at " + modulePath;
+                _isPythonReady = false;
+                return;
+            }
+            
             if (Directory.Exists(venvPath))
             {
                 UnityEngine.Debug.Log("Python venv already exists. Skipping installation.");
