@@ -485619,10 +485619,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    - target: {fileID: 5741707464347888051, guid: cf27e03cd87a0c5a6b40af4ded14c0cd, type: 3}
-      propertyPath: maxHealth
-      value: 1e+10
-      objectReference: {fileID: 0}
     - target: {fileID: 7744008168814191168, guid: cf27e03cd87a0c5a6b40af4ded14c0cd, type: 3}
       propertyPath: m_LocalPosition.x
       value: -2.35677
@@ -485662,46 +485658,6 @@ PrefabInstance:
     - target: {fileID: 7744008168814191168, guid: cf27e03cd87a0c5a6b40af4ded14c0cd, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8521726943504668858, guid: cf27e03cd87a0c5a6b40af4ded14c0cd, type: 3}
-      propertyPath: maxHealth
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 8521726943504668858, guid: cf27e03cd87a0c5a6b40af4ded14c0cd, type: 3}
-      propertyPath: playerAmmo.Array.size
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 8521726943504668858, guid: cf27e03cd87a0c5a6b40af4ded14c0cd, type: 3}
-      propertyPath: playerAmmo.Array.data[0].amount
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 8521726943504668858, guid: cf27e03cd87a0c5a6b40af4ded14c0cd, type: 3}
-      propertyPath: playerAmmo.Array.data[1].amount
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 8521726943504668858, guid: cf27e03cd87a0c5a6b40af4ded14c0cd, type: 3}
-      propertyPath: playerAmmo.Array.data[3].amount
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 8521726943504668858, guid: cf27e03cd87a0c5a6b40af4ded14c0cd, type: 3}
-      propertyPath: playerAmmo.Array.data[2].ammoType
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 8521726943504668858, guid: cf27e03cd87a0c5a6b40af4ded14c0cd, type: 3}
-      propertyPath: playerAmmo.Array.data[3].ammoType
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 8538334609046303313, guid: cf27e03cd87a0c5a6b40af4ded14c0cd, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -0.12
-      objectReference: {fileID: 0}
-    - target: {fileID: 8918833937651877119, guid: cf27e03cd87a0c5a6b40af4ded14c0cd, type: 3}
-      propertyPath: m_UseGravity
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8918833937651877119, guid: cf27e03cd87a0c5a6b40af4ded14c0cd, type: 3}
-      propertyPath: m_IsKinematic
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

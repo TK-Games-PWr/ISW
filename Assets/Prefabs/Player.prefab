@@ -903,6 +903,8 @@ MonoBehaviour:
   leanAngle: 15
   leanHorizontalOffset: 0.3
   leanSpeed: 8
+  slideSpeed: 8
+  enemyLayerName: Enemy
   crouchHeight: 1.5
   uncrouchCeilingLayer:
     serializedVersion: 2
@@ -944,10 +946,15 @@ MonoBehaviour:
     amount: 5
   - ammoType: 1
     amount: 10
+  - ammoType: 3
+    amount: 2
   - ammoType: 2
     amount: 2
   maxHealth: 100
   godMode: 0
+  regenRate: 10
+  regenDelay: 5
+  canRegenerate: 1
 --- !u!114 &3642215617026583933
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2266,6 +2273,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7744008168814191168}
     m_Modifications:
+    - target: {fileID: 3155738402522365272, guid: 71b4849e664c36c8d838c6a4ea3258e0, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3155738402522365272, guid: 71b4849e664c36c8d838c6a4ea3258e0, type: 3}
+      propertyPath: m_IsKinematic
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3986724923832534808, guid: 71b4849e664c36c8d838c6a4ea3258e0, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

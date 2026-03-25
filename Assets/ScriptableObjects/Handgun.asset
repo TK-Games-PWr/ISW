@@ -66,4 +66,4 @@ MonoBehaviour:
   recoilHorizontal: 15
   spread: 0.01
   movementSpreadPenalty: 0.05
-  reloadTime: 1
+  reloadTime: 0.8
