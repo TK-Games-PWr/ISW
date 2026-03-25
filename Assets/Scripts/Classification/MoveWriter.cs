@@ -16,7 +16,8 @@ namespace Classification
          * References to scripts needed for classification
          */
         [Header("References")]
-        //ClassificationText classificationText;
+        [SerializeField]
+        ClassificationText classificationText;
         [SerializeField]
         PlayerShootingController playerShootingController;
         [SerializeField]
@@ -116,7 +117,7 @@ namespace Classification
                 SetNewDatapoint();
                 SaveToCsv();
                 timer = 0f;
-                //classificationText.UpdateClassificationResult();
+                classificationText.UpdateClassificationResult();
             }
         
         }
