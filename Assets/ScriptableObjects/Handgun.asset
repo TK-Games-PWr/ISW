@@ -12,14 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc5496a18bb9692b6a7cc67528f8a12e, type: 3}
   m_Name: Handgun
   m_EditorClassIdentifier: Assembly-CSharp::PlayerShootingSystem.GunInfo
-  flatDamage: 15
+  flatDamage: 10
   isAutomatic: 0
   isExplosive: 0
   isMelee: 0
   blastRadius: 0
   fireRate: 0
   ammoType: 0
-  maxAmmo: 10
+  maxAmmo: 8
   damageFalloff:
     serializedVersion: 2
     m_Curve:
@@ -65,3 +65,5 @@ MonoBehaviour:
   recoilUpward: 50
   recoilHorizontal: 15
   spread: 0.01
+  movementSpreadPenalty: 0.05
+  reloadTime: 1

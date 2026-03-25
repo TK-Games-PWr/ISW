@@ -12,34 +12,43 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc5496a18bb9692b6a7cc67528f8a12e, type: 3}
   m_Name: SnipeRifle
   m_EditorClassIdentifier: Assembly-CSharp::PlayerShootingSystem.GunInfo
-  flatDamage: 300
+  flatDamage: 15
   isAutomatic: 0
   isExplosive: 0
   isMelee: 0
   blastRadius: 0
   fireRate: 0
   ammoType: 2
-  maxAmmo: 5
+  maxAmmo: 4
   damageFalloff:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
       time: 0
       value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 34
+      inSlope: -0.02677048
+      outSlope: -0.02677048
+      tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0
+      outWeight: 0.13211423
+    - serializedVersion: 3
+      time: 0.7532904
+      value: 0.9863595
+      inSlope: -0.08160476
+      outSlope: -0.08160476
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
     - serializedVersion: 3
       time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
+      value: 0.9505615
+      inSlope: -0.14510159
+      outSlope: -0.14510159
       tangentMode: 34
       weightedMode: 0
-      inWeight: 0
+      inWeight: 0.33333334
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2

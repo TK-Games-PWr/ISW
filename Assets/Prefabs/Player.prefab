@@ -907,7 +907,7 @@ MonoBehaviour:
   uncrouchCeilingLayer:
     serializedVersion: 2
     m_Bits: 119
-  jumpHeight: 2
+  jumpHeight: 2.25
   lookSensitivity: {x: 0.1, y: 0.1}
   cameraNormalFOV: 60
   cameraSprintFOV: 80
@@ -919,7 +919,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   maxHealth: 100
-  gravityScale: 3
+  gravityScale: 2
 --- !u!114 &8521726943504668858
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1048,7 +1048,6 @@ MonoBehaviour:
   shots: 0
   hits: 0
   cameraTransform: {fileID: 7685606263097007844}
-  crosshair: {fileID: 2211987939353375997}
   uiCrosshair: {fileID: 3772505715605633744}
   hitDing: {fileID: 8656975728489504990}
   aimSpeed: 12
