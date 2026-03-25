@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 using TMPro;
 using System.IO;
 using System.Threading.Tasks;
@@ -13,18 +12,109 @@ namespace Classification
 
     public class ClassificationText : MonoBehaviour
     {
-        [SerializeField] private TextMeshProUGUI text;
+        [SerializeField] TextMeshProUGUI text;
+        
+        bool _isPythonReady = false;
 
         void Start()
         {
             if (text == null) text = GetComponent<TextMeshProUGUI>();
+            
+            if (text != null) text.text = "Initializing Python Environment...";
+            
+            _ = SetupPythonEnvironmentAsync();
         }
 
         public void UpdateClassificationResult()
         {
-
+            if (!_isPythonReady)
+            {
+                UnityEngine.Debug.LogWarning("Python environment is still setting up. Please wait.");
+                return;
+            }
+            
             _ = RunPythonScriptAsync();
+        }
+        
+        private async Task SetupPythonEnvironmentAsync()
+        {
+            string modulePath = Path.Combine(Application.dataPath, "Scripts/Classification/.PythonModule");
+            string venvPath = Path.Combine(modulePath, "venv");
+            
+            if (Directory.Exists(venvPath))
+            {
+                UnityEngine.Debug.Log("Python venv already exists. Skipping installation.");
+                if (text != null) text.text = "Ready.";
+                _isPythonReady = true;
+                return;
+            }
 
+            UnityEngine.Debug.Log("Setting up Python virtual environment... This might take a minute or two.");
+            
+            string processFileName;
+            string processArguments = "";
+            
+            if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer)
+            {
+                processFileName = Path.Combine(modulePath, "install-packages.bat");
+            }
+            else
+            {
+                // mac/linux
+                processFileName = "/bin/bash";
+                processArguments = $"\"{Path.Combine(modulePath, "install-packages.sh")}\"";
+            }
+            
+            string scriptToCheck = Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer 
+                ? processFileName 
+                : Path.Combine(modulePath, "install-packages.sh");
+
+            if (!File.Exists(scriptToCheck))
+            {
+                UnityEngine.Debug.LogError($"Setup script not found at: {scriptToCheck}");
+                if (text != null) text.text = "Error: Setup script missing.";
+                return;
+            }
+
+            await Task.Run(() =>
+            {
+                ProcessStartInfo startInfo = new ProcessStartInfo
+                {
+                    FileName = processFileName,
+                    Arguments = processArguments,
+                    WorkingDirectory = modulePath,
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    CreateNoWindow = true
+                };
+
+                try
+                {
+                    using (Process process = Process.Start(startInfo))
+                    {
+                        process.WaitForExit();
+                        
+                        string output = process.StandardOutput.ReadToEnd();
+                        string error = process.StandardError.ReadToEnd();
+
+                        UnityEngine.Debug.Log($"Setup Output:\n{output}");
+                        
+                        if (!string.IsNullOrEmpty(error))
+                        {
+                            UnityEngine.Debug.LogWarning($"Setup Warnings/Errors:\n{error}");
+                        }
+                    }
+                }
+                catch (System.Exception ex)
+                {
+                    UnityEngine.Debug.LogError($"Failed to run setup script: {ex.Message}");
+                }
+            });
+
+            UnityEngine.Debug.Log("Python environment setup complete!");
+            if (text != null) text.text = "Ready.";
+            _isPythonReady = true;
         }
 
         // Changed from IEnumerator to async Task
