@@ -35,7 +35,19 @@ namespace Classification
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
 
-            string scriptPath = Path.Combine(Application.dataPath, "Scripts/Classification/PythonModule/inference.py");
+            string scriptPath = Path.Combine(Application.dataPath, "Scripts/Classification/.PythonModule/inference.py");
+            string venvPath = Path.Combine(Application.dataPath, "Scripts/Classification/.PythonModule/venv");
+            
+            string pythonExecutable;
+            if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer)
+            {
+                pythonExecutable = Path.Combine(venvPath, "Scripts/python.exe");
+            }
+            else
+            {
+                // macOS / Linux
+                pythonExecutable = Path.Combine(venvPath, "bin/python");
+            }
 
             if (!File.Exists(scriptPath))
             {
@@ -46,14 +58,14 @@ namespace Classification
             try
             {
                 // Initialize the handler (it is IDisposable, so 'using' handles cleanup)
-                using (var handler = new SubProcessHandler(scriptPath))
+                using (var handler = new SubProcessHandler(pythonExecutable, scriptPath))
                 {
                     // The new handler handles the background thread internally.
                     // 'await' pauses this method and returns control to Unity, 
                     // then resumes here on the Main Thread when finished.
                     List<string> args = new List<string>();
                     args.Add(Path.Combine(Application.dataPath, Directory.GetCurrentDirectory() + "/playerdata.csv"));
-                    args.Add(Path.Combine(Application.dataPath, "Scripts/Classification/PythonModule/model.joblib"));
+                    args.Add(Path.Combine(Application.dataPath, "Scripts/Classification/.PythonModule/model.joblib"));
                     SubProcessResponse response = await handler.ExecutePythonAsync(args);
 
                     stopwatch.Stop();
