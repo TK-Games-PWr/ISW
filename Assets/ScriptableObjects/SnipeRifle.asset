@@ -19,7 +19,7 @@ MonoBehaviour:
   blastRadius: 0
   fireRate: 0
   ammoType: 2
-  maxAmmo: 4
+  maxAmmo: 5
   damageFalloff:
     serializedVersion: 2
     m_Curve:

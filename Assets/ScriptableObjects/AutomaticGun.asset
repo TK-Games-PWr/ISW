@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc5496a18bb9692b6a7cc67528f8a12e, type: 3}
   m_Name: AutomaticGun
   m_EditorClassIdentifier: Assembly-CSharp::PlayerShootingSystem.GunInfo
-  flatDamage: 7
+  flatDamage: 5
   isAutomatic: 1
   isExplosive: 0
   isMelee: 0

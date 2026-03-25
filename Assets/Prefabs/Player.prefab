@@ -907,7 +907,7 @@ MonoBehaviour:
   uncrouchCeilingLayer:
     serializedVersion: 2
     m_Bits: 119
-  jumpHeight: 2.25
+  jumpHeight: 2.5
   lookSensitivity: {x: 0.1, y: 0.1}
   cameraNormalFOV: 60
   cameraSprintFOV: 80

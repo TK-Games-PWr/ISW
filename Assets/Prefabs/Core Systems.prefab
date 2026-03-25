@@ -841,6 +841,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   damageVolume: {fileID: 420854665073350245}
   fadeDuration: 0.5
+  lowDmgAmount: 10
+  highDmgAmount: 60
 --- !u!1 &5372822442204074747
 GameObject:
   m_ObjectHideFlags: 0
