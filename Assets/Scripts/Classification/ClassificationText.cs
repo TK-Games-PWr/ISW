@@ -8,20 +8,18 @@ using System.Collections.Generic;
 
 namespace Classification
 {
-
-
     public class ClassificationText : MonoBehaviour
     {
         [SerializeField] TextMeshProUGUI text;
-        
+
         bool _isPythonReady = false;
 
         void Start()
         {
             if (text == null) text = GetComponent<TextMeshProUGUI>();
-            
+
             if (text != null) text.text = "Initializing Python Environment...";
-            
+
             _ = SetupPythonEnvironmentAsync();
         }
 
@@ -32,15 +30,15 @@ namespace Classification
                 UnityEngine.Debug.LogWarning("Python environment is still setting up. Please wait.");
                 return;
             }
-            
+
             _ = RunPythonScriptAsync();
         }
-        
+
         private async Task SetupPythonEnvironmentAsync()
         {
             string modulePath = Path.Combine(Application.dataPath, "Scripts/Classification/.PythonModule");
             string venvPath = Path.Combine(modulePath, "venv");
-            
+
             if (!Directory.Exists(modulePath))
             {
                 UnityEngine.Debug.Log("Module directory doesn't exist at " + modulePath);
@@ -48,7 +46,7 @@ namespace Classification
                 _isPythonReady = false;
                 return;
             }
-            
+
             if (Directory.Exists(venvPath))
             {
                 UnityEngine.Debug.Log("Python venv already exists. Skipping installation.");
@@ -58,24 +56,27 @@ namespace Classification
             }
 
             UnityEngine.Debug.Log("Setting up Python virtual environment... This might take a minute or two.");
-            
+
             string processFileName;
             string processArguments = "";
-            
-            if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer)
+            string scriptToCheck;
+
+            if (Application.platform == RuntimePlatform.WindowsEditor ||
+                Application.platform == RuntimePlatform.WindowsPlayer)
             {
-                processFileName = Path.Combine(modulePath, "install-packages.bat");
+                processFileName = "cmd.exe";
+                string batPath = Path.Combine(modulePath, "install-packages.bat");
+
+                processArguments = $"/c \"{batPath}\"";
+                scriptToCheck = batPath;
             }
             else
             {
                 // mac/linux
                 processFileName = "/bin/bash";
-                processArguments = $"\"{Path.Combine(modulePath, "install-packages.sh")}\"";
+                scriptToCheck = Path.Combine(modulePath, "install-packages.sh");
+                processArguments = $"\"{scriptToCheck}\"";
             }
-            
-            string scriptToCheck = Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer 
-                ? processFileName 
-                : Path.Combine(modulePath, "install-packages.sh");
 
             if (!File.Exists(scriptToCheck))
             {
@@ -102,12 +103,12 @@ namespace Classification
                     using (Process process = Process.Start(startInfo))
                     {
                         process.WaitForExit();
-                        
+
                         string output = process.StandardOutput.ReadToEnd();
                         string error = process.StandardError.ReadToEnd();
 
                         UnityEngine.Debug.Log($"Setup Output:\n{output}");
-                        
+
                         if (!string.IsNullOrEmpty(error))
                         {
                             UnityEngine.Debug.LogWarning($"Setup Warnings/Errors:\n{error}");
@@ -135,9 +136,10 @@ namespace Classification
 
             string scriptPath = Path.Combine(Application.dataPath, "Scripts/Classification/.PythonModule/inference.py");
             string venvPath = Path.Combine(Application.dataPath, "Scripts/Classification/.PythonModule/venv");
-            
+
             string pythonExecutable;
-            if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer)
+            if (Application.platform == RuntimePlatform.WindowsEditor ||
+                Application.platform == RuntimePlatform.WindowsPlayer)
             {
                 pythonExecutable = Path.Combine(venvPath, "Scripts/python.exe");
             }
