@@ -287,8 +287,13 @@ namespace PlayerShootingSystem
 
         void SwitchWeapons(Gun gun)
         {
-            if(currentGun)
+            if (currentGun)
+            {
                 currentGun.gameObject.SetActive(false);
+                if(_reloadCoroutine != null) StopCoroutine(_reloadCoroutine);
+                currentGun = null;
+            }
+
             if (!gun) return;
             gun.gameObject.SetActive(true);
             currentGun = gun;
