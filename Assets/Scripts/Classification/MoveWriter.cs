@@ -39,7 +39,7 @@ namespace Classification
         {
             _datapoint = new ExtractedData
             {
-                avgAccuracy = Mathf.Max((float)playerShootingController.hits/(playerShootingController.shots),0),
+                avgAccuracy = Mathf.Clamp((float)playerShootingController.hits/(playerShootingController.shots),0, 1),
                 avgY = moveDataExtractor.yPositions.Average(),
                 avgDetection = float.IsNaN(detectionDataExtractor.detectionData.Average())?
                     0:detectionDataExtractor.detectionData.Average(),
