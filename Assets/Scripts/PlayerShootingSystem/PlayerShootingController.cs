@@ -337,7 +337,8 @@ namespace PlayerShootingSystem
                     if (!(enemy == null || enemy.IsDead))
                     {
                         if (hitDing) PlayHitSound();
-                        uiCrosshair.ShowHit();
+                        if(uiCrosshair.isActiveAndEnabled)
+                            uiCrosshair.ShowHit();
 
                         float distance = hit.distance;
                         float falloff = currentGun.gunInfo.damageFalloff.Evaluate(distance / 100f);
