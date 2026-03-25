@@ -143,7 +143,12 @@ namespace PlayerShootingSystem
                     rb.AddForce(throwingForce, ForceMode.Impulse);
                     currentGun.equippedNade = null;
                     AmmoEntry ammoEntry = playerResources.playerAmmo.Find(a => a.ammoType == currentGun.gunInfo.ammoType);
-                    if(ammoEntry.amount <= 0) Destroy(currentGun.gameObject);
+                    if (ammoEntry.amount <= 0)
+                    {
+                        nadeRoot.transform.parent = transform;
+                        playerResources.weapons[_currentSlot] = null;
+                        currentGun = null;
+                    }
                 }
             }
         }
@@ -185,6 +190,7 @@ namespace PlayerShootingSystem
 
         public void OnReloadInput(InputValue value)
         {
+            if (!currentGun) return;
             if (value.isPressed)
             {
                 if (currentGun.gunInfo.ammoType == AmmoType.Nade )
@@ -439,16 +445,18 @@ namespace PlayerShootingSystem
 
             else if (pickedObject.TryGetComponent(out Nade nade))
             {
-                if(playerResources.weapons.Any(a=> a != null && 
-                                                   a.gunInfo != null && 
-                                                   a.gunInfo.isExplosive))
+                AmmoEntry ammoEntry = playerResources.playerAmmo.Find(a => a.ammoType == AmmoType.Nade);
+                if(ammoEntry != null)
                 {
-                    AmmoEntry ammoEntry = playerResources.playerAmmo.Find(a => a.ammoType == AmmoType.Nade);
                     ammoEntry.amount++;
                     UpdateUI();
                     Destroy(pickedObject.gameObject);
-                    return;
                 }
+
+                if (playerResources.weapons.Any(a=> a != null && 
+                                                    a.gunInfo != null && 
+                                                    a.gunInfo.isExplosive)) return;
+                
                 nadeRoot.equippedNade = nade;
                 Gun weaponInCurrentSlot= playerResources.weapons[_currentSlot];
                 if (weaponInCurrentSlot)
