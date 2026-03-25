@@ -53,7 +53,7 @@ namespace PlayerShootingSystem
                 for (int i = 0; i < 4; i++)
                 {
                     GameObject copy = Instantiate(fireSound.gameObject, fireSound.transform.parent);
-                    copy.GetComponent<AudioSource>().pitch = Random.Range(0.9f, 1.1f);
+                    copy.GetComponent<AudioSource>().pitch = fireSound.pitch + Random.Range(-0.1f, 0.1f);
                     fireSoundInstances[i+1] = copy.GetComponent<AudioSource>();
                 }
             }
