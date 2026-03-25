@@ -4,6 +4,7 @@ using PlayerShootingSystem;
 using TK_Shared._3DPlayerMovement;
 using TMPro;
 using UnityEngine;
+
 [System.Serializable]
 public class AmmoEntry
 {
@@ -16,20 +17,30 @@ public class PlayerResources : MonoBehaviour, ICharacter
     public event Action<float> OnHealthChanged;
     public event Action OnDeath;
     
-    [SerializeField] TextMeshProUGUI HealthLabel;
-    [SerializeField] GameObject WeaponHolder;
+    [SerializeField] private TextMeshProUGUI HealthLabel;
+    [SerializeField] private GameObject WeaponHolder;
+    
     public List<Gun> weapons;
     public List<AmmoEntry> playerAmmo;
+
     public float CurrentHealth { get; private set; }
-    [SerializeField] float maxHealth = 100f;
-    [SerializeField] bool godMode;
+    [SerializeField] private float maxHealth = 100f;
+    [SerializeField] private bool godMode;
+
+    [Header("Passive Health Regeneration")]
+    [SerializeField] private float regenRate = 10f;
+    [SerializeField] private float regenDelay = 5f;
+    [SerializeField] private bool canRegenerate = true;
+
+    private float lastDamageTime;
+    private bool isRegenerating;
 
     public void PutWeaponInInventoryObject(GameObject weapon)
     {
         weapon.transform.parent = WeaponHolder.transform;
         weapon.transform.localPosition = Vector3.zero;
-        
     }
+
     void Awake()
     {
         CurrentHealth = maxHealth;
@@ -52,15 +63,28 @@ public class PlayerResources : MonoBehaviour, ICharacter
         OnHealthChanged -= DamageEffect.Instance.OnPlayerHit;
     }
 
-    /// <summary>
-    /// Does damage to a player, heals if amount is negative
-    /// </summary>
+    private void Update()
+    {
+        if (!canRegenerate || CurrentHealth >= maxHealth) 
+            return;
+
+        if (Time.time - lastDamageTime >= regenDelay)
+        {
+            RegenerateHealth();
+        }
+    }
+    
     public void Damage(float amount)
     {
 #if UNITY_EDITOR
         if (godMode) return;
 #endif
         CurrentHealth = Mathf.Clamp(CurrentHealth - amount, 0, maxHealth);
+
+        if (amount > 0)
+        {
+            lastDamageTime = Time.time;
+        }
 
         OnHealthChanged?.Invoke(amount);
 
@@ -70,15 +94,21 @@ public class PlayerResources : MonoBehaviour, ICharacter
         }
     }
 
+    private void RegenerateHealth()
+    {
+        float healAmount = regenRate * Time.deltaTime;
+        CurrentHealth = Mathf.Min(CurrentHealth + healAmount, maxHealth);
+
+        OnHealthChanged?.Invoke(-healAmount);
+    }
+
     void Die()
     {
         OnDeath?.Invoke(); 
     }
 
-    void ShowHealth(float damage)
+    void ShowHealth(float damageAmount)
     {
-        HealthLabel.text = (int)CurrentHealth + "hp";
+        HealthLabel.text = Mathf.CeilToInt(CurrentHealth) + "hp";
     }
-
-
 }
