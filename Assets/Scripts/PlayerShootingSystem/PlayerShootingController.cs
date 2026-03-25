@@ -142,6 +142,8 @@ namespace PlayerShootingSystem
                     Vector3 throwingForce = fpsCam.transform.forward * throwForce + transform.up * throwUpwardForce;
                     rb.AddForce(throwingForce, ForceMode.Impulse);
                     currentGun.equippedNade = null;
+                    AmmoEntry ammoEntry = playerResources.playerAmmo.Find(a => a.ammoType == currentGun.gunInfo.ammoType);
+                    if(ammoEntry.amount <= 0) Destroy(currentGun.gameObject);
                 }
             }
         }

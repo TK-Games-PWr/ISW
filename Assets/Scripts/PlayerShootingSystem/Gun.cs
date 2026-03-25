@@ -32,8 +32,10 @@ namespace PlayerShootingSystem
         public float slideBackSpeed = 25f;
         public float slideReturnSpeed = 15f;
         
+        [Header("Nade")]
         [SerializeField] LayerMask damageLayerMask;
         public Nade equippedNade;
+        
         Vector3 _originalSlidePos;
         Quaternion _restRot;
         public bool IsRecoiling { get; private set; }
