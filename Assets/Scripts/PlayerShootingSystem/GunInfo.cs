@@ -5,6 +5,7 @@ namespace PlayerShootingSystem
     [CreateAssetMenu(fileName = "GunInfo", menuName = "Scripts/PlayerShootingSystem/GunInfo")]
     public class GunInfo : ScriptableObject
     {
+        public Sprite icon;
         public int flatDamage;
         public bool isAutomatic;
         public bool isExplosive;
