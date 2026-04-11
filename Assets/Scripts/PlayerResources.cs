@@ -22,6 +22,7 @@ public class PlayerResources : MonoBehaviour, ICharacter
     
     public List<Gun> weapons;
     public List<AmmoEntry> playerAmmo;
+    public GameObject knifeObj;
 
     public float CurrentHealth { get; private set; }
     [SerializeField] private float maxHealth = 100f;

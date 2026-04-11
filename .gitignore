@@ -104,3 +104,7 @@ Assets/TextMesh Pro.meta
 
 # Extraction data
 *.csv
+
+# IDE
+.vscode/
+.idea/

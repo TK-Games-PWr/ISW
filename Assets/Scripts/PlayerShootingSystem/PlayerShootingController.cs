@@ -98,7 +98,15 @@ namespace PlayerShootingSystem
         {
             _isHoldingShoot = value.isPressed;
 
-            if (currentGun == null) return;
+            if (currentGun == null)
+            {
+                if (value.isPressed)
+                {
+                    meleeAnim.Play();
+                }
+
+                return;
+            }
 
             if (!currentGun.gunInfo.isExplosive && !currentGun.gunInfo.isMelee)
             {
@@ -302,7 +310,12 @@ namespace PlayerShootingSystem
                 currentGun = null;
             }
 
-            if (!gun) return;
+            if (!gun)
+            {
+                playerResources.knifeObj.SetActive(true);
+                return;
+            }
+            playerResources.knifeObj.SetActive(false);
             gun.gameObject.SetActive(true);
             currentGun = gun;
             gun.GetComponent<GrabbableObject>().Grab(holdPivot);
