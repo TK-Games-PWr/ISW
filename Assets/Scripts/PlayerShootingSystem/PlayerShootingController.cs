@@ -78,6 +78,7 @@ namespace PlayerShootingSystem
                     hitDingInstances[i+1] = copy.GetComponent<AudioSource>();
                 }
             }
+            playerResources.hotbar.HighlightSlot(_currentSlot);
         }
 
         void Update()
