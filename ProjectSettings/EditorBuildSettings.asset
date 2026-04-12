@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/Menu.unity
+    guid: df26fa906f0edf5c6acee61dcb56374a
+  - enabled: 1
     path: Assets/Scenes/TosiaScene.unity
     guid: bcb095e3f4480b649b636636ea4af7fd
   m_configObjects:

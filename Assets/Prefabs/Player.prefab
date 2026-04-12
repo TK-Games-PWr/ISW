@@ -1059,11 +1059,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerResources
   HealthLabel: {fileID: 2127398119068144553}
   WeaponHolder: {fileID: 333848910954390943}
+  hotbar: {fileID: 2676261366075097758}
   weapons:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+    items:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
   playerAmmo:
   - ammoType: 0
     amount: 5
@@ -2098,6 +2100,8 @@ MonoBehaviour:
   itemEntryPrefab: {fileID: 3122543056266596697, guid: e27af3ca939266c968fe3f0881d668c2, type: 3}
   items: []
   totalSlots: 4
+  baseColor: {r: 0.74901974, g: 0.74901974, b: 0.74901974, a: 0.23529412}
+  highlightColor: {r: 1, g: 0.740566, b: 0.77622235, a: 0.23529412}
 --- !u!1 &7762455590700344172
 GameObject:
   m_ObjectHideFlags: 0

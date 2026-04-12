@@ -14,7 +14,7 @@ public class WeaponHotbar : MonoBehaviour
     [Tooltip("Color of the highlight for item slot")] [SerializeField]
     Color highlightColor;
 
-    void Start()
+    void Awake()
     {
         for (int i = 1; i <= totalSlots; i++)
         {
