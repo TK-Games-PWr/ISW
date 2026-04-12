@@ -19,6 +19,9 @@ public class MainMenuController : MonoBehaviour
 
     void Start()
     {
+        mainMenu.SetActive(true);
+        optionsMenu.SetActive(false);
+        
         foreach (var se in scenes)
         {
             _scenes[se.name] = se.index;
@@ -50,5 +53,10 @@ public class MainMenuController : MonoBehaviour
     public void QuitGame()
     {
         Application.Quit();
+    }
+
+    public void SetOption()
+    {
+        
     }
 }
