@@ -6231,6 +6231,17 @@ MonoBehaviour:
   m_SelectedFaces: 
   m_SelectedEdges: []
   m_SelectedVertices: 
+--- !u!114 &286752014 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2676261366075097758, guid: cf27e03cd87a0c5a6b40af4ded14c0cd, type: 3}
+  m_PrefabInstance: {fileID: 1710865557}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 249de92d27b2d784284b45b44f453bb0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
 --- !u!1 &348077954
 GameObject:
   m_ObjectHideFlags: 0
@@ -12344,6 +12355,38 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2676261366075097758, guid: cf27e03cd87a0c5a6b40af4ded14c0cd, type: 3}
+      propertyPath: baseColor.a
+      value: 0.23529412
+      objectReference: {fileID: 0}
+    - target: {fileID: 2676261366075097758, guid: cf27e03cd87a0c5a6b40af4ded14c0cd, type: 3}
+      propertyPath: baseColor.b
+      value: 0.74901974
+      objectReference: {fileID: 0}
+    - target: {fileID: 2676261366075097758, guid: cf27e03cd87a0c5a6b40af4ded14c0cd, type: 3}
+      propertyPath: baseColor.g
+      value: 0.74901974
+      objectReference: {fileID: 0}
+    - target: {fileID: 2676261366075097758, guid: cf27e03cd87a0c5a6b40af4ded14c0cd, type: 3}
+      propertyPath: baseColor.r
+      value: 0.74901974
+      objectReference: {fileID: 0}
+    - target: {fileID: 2676261366075097758, guid: cf27e03cd87a0c5a6b40af4ded14c0cd, type: 3}
+      propertyPath: highlightColor.a
+      value: 0.23529412
+      objectReference: {fileID: 0}
+    - target: {fileID: 2676261366075097758, guid: cf27e03cd87a0c5a6b40af4ded14c0cd, type: 3}
+      propertyPath: highlightColor.b
+      value: 0.77622235
+      objectReference: {fileID: 0}
+    - target: {fileID: 2676261366075097758, guid: cf27e03cd87a0c5a6b40af4ded14c0cd, type: 3}
+      propertyPath: highlightColor.g
+      value: 0.740566
+      objectReference: {fileID: 0}
+    - target: {fileID: 2676261366075097758, guid: cf27e03cd87a0c5a6b40af4ded14c0cd, type: 3}
+      propertyPath: highlightColor.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3395969552154099605, guid: cf27e03cd87a0c5a6b40af4ded14c0cd, type: 3}
       propertyPath: m_Name
       value: Player
@@ -12388,6 +12431,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8521726943504668858, guid: cf27e03cd87a0c5a6b40af4ded14c0cd, type: 3}
+      propertyPath: hotbar
+      value: 
+      objectReference: {fileID: 286752014}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

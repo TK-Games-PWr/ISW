@@ -385,6 +385,7 @@ namespace PlayerShootingSystem
 
         void UpdateUI()
         {
+            playerResources.hotbar.HighlightSlot(_currentSlot);
             if (!currentGun)
             {
                 maxAmmoAmount.text = 0.ToString();
@@ -395,7 +396,6 @@ namespace PlayerShootingSystem
             AmmoEntry ammoEntry = playerResources.playerAmmo.Find(a => a.ammoType == currentGun.gunInfo.ammoType);
             maxAmmoAmount.text=ammoEntry.amount.ToString();
             magAmmoAmount.text=currentGun.ammoInMag.ToString();
-            
         }
         IEnumerator AutomaticFireLoop()
         {

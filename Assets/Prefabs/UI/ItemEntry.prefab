@@ -168,6 +168,7 @@ MonoBehaviour:
   defaultIcon: {fileID: 21300000, guid: 4f750c5cfc00221dbb8634d3fc79c81e, type: 3}
   icon: {fileID: 5027511580457875598}
   indexText: {fileID: 8098784892171759063}
+  background: {fileID: 3245939444846223360}
 --- !u!1 &8484387862279605928
 GameObject:
   m_ObjectHideFlags: 0

@@ -8,10 +8,11 @@ public class ItemEntry : MonoBehaviour
     [SerializeField] Sprite defaultIcon;
     [SerializeField] Image icon;
     [SerializeField] TextMeshProUGUI indexText;
+    [SerializeField] Image background;
 
     public void SetItem(GunInfo gun)
     {
-        if (gun.icon != null)
+        if (gun != null && gun.icon != null)
         {
             icon.sprite = gun.icon;
         }
@@ -24,5 +25,10 @@ public class ItemEntry : MonoBehaviour
     public void SetIndex(int index)
     {
         indexText.text = index.ToString();
+    }
+
+    public void SetBackground(Color color)
+    {
+        background.color = color;
     }
 }

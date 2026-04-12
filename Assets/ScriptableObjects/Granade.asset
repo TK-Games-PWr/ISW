@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc5496a18bb9692b6a7cc67528f8a12e, type: 3}
   m_Name: Granade
   m_EditorClassIdentifier: Assembly-CSharp::PlayerShootingSystem.GunInfo
+  icon: {fileID: 21300000, guid: 2167ac2f81c05b16db9424da14ac619e, type: 3}
   flatDamage: 60
   isAutomatic: 0
   isExplosive: 1
