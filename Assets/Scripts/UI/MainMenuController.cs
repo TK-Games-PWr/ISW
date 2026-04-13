@@ -13,7 +13,7 @@ public struct SceneEntry
 public class MainMenuController : MonoBehaviour
 {
     public SceneEntry[] scenes;
-    Dictionary<string, int> _scenes = new Dictionary<string, int>();
+    public static Dictionary<string, int> Scenes = new Dictionary<string, int>();
     public GameObject mainMenu;
     public GameObject optionsMenu;
 
@@ -24,18 +24,18 @@ public class MainMenuController : MonoBehaviour
         
         foreach (var se in scenes)
         {
-            _scenes[se.name] = se.index;
+            Scenes[se.name] = se.index;
         }
     }
 
     public void LoadScene(string name)
     {
-        if (!_scenes.ContainsKey(name))
+        if (!Scenes.ContainsKey(name))
         {
             Debug.LogError("Scene not found: " + name);
             return;
         }
-        SceneManager.LoadScene(_scenes[name]);
+        SceneManager.LoadScene(Scenes[name]);
     }
 
     public void OptionsMenu()
@@ -53,10 +53,5 @@ public class MainMenuController : MonoBehaviour
     public void QuitGame()
     {
         Application.Quit();
-    }
-
-    public void SetOption()
-    {
-        
     }
 }
