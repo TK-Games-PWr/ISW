@@ -823,8 +823,8 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 25
+  m_VertexColorAlwaysGammaSpace: 1
+  m_AdditionalShaderChannelsFlag: 1
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
@@ -6326,6 +6326,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 876534067145722098, guid: c361c01b907f0dbef8b6e154e4b61c73, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1091268397439316001, guid: c361c01b907f0dbef8b6e154e4b61c73, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1361331784742629587, guid: c361c01b907f0dbef8b6e154e4b61c73, type: 3}
