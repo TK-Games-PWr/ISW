@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
 
-namespace UI
+namespace OptionsSystem
 {
     public class OptionsController : MonoBehaviour
     {
@@ -50,11 +50,13 @@ namespace UI
         public void SetPlayerPref(string key, int value)
         {
             PlayerPrefs.SetInt(key, value);
+            Options.ReloadPrefs();
         }
 
         public void SetPlayerPref(string key, float value)
         {
             PlayerPrefs.SetFloat(key, value);
+            Options.ReloadPrefs();
         }
 
         public void ShowTutorialPanel()
