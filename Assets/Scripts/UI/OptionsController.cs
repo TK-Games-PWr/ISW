@@ -9,6 +9,7 @@ namespace UI
     {
         [SerializeField] TMP_Dropdown leanModeDropdown;
         [SerializeField] TMP_Dropdown crouchModeDropdown;
+        [SerializeField] GameObject tutorialPanel;
 
         [Header("Audio")]
         [SerializeField] AudioMixer mixer;
@@ -54,6 +55,11 @@ namespace UI
         public void SetPlayerPref(string key, float value)
         {
             PlayerPrefs.SetFloat(key, value);
+        }
+
+        public void ShowTutorialPanel()
+        {
+            tutorialPanel.SetActive(true);
         }
     }
 }
