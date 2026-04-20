@@ -30,5 +30,13 @@ namespace PlayerShootingSystem
         {
             _shootingController.OnMeleeInput(inputValue);
         }
+        void OnThrow(InputValue inputValue)
+        {
+            _shootingController.OnThrowInput(inputValue);
+        }
+        void OnSwapThrowable(InputValue inputValue)
+        {
+            _shootingController.OnSwapThrowableInput(inputValue);
+        }
     }
 }

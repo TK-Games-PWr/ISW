@@ -22,7 +22,7 @@ public class PlayerResources : MonoBehaviour, ICharacter
     
     public List<Gun> weapons;
     public List<AmmoEntry> playerAmmo;
-
+    public List<ThrowableInfo> throwables;
     public float CurrentHealth { get; private set; }
     [SerializeField] private float maxHealth = 100f;
     [SerializeField] private bool godMode;
