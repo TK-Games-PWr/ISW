@@ -100,12 +100,12 @@ namespace PlayerShootingSystem
 
         public void CookNade()
         {
-            StartCoroutine(equippedNade.CookCoroutine(gunInfo, damageLayerMask));
+            //StartCoroutine(equippedNade.CookCoroutine(gunInfo, damageLayerMask));
         }
         IEnumerator RecoilCoroutine()
         {
             IsRecoiling = true;
-            float side = UnityEngine.Random.Range(-recoilSide, recoilSide);
+            float side = Random.Range(-recoilSide, recoilSide);
             
             Quaternion kickRotation = Quaternion.Euler(recoilAmount, side, 0);
 

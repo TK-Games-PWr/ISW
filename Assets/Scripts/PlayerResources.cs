@@ -56,8 +56,8 @@ public class PlayerResources : MonoBehaviour, ICharacter
 
     public WeaponInventory weapons = new (4);
     public List<AmmoEntry> playerAmmo;
+    public List<ThrowableInfo> throwables;
     public GameObject knifeObj;
-
     public float CurrentHealth { get; private set; }
     [SerializeField] private float maxHealth = 100f;
     [SerializeField] private bool godMode;

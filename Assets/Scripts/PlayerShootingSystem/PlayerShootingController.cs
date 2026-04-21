@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using EnemySystem;
+using NUnit.Framework;
 using TK_Shared._3DPlayerMovement;
 using TK_Shared.ObjectInteractions3D;
 using TMPro;
@@ -44,10 +45,10 @@ namespace PlayerShootingSystem
         [SerializeField] PlayerResources playerResources;
         [SerializeField] TMP_Text magAmmoAmount;
         [SerializeField] TMP_Text maxAmmoAmount;
-        [SerializeField] GameObject nadePrefab;
-        [SerializeField] Gun nadeRoot;
         int _currentSlot=0;
         public Gun currentGun;
+        public ThrowableInfo currentThrowable;
+        int currentThrowableIndex;
         Vector3 _hipfireLocalPos;
         Quaternion _hipfireLocalRot;
         bool _isAiming;
@@ -55,10 +56,11 @@ namespace PlayerShootingSystem
         Vector3 _scopeLocalPos;
         Coroutine _aimCoroutine;
         bool _isHoldingShoot;
+        bool _isHoldingThrow;
         Coroutine _autoFireCoroutine;
         Coroutine _reloadCoroutine;
         bool _isActuallyAiming;
-        private float currentSpread;
+        float currentSpread;
         
         void Awake()
         {
@@ -78,6 +80,9 @@ namespace PlayerShootingSystem
                     hitDingInstances[i+1] = copy.GetComponent<AudioSource>();
                 }
             }
+            Assert.True(playerResources.throwables.Count > 0, "Player must have at least one throwable in resources");
+            currentThrowable=playerResources.throwables[0];
+            currentThrowableIndex=0;
             playerResources.hotbar.HighlightSlot(_currentSlot);
         }
 
@@ -110,7 +115,7 @@ namespace PlayerShootingSystem
                 return;
             }
 
-            if (!currentGun.gunInfo.isExplosive && !currentGun.gunInfo.isMelee)
+            if (!currentGun.gunInfo.isMelee)
             {
                 if (_isHoldingShoot)
                 {
@@ -127,37 +132,6 @@ namespace PlayerShootingSystem
                     {
                         StopCoroutine(_autoFireCoroutine);
                         _autoFireCoroutine = null;
-                    }
-                }
-            }
-            else if(currentGun.gunInfo.isExplosive)
-            {
-                if(currentGun.equippedNade==null) return;
-                if (_isHoldingShoot)
-                {
-                    Rigidbody rb=currentGun.slide.AddComponent<Rigidbody>();
-                    currentGun.slide.AddComponent<BoxCollider>();
-                    currentGun.slide.transform.parent = null;
-                    Vector3 forceToUnpin= rb.transform.forward * throwForce;
-                    rb.AddForce(forceToUnpin, ForceMode.Impulse);
-                    Cook();
-                }
-                else
-                {
-                    Rigidbody rb=currentGun.equippedNade.GetComponent<Rigidbody>();
-                    rb.useGravity = true;
-                    rb.isKinematic = false;
-                    currentGun.equippedNade.GetComponent<BoxCollider>().enabled = true;
-                    currentGun.equippedNade.transform.parent = null;
-                    Vector3 throwingForce = fpsCam.transform.forward * throwForce + transform.up * throwUpwardForce;
-                    rb.AddForce(throwingForce, ForceMode.Impulse);
-                    currentGun.equippedNade = null;
-                    AmmoEntry ammoEntry = playerResources.playerAmmo.Find(a => a.ammoType == currentGun.gunInfo.ammoType);
-                    if (ammoEntry.amount <= 0)
-                    {
-                        nadeRoot.transform.parent = transform;
-                        playerResources.weapons[_currentSlot] = null;
-                        currentGun = null;
                     }
                 }
             }
@@ -203,20 +177,6 @@ namespace PlayerShootingSystem
             if (!currentGun) return;
             if (value.isPressed)
             {
-                if (currentGun.gunInfo.ammoType == AmmoType.Nade )
-                {
-                    AmmoEntry ammoEntry = playerResources.playerAmmo.Find(a => a.ammoType == currentGun.gunInfo.ammoType);
-                    if (ammoEntry.amount > 0)
-                    {
-                        GameObject granade = Instantiate(nadePrefab, currentGun.transform.position, currentGun.transform.rotation);
-                        granade.transform.SetParent(currentGun.transform);
-                        Nade nade = granade.GetComponent<Nade>();
-                        currentGun.slide = nade.pin;
-                        currentGun.equippedNade = nade;
-                        Reload();
-                    }
-                }
-                else
                     _reloadCoroutine ??= StartCoroutine(ReloadCoroutine(currentGun.gunInfo.reloadTime));
 
             }
@@ -244,6 +204,27 @@ namespace PlayerShootingSystem
             {
                 uiCrosshair.SetActive(true);
             }
+        }
+        public void OnThrowInput(InputValue value)
+        {
+            if (value.isPressed)
+            {
+                if (playerResources.playerAmmo.Find(a => a.ammoType == currentThrowable.ammoType).amount > 0)
+                {
+                    GameObject thrownThrowable=Instantiate(currentThrowable.throwablePrefab,holdPivot.position, Quaternion.identity);
+                    thrownThrowable.GetComponent<Rigidbody>()
+                        .AddForce((cameraTransform.forward * throwForce) + (Vector3.up * throwUpwardForce), ForceMode.VelocityChange);
+                    thrownThrowable.GetComponent<IThrowable>().Thrown(currentThrowable);
+                    playerResources.playerAmmo.Find(a => a.ammoType == currentThrowable.ammoType).amount--;
+                    //UpdateUI();
+                }
+            }
+
+        }
+        public void OnSwapThrowableInput(InputValue value)
+        {
+            currentThrowableIndex = (currentThrowableIndex + 1) % playerResources.throwables.Count;
+            currentThrowable = playerResources.throwables[currentThrowableIndex];
         }
         void LateUpdate()
         {
@@ -427,12 +408,7 @@ namespace PlayerShootingSystem
                     }
                     else
                     {
-                        if (!weaponInCurrentSlot.gunInfo.isExplosive)
-                            weaponInCurrentSlot.GetComponent<GrabbableObject>().Drop();
-                        else if (weaponInCurrentSlot.gunInfo.isExplosive)
-                        {
-                            DropNade(weaponInCurrentSlot);
-                        }
+                        weaponInCurrentSlot.GetComponent<GrabbableObject>().Drop();
                     }
                 }
                 else
@@ -456,50 +432,6 @@ namespace PlayerShootingSystem
                 ammoEntry.amount += ammoPickup.amount;
                 UpdateUI();
                 Destroy(pickedObject.gameObject);
-            }
-
-            else if (pickedObject.TryGetComponent(out Nade nade))
-            {
-                AmmoEntry ammoEntry = playerResources.playerAmmo.Find(a => a.ammoType == AmmoType.Nade);
-                if(ammoEntry != null)
-                {
-                    ammoEntry.amount++;
-                    UpdateUI();
-                    Destroy(pickedObject.gameObject);
-                }
-
-                if (playerResources.weapons.Any(a=> a != null && 
-                                                    a.gunInfo != null && 
-                                                    a.gunInfo.isExplosive)) return;
-                
-                nadeRoot.equippedNade = nade;
-                Gun weaponInCurrentSlot= playerResources.weapons[_currentSlot];
-                if (weaponInCurrentSlot)
-                {
-                    int freeSlot = WhatSlotAvailable();
-                    if (freeSlot != -1)
-                    {
-                        playerResources.weapons[freeSlot] = nadeRoot;
-                        nadeRoot.gameObject.SetActive(false);
-                    }
-                    else
-                    {
-                        if (!weaponInCurrentSlot.gunInfo.isExplosive)
-                            weaponInCurrentSlot.GetComponent<GrabbableObject>().Drop();
-                        else
-                        {
-                            DropNade(weaponInCurrentSlot);
-                        }
-                    }
-                }
-                else
-                {
-                    playerResources.weapons[_currentSlot] = nadeRoot;
-                    nadeRoot.PickedUp();
-                    SwitchWeapons(playerResources.weapons[_currentSlot]);
-                }
-                Destroy(pickedObject.gameObject);
-
             }
         }
         

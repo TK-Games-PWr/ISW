@@ -34,5 +34,13 @@ namespace PlayerShootingSystem
             if (Time.timeScale == 0f) return;
             _shootingController.OnMeleeInput(inputValue);
         }
+        void OnThrow(InputValue inputValue)
+        {
+            _shootingController.OnThrowInput(inputValue);
+        }
+        void OnSwapThrowable(InputValue inputValue)
+        {
+            _shootingController.OnSwapThrowableInput(inputValue);
+        }
     }
 }

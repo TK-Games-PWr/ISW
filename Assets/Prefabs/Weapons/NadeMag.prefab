@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 8989815095880934737}
   - component: {fileID: 353416068506297816}
   - component: {fileID: 6376320721203465306}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: NadeMag
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -31,7 +31,7 @@ Transform:
   m_GameObject: {fileID: 496028342866459824}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -4.4491987, y: -0.06479782, z: 10.59841}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -182,7 +182,7 @@ GameObject:
   - component: {fileID: 4538906436672923725}
   - component: {fileID: 8869246230322963068}
   - component: {fileID: 5948483712530208183}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Pin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -272,7 +272,7 @@ GameObject:
   - component: {fileID: 6294679916005971303}
   - component: {fileID: 5825185631966542543}
   - component: {fileID: 1609615442250106487}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: 01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -362,6 +362,38 @@ PrefabInstance:
     - target: {fileID: 1121192042590650, guid: e1b08032bec16ba4eb1ae23cbd572664, type: 3}
       propertyPath: m_Name
       value: BigExplosion (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1121192042590650, guid: e1b08032bec16ba4eb1ae23cbd572664, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1123476242953952, guid: e1b08032bec16ba4eb1ae23cbd572664, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1329863649686238, guid: e1b08032bec16ba4eb1ae23cbd572664, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1350513023389842, guid: e1b08032bec16ba4eb1ae23cbd572664, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1428305669664712, guid: e1b08032bec16ba4eb1ae23cbd572664, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1490421183863458, guid: e1b08032bec16ba4eb1ae23cbd572664, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1716462130679846, guid: e1b08032bec16ba4eb1ae23cbd572664, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1754131149069982, guid: e1b08032bec16ba4eb1ae23cbd572664, type: 3}
+      propertyPath: m_Layer
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 4388947112716342, guid: e1b08032bec16ba4eb1ae23cbd572664, type: 3}
       propertyPath: m_LocalPosition.x
