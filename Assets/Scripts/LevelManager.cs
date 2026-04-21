@@ -58,6 +58,17 @@ public class LevelManager : MonoBehaviour
         SuccessScreen.SetActive(true);
         EndGame();
     }
+    
+    public void LoadScene(string name)
+    {
+        if (!MainMenuController.Scenes.ContainsKey(name))
+        {
+            Debug.LogError("Scene not found: " + name);
+            return;
+        }
+        SceneManager.LoadScene(MainMenuController.Scenes[name]);
+        Destroy(gameObject);
+    }
 
     private void EndGame()
     {

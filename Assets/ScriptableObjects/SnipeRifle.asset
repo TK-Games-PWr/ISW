@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc5496a18bb9692b6a7cc67528f8a12e, type: 3}
   m_Name: SnipeRifle
   m_EditorClassIdentifier: Assembly-CSharp::PlayerShootingSystem.GunInfo
+  icon: {fileID: 21300000, guid: 87a09c340d289c840b4c2b9794c6b5bc, type: 3}
   flatDamage: 15
   isAutomatic: 0
   isExplosive: 0

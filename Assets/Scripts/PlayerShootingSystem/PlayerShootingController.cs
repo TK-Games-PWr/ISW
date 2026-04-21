@@ -80,13 +80,18 @@ namespace PlayerShootingSystem
                     hitDingInstances[i+1] = copy.GetComponent<AudioSource>();
                 }
             }
+<<<<<<< HEAD
             Assert.True(playerResources.throwables.Count > 0, "Player must have at least one throwable in resources");
             currentThrowable=playerResources.throwables[0];
             currentThrowableIndex=0;
+=======
+            playerResources.hotbar.HighlightSlot(_currentSlot);
+>>>>>>> main
         }
 
         void Update()
         {
+            if (Time.timeScale == 0f) return;
             if (!currentGun) return;
             // TODO: more spread variables, like reducing it when crouching or scoping
             currentSpread = currentGun.gunInfo.spread + Mathf.Clamp01(PlayerActionsController.Speed/6f) * currentGun.gunInfo.movementSpreadPenalty;
@@ -103,7 +108,15 @@ namespace PlayerShootingSystem
         {
             _isHoldingShoot = value.isPressed;
 
-            if (currentGun == null) return;
+            if (currentGun == null)
+            {
+                if (value.isPressed)
+                {
+                    meleeAnim.Play();
+                }
+
+                return;
+            }
 
             if (!currentGun.gunInfo.isMelee)
             {
@@ -283,7 +296,12 @@ namespace PlayerShootingSystem
                 currentGun = null;
             }
 
-            if (!gun) return;
+            if (!gun)
+            {
+                playerResources.knifeObj.SetActive(true);
+                return;
+            }
+            playerResources.knifeObj.SetActive(false);
             gun.gameObject.SetActive(true);
             currentGun = gun;
             gun.GetComponent<GrabbableObject>().Grab(holdPivot);
@@ -353,6 +371,7 @@ namespace PlayerShootingSystem
 
         void UpdateUI()
         {
+            playerResources.hotbar.HighlightSlot(_currentSlot);
             if (!currentGun)
             {
                 maxAmmoAmount.text = 0.ToString();
@@ -363,7 +382,6 @@ namespace PlayerShootingSystem
             AmmoEntry ammoEntry = playerResources.playerAmmo.Find(a => a.ammoType == currentGun.gunInfo.ammoType);
             maxAmmoAmount.text=ammoEntry.amount.ToString();
             magAmmoAmount.text=currentGun.ammoInMag.ToString();
-            
         }
         IEnumerator AutomaticFireLoop()
         {

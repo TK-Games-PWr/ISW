@@ -41,11 +41,9 @@ namespace EnemySystem
 
         public void StealthKill()
         {
-            if (brain.currentState != AICore.AIState.Combat && brain.currentAlertLevel == AICore.AlertLevel.None)
-            {
-                currentHealth = 0;
-                Die();
-            }
+            if (IsDead) return;
+            currentHealth = 0;
+            Die();
         }
 
         private void Die()

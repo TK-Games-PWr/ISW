@@ -14,20 +14,24 @@ namespace PlayerShootingSystem
         }
         void OnShoot(InputValue inputValue)
         {
+            if (Time.timeScale == 0f) return;
             _shootingController.OnShootInput(inputValue);
         }
 
         void OnReload(InputValue inputValue)
         {
+            if (Time.timeScale == 0f) return;
             _shootingController.OnReloadInput(inputValue);
         }
         void OnZoom(InputValue inputValue)
         {
+            if (Time.timeScale == 0f) return;
             _shootingController.Zoom(inputValue);
         }
         
         void OnMelee(InputValue inputValue)
         {
+            if (Time.timeScale == 0f) return;
             _shootingController.OnMeleeInput(inputValue);
         }
         void OnThrow(InputValue inputValue)
