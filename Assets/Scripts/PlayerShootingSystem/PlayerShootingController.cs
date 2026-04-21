@@ -80,13 +80,10 @@ namespace PlayerShootingSystem
                     hitDingInstances[i+1] = copy.GetComponent<AudioSource>();
                 }
             }
-<<<<<<< HEAD
             Assert.True(playerResources.throwables.Count > 0, "Player must have at least one throwable in resources");
             currentThrowable=playerResources.throwables[0];
             currentThrowableIndex=0;
-=======
             playerResources.hotbar.HighlightSlot(_currentSlot);
->>>>>>> main
         }
 
         void Update()
