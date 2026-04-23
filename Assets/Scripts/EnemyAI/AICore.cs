@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using UnityEngine.InputSystem.Controls;
 
 namespace EnemySystem
 {
@@ -8,21 +9,44 @@ namespace EnemySystem
     public class AICore : MonoBehaviour
     {
         // --- Enums ---
-        public enum AIState { Patrol, Alert, Combat }
-        public enum AlertLevel { None, Low, Medium, High, Extreme }
-        public enum EnemyType { Glock, Shotgun }
+        public enum AIState
+        {
+            Patrol,
+            Alert,
+            Combat
+        }
+
+        public enum AlertLevel
+        {
+            None,
+            Low,
+            Medium,
+            High,
+            Extreme
+        }
+
+        public enum EnemyType
+        {
+            Glock,
+            Shotgun
+        }
 
         // --- Events ---
         public static event Action<AICore, float, AlertLevel> OnAlertChanged;
 
-        [Header("General Settings")]
-        [SerializeField] EnemyType enemyType = EnemyType.Glock;
+        [Header("General Settings")] [SerializeField]
+        EnemyType enemyType = EnemyType.Glock;
 
-        [Header("Alert System")]
-        [SerializeField] float alertSensitivity = 1f;
+        [Header("Alert System")] [SerializeField]
+        float alertSensitivity = 1f;
+
         [SerializeField] float timeToLoseAlertLevel = 3f;
-        [Tooltip("Delay before agents starts shooting in seconds")]
-        [SerializeField] private float fightDelay = 1f;
+
+        [Tooltip("Delay before agents starts shooting in seconds")] [SerializeField]
+        float fightDelay = 1f;
+        
+        [Tooltip("Time before TM starts decreasing")]
+        [SerializeField] float triggerMultiplierTimeout = 2f;
 
         // --- State Variables ---
         public AIState currentState = AIState.Patrol;
@@ -30,15 +54,15 @@ namespace EnemySystem
         public float triggerMultiplier = 0f;
 
         // --- References ---
-        private EnemySensors sensors;
-        private EnemyMovement movement;
-        private EnemyCombat combat;
-        private EnemyHealth health;
+        EnemySensors sensors;
+        EnemyMovement movement;
+        EnemyCombat combat;
+        EnemyHealth health;
 
-        private float lastAlertTime = 0f;
+        float lastAlertTime = 0f;
         public float timeInCombat { get; private set; } = 0f;
 
-        private void Awake()
+        void Awake()
         {
             sensors = GetComponent<EnemySensors>();
             movement = GetComponent<EnemyMovement>();
@@ -46,7 +70,7 @@ namespace EnemySystem
             health = GetComponent<EnemyHealth>();
         }
 
-        private void Update()
+        void Update()
         {
             if (health.IsDead) return;
 
@@ -71,12 +95,21 @@ namespace EnemySystem
             }
         }
 
-        private void UpdateAlertSystem()
+        public void HearingUpdate(float baseVolume, float distance, float range)
+        {
+            triggerMultiplier += baseVolume * Mathf.Clamp01((range - distance) / range);
+            lastAlertTime = Time.time;
+            // sensors.UpdateLastKnownPosition();
+            DetermineAlertLevel();
+        }
+
+        void UpdateAlertSystem()
         {
             if (sensors.HasLineOfSight())
             {
                 float distanceToPlayer = Vector3.Distance(transform.position, sensors.PlayerTransform.position);
                 triggerMultiplier += Time.deltaTime * alertSensitivity / distanceToPlayer;
+                triggerMultiplier = Mathf.Clamp(triggerMultiplier, 0f, 10f);
                 sensors.UpdateLastKnownPosition();
                 lastAlertTime = Time.time;
 
@@ -84,13 +117,16 @@ namespace EnemySystem
             }
             else
             {
-                if (triggerMultiplier > 0)
+                if (currentState != AIState.Alert && Time.time - lastAlertTime >= triggerMultiplierTimeout)
                 {
-                    triggerMultiplier -= Time.deltaTime;
-                }
-                else
-                {
-                    triggerMultiplier = 0f;
+                    if (triggerMultiplier > 0)
+                    {
+                        triggerMultiplier -= Time.deltaTime;
+                    }
+                    else
+                    {
+                        triggerMultiplier = 0f;
+                    }
                 }
 
                 if (currentState != AIState.Combat && Time.time - lastAlertTime > timeToLoseAlertLevel)
@@ -113,7 +149,7 @@ namespace EnemySystem
             else SetAlertLevel(AlertLevel.Extreme);
         }
 
-        private void SetAlertLevel(AlertLevel newLevel)
+        void SetAlertLevel(AlertLevel newLevel)
         {
             if (currentAlertLevel == newLevel) return;
             currentAlertLevel = newLevel;
@@ -161,7 +197,7 @@ namespace EnemySystem
             }
         }
 
-        private void UpdateCombatLogic()
+        void UpdateCombatLogic()
         {
             timeInCombat += Time.deltaTime;
             if (sensors.PlayerTransform == null || combat.IsReloading) return;
@@ -170,10 +206,11 @@ namespace EnemySystem
             float distanceToPlayer = Vector3.Distance(transform.position, sensors.PlayerTransform.position);
 
             // Handle Movement
-            movement.HandleCombatMovement(sensors.PlayerTransform, distanceToPlayer, combat.WeaponRange, combat.OptimalDistance, hasLOS);
+            movement.HandleCombatMovement(sensors.PlayerTransform, distanceToPlayer, combat.WeaponRange,
+                combat.OptimalDistance, hasLOS);
 
             if (fightDelay > timeInCombat) return;
-            
+
             // Handle Shooting
             if (distanceToPlayer <= combat.WeaponRange && hasLOS)
             {
