@@ -500,7 +500,8 @@ namespace PlayerShootingSystem
                 {
                     aic.HearingUpdate(currentGun.gunInfo.fireVolume,
                         Vector3.Distance(transform.position, col.gameObject.transform.position),
-                        currentGun.gunInfo.audioEmitRange * currentGun.gunInfo.fireVolume);
+                        currentGun.gunInfo.audioEmitRange * currentGun.gunInfo.fireVolume,
+                        currentGun.gunInfo.damageFalloff);
                 }
             }
         }

@@ -1,4 +1,6 @@
+using System;
 using System.Collections;
+using EnemySystem;
 using JetBrains.Annotations;
 using PlayerShootingSystem;
 using TK_Shared._3DPlayerMovement;
@@ -10,15 +12,23 @@ public class Nade : MonoBehaviour, IThrowable
     
     [SerializeField] [CanBeNull] AudioSource explosionSound;
     [SerializeField] [CanBeNull] ParticleSystem explosionParticle;
+    int _enemyLayerIndex;
+
+    void Awake()
+    {
+        _enemyLayerIndex = LayerMask.NameToLayer("Enemy");
+    }
 
     public void Thrown(ThrowableInfo info)
     {
-        StartCoroutine(CookCoroutine(info.radius, info.flatDamage, info.delay, info.workingLayerMask));
+        StartCoroutine(CookCoroutine(info.radius, info.flatDamage, info.delay, info.workingLayerMask, info.audioEmitRange, info.volume, info.volumeCurve));
     }
-    IEnumerator CookCoroutine(float blastRadius, int flatDamage, float delay, LayerMask damageLayerMask)
+    
+    IEnumerator CookCoroutine(float blastRadius, int flatDamage, float delay, LayerMask damageLayerMask, float audioEmitRange, float volume, AnimationCurve volumeCurve)
      {
          yield return new WaitForSecondsRealtime(delay);
          Explode(blastRadius,flatDamage, damageLayerMask);
+         EmitExplosionSound(audioEmitRange, volume, volumeCurve);
          yield return new WaitForSecondsRealtime(2f);
          Destroy(gameObject);
      }
@@ -53,11 +63,26 @@ public class Nade : MonoBehaviour, IThrowable
                  damageable.Damage(finalDamage);
              }
          }
-
      }
       
     public void Cook()
     {
         
+    }
+    
+    void EmitExplosionSound(float audioEmitRange, float volume, AnimationCurve volumeCurve)
+    {
+        if (audioEmitRange < 0.01f) return;
+        Collider[] colliders = Physics.OverlapSphere(transform.position, audioEmitRange);
+        foreach (Collider col in colliders)
+        {
+            if (col.gameObject.layer == _enemyLayerIndex && col.gameObject.GetComponent<AICore>() is { } aic)
+            {
+                aic.HearingUpdate(volume,
+                    Vector3.Distance(transform.position, col.gameObject.transform.position),
+                    audioEmitRange * volume,
+                    volumeCurve);
+            }
+        }
     }
 }

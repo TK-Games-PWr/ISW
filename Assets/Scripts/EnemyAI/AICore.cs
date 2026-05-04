@@ -95,9 +95,10 @@ namespace EnemySystem
             }
         }
 
-        public void HearingUpdate(float baseVolume, float distance, float range)
+        public void HearingUpdate(float baseVolume, float distance, float range, AnimationCurve falloffCurve = null)
         {
-            triggerMultiplier += baseVolume * Mathf.Clamp01((range - distance) / range);
+            float dist = Mathf.Clamp01((range - distance) / range);
+            triggerMultiplier += baseVolume * (falloffCurve?.Evaluate(1f-dist) ?? dist);
             lastAlertTime = Time.time;
             // sensors.UpdateLastKnownPosition(); // enemy would look at every sound he hears
             DetermineAlertLevel();
