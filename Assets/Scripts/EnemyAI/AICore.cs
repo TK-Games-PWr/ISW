@@ -99,7 +99,7 @@ namespace EnemySystem
         {
             triggerMultiplier += baseVolume * Mathf.Clamp01((range - distance) / range);
             lastAlertTime = Time.time;
-            // sensors.UpdateLastKnownPosition();
+            // sensors.UpdateLastKnownPosition(); // enemy would look at every sound he hears
             DetermineAlertLevel();
         }
 

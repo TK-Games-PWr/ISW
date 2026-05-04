@@ -62,9 +62,12 @@ namespace PlayerShootingSystem
         bool _isActuallyAiming;
         float currentSpread;
         
+        int enemyLayerIndex;
+        
         void Awake()
         {
             PlayerActionsController.OnPickedUp += HandlePickup;
+            enemyLayerIndex = LayerMask.NameToLayer("Enemy");
         }
 
         void Start()
@@ -364,6 +367,7 @@ namespace PlayerShootingSystem
             }
             // apply recoil after shooting, so first shoot is accurate
             uiCrosshair.ApplyRecoil(currentGun.gunInfo);
+            EmitShootSound();
         }
 
         void UpdateUI()
@@ -484,6 +488,21 @@ namespace PlayerShootingSystem
         {
             hitDingInstances[hitDingIter].Play();
             hitDingIter = (hitDingIter + 1) % hitDingInstances.Length;
+        }
+
+        void EmitShootSound()
+        {
+            if (currentGun.gunInfo.audioEmitRange < 0.01f) return;
+            Collider[] colliders = Physics.OverlapSphere(transform.position, currentGun.gunInfo.audioEmitRange);
+            foreach (Collider col in colliders)
+            {
+                if (col.gameObject.layer == enemyLayerIndex && col.gameObject.GetComponent<AICore>() is { } aic)
+                {
+                    aic.HearingUpdate(currentGun.gunInfo.fireVolume,
+                        Vector3.Distance(transform.position, col.gameObject.transform.position),
+                        currentGun.gunInfo.audioEmitRange * currentGun.gunInfo.fireVolume);
+                }
+            }
         }
 
         int WhatSlotAvailable()
