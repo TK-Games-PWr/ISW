@@ -44,9 +44,9 @@ namespace EnemySystem
 
         [Tooltip("Delay before agents starts shooting in seconds")] [SerializeField]
         float fightDelay = 1f;
-        
-        [Tooltip("Time before TM starts decreasing")]
-        [SerializeField] float triggerMultiplierTimeout = 2f;
+
+        [Tooltip("Time before TM starts decreasing")] [SerializeField]
+        float triggerMultiplierTimeout = 2f;
 
         // --- State Variables ---
         public AIState currentState = AIState.Patrol;
@@ -98,7 +98,7 @@ namespace EnemySystem
         public void HearingUpdate(float baseVolume, float distance, float range, AnimationCurve falloffCurve = null)
         {
             float dist = Mathf.Clamp01((range - distance) / range);
-            triggerMultiplier += baseVolume * (falloffCurve?.Evaluate(1f-dist) ?? dist);
+            triggerMultiplier += baseVolume * (falloffCurve?.Evaluate(1f - dist) ?? dist);
             lastAlertTime = Time.time;
             // sensors.UpdateLastKnownPosition(); // enemy would look at every sound he hears
             DetermineAlertLevel();
