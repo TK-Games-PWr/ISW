@@ -493,17 +493,11 @@ namespace PlayerShootingSystem
         void EmitShootSound()
         {
             if (currentGun.gunInfo.audioEmitRange < 0.01f) return;
-            Collider[] colliders = Physics.OverlapSphere(transform.position, currentGun.gunInfo.audioEmitRange);
-            foreach (Collider col in colliders)
-            {
-                if (col.gameObject.layer == enemyLayerIndex && col.gameObject.GetComponent<AICore>() is { } aic)
-                {
-                    aic.HearingUpdate(currentGun.gunInfo.fireVolume,
-                        Vector3.Distance(transform.position, col.gameObject.transform.position),
-                        currentGun.gunInfo.audioEmitRange * currentGun.gunInfo.fireVolume,
-                        currentGun.gunInfo.damageFalloff);
-                }
-            }
+            SoundSystem.Instance.BroadcastSound(
+                transform.position, currentGun.gunInfo.fireVolume, 
+                currentGun.gunInfo.audioEmitRange, false, 
+                currentGun.gunInfo.damageFalloff
+                );
         }
 
         int WhatSlotAvailable()

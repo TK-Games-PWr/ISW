@@ -6,7 +6,7 @@ namespace EnemySystem
 {
     [RequireComponent(typeof(EnemySensors), typeof(EnemyMovement), typeof(EnemyCombat))]
     [RequireComponent(typeof(EnemyHealth))]
-    public class AICore : MonoBehaviour
+    public class AICore : MonoBehaviour, IHearingTarget
     {
         // --- Enums ---
         public enum AIState
@@ -69,6 +69,22 @@ namespace EnemySystem
             combat = GetComponent<EnemyCombat>();
             health = GetComponent<EnemyHealth>();
         }
+        
+        void OnEnable()
+        {
+            if (SoundSystem.Instance != null)
+            {
+                SoundSystem.Instance.RegisterListener(this);
+            }
+        }
+
+        void OnDisable()
+        {
+            if (SoundSystem.Instance != null)
+            {
+                SoundSystem.Instance.UnregisterListener(this);
+            }
+        }
 
         void Update()
         {
@@ -94,13 +110,22 @@ namespace EnemySystem
                     break;
             }
         }
+        
+        public Vector3 GetHearingPosition()
+        {
+            return transform.position; 
+        }
 
-        public void HearingUpdate(float baseVolume, float distance, float range, AnimationCurve falloffCurve = null)
+        public void OnSoundHeard(Vector3 soundOrigin, float baseVolume, float distance, float range, bool capAlertLevel, AnimationCurve falloffCurve)
         {
             float dist = Mathf.Clamp01((range - distance) / range);
-            triggerMultiplier += baseVolume * (falloffCurve?.Evaluate(1f - dist) ?? dist);
+            dist = baseVolume * (falloffCurve?.Evaluate(1f - dist) ?? dist);
+            if (!capAlertLevel || triggerMultiplier < 0.76f)
+            {
+                triggerMultiplier += capAlertLevel ? Mathf.Min(dist, 0.76f - triggerMultiplier) : dist;
+            }
             lastAlertTime = Time.time;
-            // sensors.UpdateLastKnownPosition(); // enemy would look at every sound he hears
+            if(triggerMultiplier > 0.75f) sensors.UpdateLastKnownPosition(soundOrigin); // enemy will go to the sound it hears if alerted
             DetermineAlertLevel();
         }
 

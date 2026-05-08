@@ -1134,18 +1134,56 @@ MonoBehaviour:
   playerCamera: {fileID: 2075015063065847598}
   headBobbing: {fileID: 6246916651599479197}
   HoldPivot: {fileID: 1844550111215921797}
-  walkingAudioSource: {fileID: 6224119882570213993}
   acceleration: 15
   walkSpeed: 4
   sprintSpeed: 6
   crouchedSpeed: 2
   baseHeadBobbingFreq: 10
   baseHeadBobbingAmpl: 0.002
+  walkingAudioSource: {fileID: 6224119882570213993}
+  audioEmitRange: 20
+  audioEmitCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: -1.281034
+      outSlope: -1.281034
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.20544878
+      value: 0.7368131
+      inSlope: -1.220338
+      outSlope: -1.220338
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.9999996
+      outWeight: 0.10873577
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: -0.9273324
+      outSlope: -0.9273324
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  crouchVolume: 0.1
+  walkVolume: 1
+  sprintVolume: 1.5
+  jumpVolume: 2.5
+  groundHitVolume: 3
   leanAngle: 15
   leanHorizontalOffset: 0.3
   leanSpeed: 8
   slideSpeed: 8
-  enemyLayerName: Enemy
   crouchHeight: 1.5
   uncrouchCeilingLayer:
     serializedVersion: 2
@@ -1161,7 +1199,6 @@ MonoBehaviour:
   pickupLayer:
     serializedVersion: 2
     m_Bits: 512
-  maxHealth: 100
   gravityScale: 2
 --- !u!114 &8521726943504668858
 MonoBehaviour:

@@ -14,10 +14,34 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerShootingSystem.GunInfo
   icon: {fileID: 21300000, guid: 79b4dc84a5b51d18cb5e16e33346a716, type: 3}
   flatDamage: 10
+  audioEmitRange: 10
+  fireVolume: 1
+  fireVolumeCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: -1
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: -1
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   isAutomatic: 0
-  isExplosive: 0
   isMelee: 0
-  blastRadius: 0
   fireRate: 0
   ammoType: 0
   maxAmmo: 10

@@ -74,16 +74,11 @@ public class Nade : MonoBehaviour, IThrowable
     void EmitExplosionSound(float audioEmitRange, float volume, AnimationCurve volumeCurve)
     {
         if (audioEmitRange < 0.01f) return;
-        Collider[] colliders = Physics.OverlapSphere(transform.position, audioEmitRange);
-        foreach (Collider col in colliders)
-        {
-            if (col.gameObject.layer == _enemyLayerIndex && col.gameObject.GetComponent<AICore>() is { } aic)
-            {
-                aic.HearingUpdate(volume,
-                    Vector3.Distance(transform.position, col.gameObject.transform.position),
-                    audioEmitRange * volume,
-                    volumeCurve);
-            }
-        }
+        SoundSystem.Instance.BroadcastSound(
+            transform.position, 
+            volume, 
+            audioEmitRange, 
+            false, volumeCurve
+        );
     }
 }
