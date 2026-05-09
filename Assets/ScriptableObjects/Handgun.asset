@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerShootingSystem.GunInfo
   icon: {fileID: 21300000, guid: 79b4dc84a5b51d18cb5e16e33346a716, type: 3}
   flatDamage: 10
-  audioEmitRange: 10
+  audioEmitRange: 30
   fireVolume: 1
   fireVolumeCurve:
     serializedVersion: 2

@@ -15,7 +15,7 @@ MonoBehaviour:
   dealsDamage: 1
   flatDamage: 100
   radius: 5
-  audioEmitRange: 30
+  audioEmitRange: 80
   volume: 1
   volumeCurve:
     serializedVersion: 2
