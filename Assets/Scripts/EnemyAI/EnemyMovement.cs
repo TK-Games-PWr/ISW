@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.AI;
 using System.Collections;
+using EnemyAI;
 
 namespace EnemySystem
 {
