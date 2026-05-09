@@ -1175,11 +1175,11 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  crouchVolume: 0.1
-  walkVolume: 1
-  sprintVolume: 1.5
-  jumpVolume: 2.5
-  groundHitVolume: 3
+  crouchVolume: 0.05
+  walkVolume: 0.7
+  sprintVolume: 1.2
+  jumpVolume: 2
+  groundHitVolume: 2.5
   leanAngle: 15
   leanHorizontalOffset: 0.3
   leanSpeed: 8

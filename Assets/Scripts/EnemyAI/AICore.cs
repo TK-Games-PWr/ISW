@@ -113,7 +113,7 @@ namespace EnemySystem
         
         public Vector3 GetHearingPosition()
         {
-            return transform.position; 
+            return transform.position + new Vector3(0, 1.5f, 0); 
         }
 
         public void OnSoundHeard(Vector3 soundOrigin, float baseVolume, float distance, float range, bool capAlertLevel, AnimationCurve falloffCurve)

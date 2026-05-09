@@ -905,8 +905,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3604899088855785236}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0.5735764, z: 0, w: 0.8191521}
-  m_LocalPosition: {x: -2.35677, y: 1.703, z: 7.61691}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.65, y: 6.587085, z: 8.445}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1431,6 +1431,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6031e1a3d1002a974b95d45f0e735ab3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SoundSystem
+  occludingLayers:
+    serializedVersion: 2
+    m_Bits: 65
 --- !u!1 &6244907886219428328
 GameObject:
   m_ObjectHideFlags: 0
