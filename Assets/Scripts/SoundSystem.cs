@@ -49,11 +49,10 @@ public class SoundSystem : MonoBehaviour
             {
                 float actualDistance = Mathf.Sqrt(sqrDistance);
 
-                Debug.DrawLine(soundOrigin, listener.GetHearingPosition(), Color.red, 1f);
+                Debug.DrawLine(soundOrigin, listener.GetHearingPosition(), Color.cadetBlue, 1f);
                 
                 if (Physics.Linecast(soundOrigin + new Vector3(0, 0.1f, 0), listener.GetHearingPosition(), occludingLayers))
                 {
-                    Debug.Log("Occluding audio by 50%");
                     baseVolume /= 2;
                 }
                 

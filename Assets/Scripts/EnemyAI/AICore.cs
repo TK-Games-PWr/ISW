@@ -70,19 +70,29 @@ namespace EnemySystem
             health = GetComponent<EnemyHealth>();
         }
         
-        void OnEnable()
+        async void OnEnable()
         {
+            await Awaitable.EndOfFrameAsync();
             if (SoundSystem.Instance != null)
             {
                 SoundSystem.Instance.RegisterListener(this);
             }
+            else
+            {
+                Debug.LogError(gameObject.name + " failed to register sound event.");
+            }
         }
 
-        void OnDisable()
+        async void OnDisable()
         {
+            await Awaitable.EndOfFrameAsync();
             if (SoundSystem.Instance != null)
             {
                 SoundSystem.Instance.UnregisterListener(this);
+            }
+            else
+            {
+                Debug.LogError(gameObject.name + " failed to unregister sound event.");
             }
         }
 

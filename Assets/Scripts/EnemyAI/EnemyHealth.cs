@@ -12,13 +12,13 @@ namespace EnemySystem
 
         [SerializeField] float maxHealth = 75f;
 
-        private float currentHealth;
-        private AICore brain;
+        float currentHealth;
+        AICore brain;
         AIAnimationController animController;
 
         public bool IsDead => currentHealth <= 0;
 
-        private void Awake()
+        void Awake()
         {
             currentHealth = maxHealth;
             brain = GetComponent<AICore>();
@@ -50,16 +50,27 @@ namespace EnemySystem
             Die();
         }
 
-        private void Die()
+        void Die()
         {
             OnEnemyDied?.Invoke(this);
-            // imitation of ragdoll
             Lobotomize();
             animController.SetRagdoll(true);
+            int deadLayer = LayerMask.NameToLayer("EnemyFainted");
+            SetLayerRecursively(gameObject, deadLayer);
             //Rigidbody rb = gameObject.AddComponent<Rigidbody>();
             //rb.AddForceAtPosition(Vector3.back * 2, transform.position + new Vector3(0, 0.5f, 0), ForceMode.Impulse);
             // uncomment if is supposed to disappear, maybe add some delay
             // Destroy(gameObject);
+        }
+        
+        void SetLayerRecursively(GameObject obj, int newLayer)
+        {
+            obj.layer = newLayer;
+            
+            foreach (Transform child in obj.transform)
+            {
+                SetLayerRecursively(child.gameObject, newLayer);
+            }
         }
 
         public void Lobotomize()
