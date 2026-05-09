@@ -3,7 +3,14 @@ using UnityEngine;
 
 public class FinishZone : MonoBehaviour
 {
-    private void OnTriggerEnter(Collider other)
+    public static FinishZone Instance { get; private set; }
+
+    void Awake()
+    {
+        Instance = this;
+    }
+
+    void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
