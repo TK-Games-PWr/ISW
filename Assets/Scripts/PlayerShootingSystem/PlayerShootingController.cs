@@ -45,6 +45,7 @@ namespace PlayerShootingSystem
         [SerializeField] PlayerResources playerResources;
         [SerializeField] TMP_Text magAmmoAmount;
         [SerializeField] TMP_Text maxAmmoAmount;
+        [SerializeField] TMP_Text grenadeAmount;
         int _currentSlot=0;
         public Gun currentGun;
         public ThrowableInfo currentThrowable;
@@ -87,6 +88,7 @@ namespace PlayerShootingSystem
             currentThrowable=playerResources.throwables[0];
             currentThrowableIndex=0;
             playerResources.hotbar.HighlightSlot(_currentSlot);
+            UpdateUI();
         }
 
         void Update()
@@ -219,7 +221,7 @@ namespace PlayerShootingSystem
                         .AddForce((cameraTransform.forward * throwForce) + (Vector3.up * throwUpwardForce), ForceMode.VelocityChange);
                     thrownThrowable.GetComponent<IThrowable>().Thrown(currentThrowable);
                     playerResources.playerAmmo.Find(a => a.ammoType == currentThrowable.ammoType).amount--;
-                    //UpdateUI();
+                    UpdateUI();
                 }
             }
 
@@ -228,7 +230,9 @@ namespace PlayerShootingSystem
         {
             currentThrowableIndex = (currentThrowableIndex + 1) % playerResources.throwables.Count;
             currentThrowable = playerResources.throwables[currentThrowableIndex];
+            UpdateUI();
         }
+        
         void LateUpdate()
         {
             if (!currentGun || currentGun.gunInfo.ammoType != AmmoType.Snipe) return;
@@ -324,7 +328,11 @@ namespace PlayerShootingSystem
             if (_reloadCoroutine != null)
                 return;
             if (!currentGun) return;
-            if (currentGun.ammoInMag <= 0) return;
+            if (currentGun.ammoInMag <= 0)
+            {
+                _reloadCoroutine ??= StartCoroutine(ReloadCoroutine(currentGun.gunInfo.reloadTime));
+                return;
+            }
             currentGun.PerformShoot();
             currentGun.ammoInMag -= 1;
             shots++;
@@ -373,6 +381,11 @@ namespace PlayerShootingSystem
         void UpdateUI()
         {
             playerResources.hotbar.HighlightSlot(_currentSlot);
+            
+            grenadeAmount.text = playerResources.playerAmmo.Find(a => a.ammoType == currentThrowable.ammoType)
+                .amount
+                .ToString();
+            
             if (!currentGun)
             {
                 maxAmmoAmount.text = 0.ToString();
@@ -383,7 +396,9 @@ namespace PlayerShootingSystem
             AmmoEntry ammoEntry = playerResources.playerAmmo.Find(a => a.ammoType == currentGun.gunInfo.ammoType);
             maxAmmoAmount.text=ammoEntry.amount.ToString();
             magAmmoAmount.text=currentGun.ammoInMag.ToString();
+ 
         }
+        
         IEnumerator AutomaticFireLoop()
         {
             while (_isHoldingShoot && currentGun && currentGun.gunInfo.isAutomatic)
@@ -478,6 +493,12 @@ namespace PlayerShootingSystem
         }
         IEnumerator ReloadCoroutine(float reloadTime)
         {
+            AmmoEntry ammoEntry = playerResources.playerAmmo.Find(a => a.ammoType == currentGun.gunInfo.ammoType);
+            
+            if (ammoEntry == null)
+                yield break;
+            if(ammoEntry.amount <= 0)
+                yield break;
             currentGun.Reload(reloadTime);
             yield return new WaitForSecondsRealtime(reloadTime);
             Reload();
