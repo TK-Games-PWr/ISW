@@ -1,8 +1,10 @@
+using TK_Shared._3DPlayerMovement;
 using UnityEngine;
 
 public class PauseMenu : MonoBehaviour
 {
     public bool isPaused = false;
+    public PlayerActionsController playerActionsController;
     
     public void TogglePauseMenu()
     {
@@ -11,5 +13,6 @@ public class PauseMenu : MonoBehaviour
         Time.timeScale = isPaused ? 0f : 1f;
         Cursor.lockState = isPaused ? CursorLockMode.None : CursorLockMode.Locked;
         Cursor.visible = !isPaused;
+        playerActionsController.OnGamePaused(isPaused);
     }
 }

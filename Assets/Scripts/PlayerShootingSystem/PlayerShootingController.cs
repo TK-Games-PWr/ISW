@@ -63,9 +63,12 @@ namespace PlayerShootingSystem
         bool _isActuallyAiming;
         float currentSpread;
         
+        int enemyLayerIndex;
+        
         void Awake()
         {
             PlayerActionsController.OnPickedUp += HandlePickup;
+            enemyLayerIndex = LayerMask.NameToLayer("Enemy");
         }
 
         void Start()
@@ -372,6 +375,7 @@ namespace PlayerShootingSystem
             }
             // apply recoil after shooting, so first shoot is accurate
             uiCrosshair.ApplyRecoil(currentGun.gunInfo);
+            EmitShootSound();
         }
 
         void UpdateUI()
@@ -505,6 +509,16 @@ namespace PlayerShootingSystem
         {
             hitDingInstances[hitDingIter].Play();
             hitDingIter = (hitDingIter + 1) % hitDingInstances.Length;
+        }
+
+        void EmitShootSound()
+        {
+            if (currentGun.gunInfo.audioEmitRange < 0.01f) return;
+            SoundSystem.Instance.BroadcastSound(
+                transform.position, currentGun.gunInfo.fireVolume, 
+                currentGun.gunInfo.audioEmitRange, false, 
+                currentGun.gunInfo.damageFalloff
+                );
         }
 
         int WhatSlotAvailable()

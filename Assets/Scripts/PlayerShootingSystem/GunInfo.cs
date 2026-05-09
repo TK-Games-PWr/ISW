@@ -8,6 +8,9 @@ namespace PlayerShootingSystem
     {
         public Sprite icon;
         public int flatDamage;
+        [Tooltip("Emit range of shooting audio")] public float audioEmitRange = 20f;
+        [Tooltip("How loud gun shooting is.")] [HideIf("@this.audioEmitRange <= 0f")] public float fireVolume = 1f;
+        [HideIf("@this.audioEmitRange <= 0f")] public AnimationCurve fireVolumeCurve = AnimationCurve.Linear(0, 1, 1, 0);
         [HideIf("isMelee")]
         public bool isAutomatic;
         [HideIf("isAutomatic")]

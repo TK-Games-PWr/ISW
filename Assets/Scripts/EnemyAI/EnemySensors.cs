@@ -70,6 +70,11 @@ namespace EnemySystem
         {
             if (PlayerTransform != null) LastKnownPosition = PlayerTransform.position;
         }
+        
+        internal void UpdateLastKnownPosition(Vector3 position)
+        {
+            LastKnownPosition = position;
+        }
 
         internal void AlertNearbyEnemies()
         {
