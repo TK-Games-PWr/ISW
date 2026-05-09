@@ -321,7 +321,11 @@ namespace PlayerShootingSystem
             if (_reloadCoroutine != null)
                 return;
             if (!currentGun) return;
-            if (currentGun.ammoInMag <= 0) return;
+            if (currentGun.ammoInMag <= 0)
+            {
+                _reloadCoroutine ??= StartCoroutine(ReloadCoroutine(currentGun.gunInfo.reloadTime));
+                return;
+            }
             currentGun.PerformShoot();
             currentGun.ammoInMag -= 1;
             shots++;
@@ -474,6 +478,12 @@ namespace PlayerShootingSystem
         }
         IEnumerator ReloadCoroutine(float reloadTime)
         {
+            AmmoEntry ammoEntry = playerResources.playerAmmo.Find(a => a.ammoType == currentGun.gunInfo.ammoType);
+            
+            if (ammoEntry == null)
+                yield break;
+            if(ammoEntry.amount <= 0)
+                yield break;
             currentGun.Reload(reloadTime);
             yield return new WaitForSecondsRealtime(reloadTime);
             Reload();

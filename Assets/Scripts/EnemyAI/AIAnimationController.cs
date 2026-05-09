@@ -1,0 +1,41 @@
+using System;
+using UnityEngine;
+using UnityEngine.AI;
+
+namespace EnemyAI
+{
+    public class AIAnimationController : MonoBehaviour
+    {
+        readonly static int Speed = Animator.StringToHash("Speed");
+        readonly static int Looking = Animator.StringToHash("Looking");
+        [SerializeField] Animator animator;
+        [SerializeField] Rigidbody[]  rigidbodies;
+        NavMeshAgent agent;
+        void Awake()
+        {
+            agent = GetComponent<NavMeshAgent>();
+        }
+        void Start()
+        {
+        
+        }
+
+        // Update is called once per frame
+        void Update()
+        {
+            animator.SetFloat(Speed, agent.velocity.magnitude);
+        }
+        public void AgentLooking(bool looking)
+        {
+            animator.SetBool(Looking, looking);
+        }
+        public void SetRagdoll(bool isRagdoll)
+        {
+            animator.enabled = !isRagdoll;
+            foreach (Rigidbody rb in rigidbodies)
+            {
+                rb.isKinematic = !isRagdoll;
+            }
+        }
+    }
+}

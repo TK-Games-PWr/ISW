@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.AI;
 using System.Collections;
+using EnemyAI;
 
 namespace EnemySystem
 {
@@ -19,6 +20,7 @@ namespace EnemySystem
 
         private NavMeshAgent agent;
         private EnemySensors sensors;
+        AIAnimationController  animationController;
 
         private int currentPatrolIndex = 0;
         private bool isWaiting = false;
@@ -27,6 +29,7 @@ namespace EnemySystem
         {
             agent = GetComponent<NavMeshAgent>();
             sensors = GetComponent<EnemySensors>();
+            animationController = GetComponent<AIAnimationController>();
         }
 
         private void Start()
@@ -113,7 +116,9 @@ namespace EnemySystem
         {
             isWaiting = true;
             agent.isStopped = true;
+            animationController.AgentLooking(true);
             yield return StartCoroutine(SweepRotationRoutine(waitTimeAtWaypoint, false, 40));
+            animationController.AgentLooking(false);
             agent.isStopped = false;
             GoToNextPatrolPoint();
             isWaiting = false;
@@ -122,6 +127,7 @@ namespace EnemySystem
         private IEnumerator LookAroundRoutine(float duration, AICore brain)
         {
             agent.isStopped = true;
+            
             yield return StartCoroutine(SweepRotationRoutine(duration, true));
             agent.isStopped = false;
             brain.ChangeState(AICore.AIState.Patrol);
