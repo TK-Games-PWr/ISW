@@ -15,8 +15,7 @@ TagManager:
   - Player
   - Enemy
   - Interactable
-  - 
-  - 
+  - EnemyFainted
   - 
   - 
   - 
