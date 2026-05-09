@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using EnemyAI;
 using TK_Shared._3DPlayerMovement;
 using UnityEngine.AI;
 
@@ -13,6 +14,7 @@ namespace EnemySystem
 
         private float currentHealth;
         private AICore brain;
+        AIAnimationController animController;
 
         public bool IsDead => currentHealth <= 0;
 
@@ -20,6 +22,8 @@ namespace EnemySystem
         {
             currentHealth = maxHealth;
             brain = GetComponent<AICore>();
+           animController = GetComponent<AIAnimationController>();
+
         }
 
         public void Damage(float amount)
@@ -51,8 +55,9 @@ namespace EnemySystem
             OnEnemyDied?.Invoke(this);
             // imitation of ragdoll
             Lobotomize();
-            Rigidbody rb = gameObject.AddComponent<Rigidbody>();
-            rb.AddForceAtPosition(Vector3.back * 2, transform.position + new Vector3(0, 0.5f, 0), ForceMode.Impulse);
+            animController.SetRagdoll(true);
+            //Rigidbody rb = gameObject.AddComponent<Rigidbody>();
+            //rb.AddForceAtPosition(Vector3.back * 2, transform.position + new Vector3(0, 0.5f, 0), ForceMode.Impulse);
             // uncomment if is supposed to disappear, maybe add some delay
             // Destroy(gameObject);
         }
