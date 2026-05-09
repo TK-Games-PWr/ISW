@@ -12,9 +12,9 @@ public class Compass : MonoBehaviour
     
     private Transform exitPoint;
 
-    public void Awake()
+    public void Start()
     {
-        exitPoint = GameObject.Find("FinishZone").transform;
+        exitPoint = FinishZone.Instance.transform;
     }
 
     void Update()
