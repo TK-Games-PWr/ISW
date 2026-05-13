@@ -6,9 +6,9 @@ using UnityEngine.AI;
 
 namespace EnemySystem
 {
-    public class EnemyHealth : MonoBehaviour, ICharacter
+    public class EnemyResources : MonoBehaviour, ICharacter
     {
-        public static event Action<EnemyHealth> OnEnemyDied;
+        public static event Action<EnemyResources> OnEnemyDied;
 
         [SerializeField] float maxHealth = 75f;
 
