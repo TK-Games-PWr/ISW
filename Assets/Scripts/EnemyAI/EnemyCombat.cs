@@ -57,7 +57,7 @@ namespace EnemySystem
             {
                 if (Time.time >= nextFireTime)
                 {
-                    TryShootOnce(distanceToPlayer);
+                    Shoot();
 
                     float cooldown = currentGun.gunInfo.fireRate;
 
@@ -75,7 +75,7 @@ namespace EnemySystem
             }
         }
 
-        private void TryShootOnce(float distanceToPlayer)
+        private void Shoot()
         {
             currentAmmo--;
             currentGun.PerformShoot();
@@ -87,25 +87,40 @@ namespace EnemySystem
             float movementFactor = agent.speed > 0.01f
                 ? Mathf.Clamp01(agent.velocity.magnitude / agent.speed)
                 : 0f;
-
+            
             float spreadAmount = (currentGun.gunInfo.spread + 
                                   currentGun.gunInfo.movementSpreadPenalty * movementFactor);
             Quaternion spreadRotation = Quaternion.LookRotation(direction);
+
+            for (int i = 0; i < currentGun.gunInfo.firesShotPerAmmo; i++)
+            {
+                RaycastHit? hit = TryRaycastHit(direction, spreadRotation, rayOrigin, spreadAmount);
+                
+                if (hit != null)
+                {
+                    float multiplier = currentGun.gunInfo.damageFalloff.Evaluate(hit.Value.distance / 100f);
+                    float finalDamage = currentGun.gunInfo.flatDamage * multiplier;
+                    sensors.PlayerResources.Damage(finalDamage);
+                }
+            }
+        }
+
+        private RaycastHit? TryRaycastHit(Vector3 direction, Quaternion spreadRotation, Vector3 rayOrigin, float spreadAmount)
+        {
+
             direction += spreadRotation * Vector3.right * Random.Range(-spreadAmount, spreadAmount);
             direction += spreadRotation * Vector3.up * Random.Range(-spreadAmount, spreadAmount);
             direction.Normalize();
 
             // Nothing was hit 
             if (!Physics.Raycast(rayOrigin, direction, out RaycastHit hit, weaponRange))
-                return;
+                return null;
 
             // Something other than the player was hit
             if (hit.collider.transform != sensors.PlayerTransform)
-                return;
+                return null;
 
-            float multiplier = currentGun.gunInfo.damageFalloff.Evaluate(hit.distance / 100f);
-            float finalDamage = currentGun.gunInfo.flatDamage * multiplier;
-            sensors.PlayerResources.Damage(finalDamage);
+            return hit;
         }
 
         private IEnumerator ReloadRoutine()
