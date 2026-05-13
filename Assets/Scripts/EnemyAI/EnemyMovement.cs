@@ -12,8 +12,6 @@ namespace EnemySystem
         float basePlayerVelocity = 4f;
 
         [SerializeField] float patrolSpeedMultiplier = 1f;
-        [SerializeField] float combatSpeedMultiplier = 1.3f;
-        [SerializeField] float retreatSpeedMultiplier = 0.3f;
 
         [Header("Patrol Settings")] [SerializeField]
         Transform[] patrolPoints;
@@ -69,36 +67,6 @@ namespace EnemySystem
             if (patrolPoints.Length == 0) return;
             agent.destination = patrolPoints[currentPatrolIndex].position;
             currentPatrolIndex = (currentPatrolIndex + 1) % patrolPoints.Length;
-        }
-
-        // --- Combat Logic ---
-        internal void HandleCombatMovement(Transform playerTransform, float distanceToPlayer, float weaponRange,
-            float optimalDistance, bool hasLOS)
-        {
-            SetSpeedMultiplier(combatSpeedMultiplier);
-
-            Vector3 direction = (playerTransform.position - transform.position).normalized;
-            Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
-            transform.rotation =
-                Quaternion.RotateTowards(transform.rotation, lookRotation, agent.angularSpeed * Time.deltaTime);
-
-            if (distanceToPlayer <= weaponRange && hasLOS)
-            {
-                if (distanceToPlayer <= optimalDistance)
-                {
-                    SetSpeedMultiplier(retreatSpeedMultiplier);
-                    Vector3 retreatDirection = transform.position - playerTransform.position;
-                    agent.SetDestination(transform.position + retreatDirection.normalized * 2f);
-                }
-                else
-                {
-                    agent.SetDestination(transform.position); // Stop and shoot
-                }
-            }
-            else
-            {
-                agent.SetDestination(playerTransform.position); // Chase
-            }
         }
 
         // --- Coroutines & State Handlers ---

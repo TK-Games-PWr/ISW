@@ -15,7 +15,8 @@ namespace EnemySystem
         [SerializeField] float optimalCombatDistancePct = 0.7f;
         [Tooltip("Total amount of bullets, specified in magazines of current weapon")]
         [SerializeField] int totalMagazines = 1;
-        private int availableAmmo;
+
+        int availableAmmo;
         [SerializeField] float reloadTime = 1.7f;
         [SerializeField] float weaponRange; // todo: replace from guninfo
         [SerializeField] int magazineAmmo = 15; // todo: replace from guninfo
@@ -27,19 +28,24 @@ namespace EnemySystem
         internal float OptimalDistance => weaponRange * optimalCombatDistancePct;
         internal bool IsReloading { get; private set; } = false;
 
-        private int currentAmmo;
-        private float nextFireTime = 0f;
-        private NavMeshAgent agent;
+        int currentAmmo;
+        float nextFireTime = 0f;
+        
+        [SerializeField] float combatSpeedMultiplier = 1.3f;
+        [SerializeField] float retreatSpeedMultiplier = 0.3f;
+        
+        NavMeshAgent agent;
 
-        private EnemySensors sensors;
+        EnemySensors sensors;
+        EnemyMovement movement;
 
-        private void Awake()
+        void Awake()
         {
             agent = GetComponent<NavMeshAgent>();
             sensors = GetComponent<EnemySensors>();
         }
 
-        private void Start()
+        void Start()
         {
             if (currentGun != null && currentGun.TryGetComponent(out GrabbableObject grabbable))
             {
@@ -48,6 +54,35 @@ namespace EnemySystem
             
             availableAmmo = (totalMagazines - 1) * magazineAmmo;
             currentAmmo = magazineAmmo;
+        }
+        
+        // --- Combat Movement Logic ---
+        internal void HandleCombatMovement(Transform playerTransform, float distanceToPlayer, bool hasLOS)
+        {
+            movement.SetSpeedMultiplier(combatSpeedMultiplier);
+
+            Vector3 direction = (playerTransform.position - transform.position).normalized;
+            Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+            transform.rotation =
+                Quaternion.RotateTowards(transform.rotation, lookRotation, agent.angularSpeed * Time.deltaTime);
+
+            if (distanceToPlayer <= weaponRange && hasLOS)
+            {
+                if (distanceToPlayer <= OptimalDistance)
+                {
+                    movement.SetSpeedMultiplier(retreatSpeedMultiplier);
+                    Vector3 retreatDirection = transform.position - playerTransform.position;
+                    agent.SetDestination(transform.position + retreatDirection.normalized * 2f);
+                }
+                else
+                {
+                    agent.SetDestination(transform.position); // Stop and shoot
+                }
+            }
+            else
+            {
+                agent.SetDestination(playerTransform.position); // Chase
+            }
         }
 
         // Assuming player is visible!
@@ -75,7 +110,7 @@ namespace EnemySystem
             }
         }
 
-        private void TryShootOnce(float distanceToPlayer)
+        void TryShootOnce(float distanceToPlayer)
         {
             currentAmmo--;
             currentGun.PerformShoot();
@@ -85,7 +120,7 @@ namespace EnemySystem
             if (sensors.PlayerResources != null) sensors.PlayerResources.Damage(finalDamage);
         }
 
-        private IEnumerator ReloadRoutine()
+        IEnumerator ReloadRoutine()
         {
             IsReloading = true;
             agent.isStopped = true;

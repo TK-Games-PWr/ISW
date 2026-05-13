@@ -75,12 +75,18 @@ namespace EnemySystem
 
         public void Lobotomize()
         {
-            GetComponent<EnemyCombat>().enabled = false;
-            GetComponent<EnemySensors>().enabled = false;
-            GetComponent<EnemyMovement>().StopAllCoroutines();
-            GetComponent<EnemyMovement>().enabled = false;
-            GetComponent<AICore>().enabled = false;
-            GetComponent<NavMeshAgent>().enabled = false;
+            MonoBehaviour[] scripts = GetComponents<MonoBehaviour>();
+            foreach (var script in scripts)
+            {
+                script.StopAllCoroutines();
+                script.enabled = false;
+            }
+            
+            NavMeshAgent agent = GetComponent<NavMeshAgent>();
+            if (agent != null) 
+            {
+                agent.enabled = false;
+            }
         }
     }
 }

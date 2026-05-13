@@ -242,8 +242,7 @@ namespace EnemySystem
             float distanceToPlayer = Vector3.Distance(transform.position, sensors.PlayerTransform.position);
 
             // Handle Movement
-            movement.HandleCombatMovement(sensors.PlayerTransform, distanceToPlayer, combat.WeaponRange,
-                combat.OptimalDistance, hasLOS);
+            combat.HandleCombatMovement(sensors.PlayerTransform, distanceToPlayer, hasLOS);
 
             if (fightDelay > timeInCombat) return;
 
