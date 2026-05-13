@@ -132,6 +132,7 @@ namespace EnemySystem
 
             for (int i = 0; i < resources.currentGun.gunInfo.firesShotPerAmmo; i++)
             {
+                direction = (targetPosition - rayOrigin).normalized;
                 RaycastHit? hit = TryRaycastHit(direction, spreadRotation, rayOrigin, spreadAmount);
                 
                 if (hit != null)

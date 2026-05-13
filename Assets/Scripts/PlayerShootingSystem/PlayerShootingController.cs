@@ -339,10 +339,11 @@ namespace PlayerShootingSystem
             UpdateUI();
             
             Ray ray = fpsCam.ScreenPointToRay(uiCrosshair.crosshairRect.position);
-            Vector3 direction = ray.direction;
 
             for (int i = 0; i < currentGun.gunInfo.firesShotPerAmmo; i++)
             {
+                Vector3 direction = ray.direction;
+                
                 // spread
                 float x = UnityEngine.Random.Range(-currentSpread, currentSpread);
                 float y = UnityEngine.Random.Range(-currentSpread, currentSpread);
