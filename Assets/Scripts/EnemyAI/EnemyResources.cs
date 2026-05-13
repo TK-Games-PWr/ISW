@@ -21,6 +21,9 @@ namespace EnemySystem
         [Header("Combat Settings")]
         public PlayerShootingSystem.Gun currentGun;
         [SerializeField] internal Transform gunPivot;
+        
+        [Tooltip("Total amount of bullets, specified in magazines of current weapon")]
+        [SerializeField] internal int totalMagazines = 1;
 
         void Awake()
         {

@@ -1,4 +1,5 @@
 using System.Collections;
+using PlayerShootingSystem;
 using TK_Shared.ObjectInteractions3D;
 using UnityEngine;
 using UnityEngine.AI;
@@ -6,22 +7,20 @@ using Random = UnityEngine.Random;
 
 namespace EnemySystem
 {
-    [RequireComponent(typeof(EnemySensors))]
+    [RequireComponent(typeof(EnemySensors), typeof(EnemyMovement), typeof(EnemyResources))]
     public class EnemyCombat : MonoBehaviour
     {
         protected EnemyResources resources;
         
         [SerializeField] protected float optimalCombatDistancePct = 0.7f;
-        [Tooltip("Total amount of bullets, specified in magazines of current weapon")]
-        [SerializeField] protected int totalMagazines = 1;
 
         protected int availableAmmo;
-        [SerializeField] protected float reloadTime = 1.7f;
         [SerializeField] protected float weaponRange; 
-        [SerializeField] protected int magazineAmmo = 15; 
 
         [Tooltip("Extra delay added between shots for semi-automatic weapons to simulate an AI's trigger finger.")]
         [SerializeField] protected float singleShotDelay = 0.6f;
+
+        GunInfo GunInfo => resources.currentGun.gunInfo;
 
         internal float WeaponRange => weaponRange;
         internal float OptimalDistance => weaponRange * optimalCombatDistancePct;
@@ -37,7 +36,7 @@ namespace EnemySystem
         protected EnemySensors sensors;
         protected EnemyMovement movement;
 
-        protected virtual void Awake()
+        protected void Awake()
         {
             agent = GetComponent<NavMeshAgent>();
             sensors = GetComponent<EnemySensors>();
@@ -45,15 +44,15 @@ namespace EnemySystem
             resources = GetComponent<EnemyResources>();
         }
 
-        protected virtual void Start()
+        protected void Start()
         {
             if (resources.currentGun != null && resources.currentGun.TryGetComponent(out GrabbableObject grabbable))
             {
                 grabbable.Grab(resources.gunPivot);
             }
 
-            availableAmmo = (totalMagazines - 1) * magazineAmmo;
-            currentAmmo = magazineAmmo;
+            availableAmmo = (resources.totalMagazines - 1) * GunInfo.maxAmmo;
+            currentAmmo = GunInfo.maxAmmo;
         }
         
         // --- Combat Movement Logic ---
@@ -110,7 +109,7 @@ namespace EnemySystem
             }
         }
 
-        protected virtual void Shoot()
+        protected void Shoot()
         {
             currentAmmo--;
             resources.currentGun.PerformShoot();
@@ -161,14 +160,14 @@ namespace EnemySystem
             return hit;
         }
 
-        protected virtual IEnumerator ReloadRoutine()
+        protected IEnumerator ReloadRoutine()
         {
             IsReloading = true;
             agent.isStopped = true;
 
-            yield return new WaitForSeconds(reloadTime);
+            yield return new WaitForSeconds(GunInfo.reloadTime);
 
-            currentAmmo = availableAmmo > magazineAmmo ?  magazineAmmo : availableAmmo;
+            currentAmmo = availableAmmo > GunInfo.maxAmmo ?  GunInfo.maxAmmo : availableAmmo;
             availableAmmo -= currentAmmo;
             IsReloading = false;
             agent.isStopped = false;
