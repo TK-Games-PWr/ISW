@@ -11,41 +11,41 @@ namespace EnemySystem
     {
         [Header("Combat Settings")]
         public PlayerShootingSystem.Gun currentGun;
-        [SerializeField] Transform GunPivot;
-        [SerializeField] float optimalCombatDistancePct = 0.7f;
+        [SerializeField] protected Transform GunPivot;
+        [SerializeField] protected float optimalCombatDistancePct = 0.7f;
         [Tooltip("Total amount of bullets, specified in magazines of current weapon")]
-        [SerializeField] int totalMagazines = 1;
+        [SerializeField] protected int totalMagazines = 1;
 
-        int availableAmmo;
-        [SerializeField] float reloadTime = 1.7f;
-        [SerializeField] float weaponRange; // todo: replace from guninfo
-        [SerializeField] int magazineAmmo = 15; // todo: replace from guninfo
+        protected int availableAmmo;
+        [SerializeField] protected float reloadTime = 1.7f;
+        [SerializeField] protected float weaponRange; 
+        [SerializeField] protected int magazineAmmo = 15; 
 
         [Tooltip("Extra delay added between shots for semi-automatic weapons to simulate an AI's trigger finger.")]
-        [SerializeField] float singleShotDelay = 0.6f;
+        [SerializeField] protected float singleShotDelay = 0.6f;
 
         internal float WeaponRange => weaponRange;
         internal float OptimalDistance => weaponRange * optimalCombatDistancePct;
         internal bool IsReloading { get; private set; } = false;
 
-        int currentAmmo;
-        float nextFireTime = 0f;
+        protected int currentAmmo;
+        protected float nextFireTime = 0f;
         
-        [SerializeField] float combatSpeedMultiplier = 1.3f;
-        [SerializeField] float retreatSpeedMultiplier = 0.3f;
+        [SerializeField] protected float combatSpeedMultiplier = 1.3f;
+        [SerializeField] protected float retreatSpeedMultiplier = 0.3f;
         
-        NavMeshAgent agent;
+        protected NavMeshAgent agent;
+        protected EnemySensors sensors;
+        protected EnemyMovement movement;
 
-        EnemySensors sensors;
-        EnemyMovement movement;
-
-        void Awake()
+        protected virtual void Awake()
         {
             agent = GetComponent<NavMeshAgent>();
             sensors = GetComponent<EnemySensors>();
+            movement = GetComponent<EnemyMovement>();
         }
 
-        void Start()
+        protected virtual void Start()
         {
             if (currentGun != null && currentGun.TryGetComponent(out GrabbableObject grabbable))
             {
@@ -57,7 +57,7 @@ namespace EnemySystem
         }
         
         // --- Combat Movement Logic ---
-        internal void HandleCombatMovement(Transform playerTransform, float distanceToPlayer, bool hasLOS)
+        internal virtual void HandleCombatMovement(Transform playerTransform, float distanceToPlayer, bool hasLOS)
         {
             movement.SetSpeedMultiplier(combatSpeedMultiplier);
 
@@ -86,7 +86,7 @@ namespace EnemySystem
         }
 
         // Assuming player is visible!
-        internal void CombatAction(float distanceToPlayer)
+        internal virtual void CombatAction(float distanceToPlayer)
         {
             if (currentAmmo > 0)
             {
@@ -110,7 +110,7 @@ namespace EnemySystem
             }
         }
 
-        void TryShootOnce(float distanceToPlayer)
+        protected virtual void TryShootOnce(float distanceToPlayer)
         {
             currentAmmo--;
             currentGun.PerformShoot();
@@ -120,7 +120,7 @@ namespace EnemySystem
             if (sensors.PlayerResources != null) sensors.PlayerResources.Damage(finalDamage);
         }
 
-        IEnumerator ReloadRoutine()
+        protected virtual IEnumerator ReloadRoutine()
         {
             IsReloading = true;
             agent.isStopped = true;
