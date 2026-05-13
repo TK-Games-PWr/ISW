@@ -20,9 +20,6 @@ namespace EnemySystem
         [SerializeField] float reloadTime = 1.7f;
         [SerializeField] float weaponRange; // todo: replace from guninfo
         [SerializeField] int magazineAmmo = 15; // todo: replace from guninfo
-
-        private float recoil;
-
         [Tooltip("Extra delay added between shots for semi-automatic weapons to simulate an AI's trigger finger.")]
         [SerializeField] float singleShotDelay = 0.6f;
 
