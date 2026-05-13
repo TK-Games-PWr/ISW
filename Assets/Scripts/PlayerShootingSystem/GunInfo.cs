@@ -24,7 +24,7 @@ namespace PlayerShootingSystem
         [HideIf("isMelee")]
         public AnimationCurve damageFalloff;
         [HideIf("isMelee")]
-        public int firesShotPerAmmo = 3;
+        public int firesShotPerAmmo = 1;
         
         [HideIf("isMelee")]
         public float recoilUpward = 30f;

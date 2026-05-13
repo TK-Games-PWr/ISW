@@ -81,7 +81,10 @@ namespace EnemySystem
             currentGun.PerformShoot();
 
             Vector3 rayOrigin = GunPivot.position;
-            Vector3 targetPosition = sensors.PlayerTransform.position + Vector3.up * 1.7f;
+            
+            var playerController = sensors.PlayerTransform.GetComponent<TK_Shared._3DPlayerMovement.PlayerActionsController>();
+            Vector3 targetPosition = sensors.PlayerTransform.position + Vector3.up * playerController.eyeLevel;
+            
             Vector3 direction = (targetPosition - rayOrigin).normalized;
 
             float movementFactor = agent.speed > 0.01f
