@@ -4,6 +4,9 @@ namespace EnemySystem
 {
     public class CoverGuyCombat : EnemyCombat
     {
+        [Header("Specific to cover guy")]
+        [SerializeField] float hidingSpeedMultiplier = 2f;
+        
         internal override void HandleCombatMovement(Transform playerTransform, float distanceToPlayer, bool hasLOS)
         {
             movement.SetSpeedMultiplier(combatSpeedMultiplier);
@@ -29,6 +32,31 @@ namespace EnemySystem
             else
             {
                 agent.SetDestination(playerTransform.position); // Chase
+            }
+        }
+        
+        // Assuming player is visible!
+        internal override void CombatAction(float distanceToPlayer)
+        {
+            if (currentAmmo > 0)
+            {
+                if (Time.time >= nextFireTime)
+                {
+                    Shoot();
+
+                    float cooldown = resources.currentGun.gunInfo.fireRate;
+
+                    if (!resources.currentGun.gunInfo.isAutomatic)
+                    {
+                        cooldown += singleShotDelay;
+                    }
+
+                    nextFireTime = Time.time + cooldown;
+                }
+            }
+            else if (availableAmmo > 0 && !IsReloading)
+            {
+                StartCoroutine(ReloadRoutine());
             }
         }
     }
