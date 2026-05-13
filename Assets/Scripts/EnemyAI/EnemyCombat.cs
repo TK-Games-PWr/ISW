@@ -9,9 +9,8 @@ namespace EnemySystem
     [RequireComponent(typeof(EnemySensors))]
     public class EnemyCombat : MonoBehaviour
     {
-        [Header("Combat Settings")]
-        public PlayerShootingSystem.Gun currentGun;
-        [SerializeField] protected Transform GunPivot;
+        protected EnemyResources resources;
+        
         [SerializeField] protected float optimalCombatDistancePct = 0.7f;
         [Tooltip("Total amount of bullets, specified in magazines of current weapon")]
         [SerializeField] protected int totalMagazines = 1;
@@ -43,13 +42,14 @@ namespace EnemySystem
             agent = GetComponent<NavMeshAgent>();
             sensors = GetComponent<EnemySensors>();
             movement = GetComponent<EnemyMovement>();
+            resources = GetComponent<EnemyResources>();
         }
 
         protected virtual void Start()
         {
-            if (currentGun != null && currentGun.TryGetComponent(out GrabbableObject grabbable))
+            if (resources.currentGun != null && resources.currentGun.TryGetComponent(out GrabbableObject grabbable))
             {
-                grabbable.Grab(GunPivot);
+                grabbable.Grab(resources.gunPivot);
             }
             
             availableAmmo = (totalMagazines - 1) * magazineAmmo;
@@ -94,9 +94,9 @@ namespace EnemySystem
                 {
                     TryShootOnce(distanceToPlayer);
 
-                    float cooldown = currentGun.gunInfo.fireRate;
+                    float cooldown = resources.currentGun.gunInfo.fireRate;
 
-                    if (!currentGun.gunInfo.isAutomatic)
+                    if (!resources.currentGun.gunInfo.isAutomatic)
                     {
                         cooldown += singleShotDelay;
                     }
@@ -113,10 +113,10 @@ namespace EnemySystem
         protected virtual void TryShootOnce(float distanceToPlayer)
         {
             currentAmmo--;
-            currentGun.PerformShoot();
+            resources.currentGun.PerformShoot();
 
-            float multiplier = currentGun.gunInfo.damageFalloff.Evaluate(distanceToPlayer / 100f);
-            float finalDamage = currentGun.gunInfo.flatDamage * multiplier;
+            float multiplier = resources.currentGun.gunInfo.damageFalloff.Evaluate(distanceToPlayer / 100f);
+            float finalDamage = resources.currentGun.gunInfo.flatDamage * multiplier;
             if (sensors.PlayerResources != null) sensors.PlayerResources.Damage(finalDamage);
         }
 

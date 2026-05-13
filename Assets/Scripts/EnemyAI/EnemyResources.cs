@@ -12,17 +12,21 @@ namespace EnemySystem
 
         [SerializeField] float maxHealth = 75f;
 
-        float currentHealth;
-        AICore brain;
-        AIAnimationController animController;
+        float _currentHealth;
+        AICore _brain;
+        AIAnimationController _animController;
 
-        public bool IsDead => currentHealth <= 0;
+        public bool IsDead => _currentHealth <= 0;
+        
+        [Header("Combat Settings")]
+        public PlayerShootingSystem.Gun currentGun;
+        [SerializeField] internal Transform gunPivot;
 
         void Awake()
         {
-            currentHealth = maxHealth;
-            brain = GetComponent<AICore>();
-           animController = GetComponent<AIAnimationController>();
+            _currentHealth = maxHealth;
+            _brain = GetComponent<AICore>();
+           _animController = GetComponent<AIAnimationController>();
 
         }
 
@@ -30,7 +34,7 @@ namespace EnemySystem
         {
             if (IsDead) return;
 
-            currentHealth = Mathf.Clamp(currentHealth - amount, 0, maxHealth);
+            _currentHealth = Mathf.Clamp(_currentHealth - amount, 0, maxHealth);
 
             if (IsDead)
             {
@@ -39,14 +43,14 @@ namespace EnemySystem
             else
             {
                 // Alert the brain if we were shot from stealth
-                brain.ForceAlertSpike();
+                _brain.ForceAlertSpike();
             }
         }
 
         public void StealthKill()
         {
             if (IsDead) return;
-            currentHealth = 0;
+            _currentHealth = 0;
             Die();
         }
 
@@ -54,7 +58,7 @@ namespace EnemySystem
         {
             OnEnemyDied?.Invoke(this);
             Lobotomize();
-            animController.SetRagdoll(true);
+            _animController.SetRagdoll(true);
             int deadLayer = LayerMask.NameToLayer("EnemyFainted");
             SetLayerRecursively(gameObject, deadLayer);
             //Rigidbody rb = gameObject.AddComponent<Rigidbody>();
