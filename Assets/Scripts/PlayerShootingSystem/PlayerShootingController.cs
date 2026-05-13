@@ -340,39 +340,44 @@ namespace PlayerShootingSystem
             
             Ray ray = fpsCam.ScreenPointToRay(uiCrosshair.crosshairRect.position);
             Vector3 direction = ray.direction;
-            
-            // spread
-            float x = UnityEngine.Random.Range(-currentSpread, currentSpread);
-            float y = UnityEngine.Random.Range(-currentSpread, currentSpread);
-            direction += fpsCam.transform.right * x + fpsCam.transform.up * y;
-            direction.Normalize();
-            
-            if (Physics.Raycast(ray.origin, direction, out RaycastHit hit))
+
+            for (int i = 0; i < currentGun.gunInfo.firesShotPerAmmo; i++)
             {
-                if (hit.transform.TryGetComponent(out EnemyHitbox hitbox))
+                // spread
+                float x = UnityEngine.Random.Range(-currentSpread, currentSpread);
+                float y = UnityEngine.Random.Range(-currentSpread, currentSpread);
+                direction += fpsCam.transform.right * x + fpsCam.transform.up * y;
+                direction.Normalize();
+            
+                if (Physics.Raycast(ray.origin, direction, out RaycastHit hit))
                 {
-                    BulletImpactManager.Instance.SpawnImpact(hit.point, hit.normal, BulletImpactManager.ImpactType.Flesh);
-
-                    EnemyHealth enemy = hitbox.GetEnemyHealth();
-                    if (!(enemy == null || enemy.IsDead))
+                    if (hit.transform.TryGetComponent(out EnemyHitbox hitbox))
                     {
-                        if (hitDing) PlayHitSound();
-                        if(uiCrosshair.isActiveAndEnabled)
-                            uiCrosshair.ShowHit();
+                        BulletImpactManager.Instance.SpawnImpact(hit.point, hit.normal, BulletImpactManager.ImpactType.Flesh);
 
-                        float distance = hit.distance;
-                        float falloff = currentGun.gunInfo.damageFalloff.Evaluate(distance / 100f);
-                        float finalDamage = currentGun.gunInfo.flatDamage * falloff * hitbox.GetDamageMultiplier();
-                        Debug.Log(hitbox.hitboxType);
-                        enemy.Damage(finalDamage);
-                        hits++;
+                        EnemyHealth enemy = hitbox.GetEnemyHealth();
+                        if (!(enemy == null || enemy.IsDead))
+                        {
+                            if (hitDing) PlayHitSound();
+                            if(uiCrosshair.isActiveAndEnabled)
+                                uiCrosshair.ShowHit();
+
+                            float distance = hit.distance;
+                            float falloff = currentGun.gunInfo.damageFalloff.Evaluate(distance / 100f);
+                            float finalDamage = currentGun.gunInfo.flatDamage * falloff * hitbox.GetDamageMultiplier();
+                            Debug.Log(hitbox.hitboxType);
+                            enemy.Damage(finalDamage);
+                            hits++;
+                        }
+                    }
+                    else
+                    {
+                        BulletImpactManager.Instance.SpawnImpact(hit.point, hit.normal, BulletImpactManager.ImpactType.Ground);
                     }
                 }
-                else
-                {
-                    BulletImpactManager.Instance.SpawnImpact(hit.point, hit.normal, BulletImpactManager.ImpactType.Ground);
-                }
+
             }
+            
             // apply recoil after shooting, so first shoot is accurate
             uiCrosshair.ApplyRecoil(currentGun.gunInfo);
             EmitShootSound();

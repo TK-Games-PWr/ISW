@@ -107,7 +107,6 @@ namespace EnemySystem
 
         private RaycastHit? TryRaycastHit(Vector3 direction, Quaternion spreadRotation, Vector3 rayOrigin, float spreadAmount)
         {
-
             direction += spreadRotation * Vector3.right * Random.Range(-spreadAmount, spreadAmount);
             direction += spreadRotation * Vector3.up * Random.Range(-spreadAmount, spreadAmount);
             direction.Normalize();
