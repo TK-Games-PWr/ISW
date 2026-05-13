@@ -1,8 +1,8 @@
-using System;
-using UnityEngine;
 using System.Collections;
-using UnityEngine.AI; // Needed to stop agent during reload
 using TK_Shared.ObjectInteractions3D;
+using UnityEngine;
+using UnityEngine.AI;
+using Random = UnityEngine.Random;
 
 namespace EnemySystem
 {
@@ -51,7 +51,7 @@ namespace EnemySystem
             {
                 grabbable.Grab(resources.gunPivot);
             }
-            
+
             availableAmmo = (totalMagazines - 1) * magazineAmmo;
             currentAmmo = magazineAmmo;
         }
@@ -92,7 +92,7 @@ namespace EnemySystem
             {
                 if (Time.time >= nextFireTime)
                 {
-                    TryShootOnce(distanceToPlayer);
+                    Shoot();
 
                     float cooldown = resources.currentGun.gunInfo.fireRate;
 
@@ -110,14 +110,54 @@ namespace EnemySystem
             }
         }
 
-        protected virtual void TryShootOnce(float distanceToPlayer)
+        protected virtual void Shoot()
         {
             currentAmmo--;
             resources.currentGun.PerformShoot();
 
-            float multiplier = resources.currentGun.gunInfo.damageFalloff.Evaluate(distanceToPlayer / 100f);
-            float finalDamage = resources.currentGun.gunInfo.flatDamage * multiplier;
-            if (sensors.PlayerResources != null) sensors.PlayerResources.Damage(finalDamage);
+            Vector3 rayOrigin = resources.gunPivot.position;
+            
+            var playerController = sensors.PlayerTransform.GetComponent<TK_Shared._3DPlayerMovement.PlayerActionsController>();
+            Vector3 targetPosition = sensors.PlayerTransform.position + Vector3.up * playerController.eyeLevel;
+            
+            Vector3 direction = (targetPosition - rayOrigin).normalized;
+
+            float movementFactor = agent.speed > 0.01f
+                ? Mathf.Clamp01(agent.velocity.magnitude / agent.speed)
+                : 0f;
+            
+            float spreadAmount = (resources.currentGun.gunInfo.spread + 
+                                  resources.currentGun.gunInfo.movementSpreadPenalty * movementFactor);
+            Quaternion spreadRotation = Quaternion.LookRotation(direction);
+
+            for (int i = 0; i < resources.currentGun.gunInfo.firesShotPerAmmo; i++)
+            {
+                RaycastHit? hit = TryRaycastHit(direction, spreadRotation, rayOrigin, spreadAmount);
+                
+                if (hit != null)
+                {
+                    float multiplier = resources.currentGun.gunInfo.damageFalloff.Evaluate(hit.Value.distance / 100f);
+                    float finalDamage = resources.currentGun.gunInfo.flatDamage * multiplier;
+                    sensors.PlayerResources.Damage(finalDamage);
+                }
+            }
+        }
+
+        RaycastHit? TryRaycastHit(Vector3 direction, Quaternion spreadRotation, Vector3 rayOrigin, float spreadAmount)
+        {
+            direction += spreadRotation * Vector3.right * Random.Range(-spreadAmount, spreadAmount);
+            direction += spreadRotation * Vector3.up * Random.Range(-spreadAmount, spreadAmount);
+            direction.Normalize();
+
+            // Nothing was hit 
+            if (!Physics.Raycast(rayOrigin, direction, out RaycastHit hit, weaponRange))
+                return null;
+
+            // Something other than the player was hit
+            if (hit.collider.transform != sensors.PlayerTransform)
+                return null;
+
+            return hit;
         }
 
         protected virtual IEnumerator ReloadRoutine()
@@ -126,7 +166,7 @@ namespace EnemySystem
             agent.isStopped = true;
 
             yield return new WaitForSeconds(reloadTime);
-            
+
             currentAmmo = availableAmmo > magazineAmmo ?  magazineAmmo : availableAmmo;
             availableAmmo -= currentAmmo;
             IsReloading = false;
