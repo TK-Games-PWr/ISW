@@ -10306,6 +10306,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2872910168279008260, guid: d99dcb84300c819009dc79cf653ecd04, type: 3}
+      propertyPath: patrolPoints.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2872910168279008260, guid: d99dcb84300c819009dc79cf653ecd04, type: 3}
+      propertyPath: 'patrolPoints.Array.data[0]'
+      value: 
+      objectReference: {fileID: 458053052}
+    - target: {fileID: 2872910168279008260, guid: d99dcb84300c819009dc79cf653ecd04, type: 3}
+      propertyPath: 'patrolPoints.Array.data[1]'
+      value: 
+      objectReference: {fileID: 458053052}
     - target: {fileID: 3538606667079733189, guid: d99dcb84300c819009dc79cf653ecd04, type: 3}
       propertyPath: m_Name
       value: Cover guy

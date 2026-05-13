@@ -82,6 +82,7 @@ namespace EnemySystem
         {
             StopAllCoroutines();
             isWaiting = false;
+            animationController.AgentLooking(false);
         }
 
         internal void StartLookAround(float duration, AICore brain)
