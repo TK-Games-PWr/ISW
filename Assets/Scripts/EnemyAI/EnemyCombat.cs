@@ -36,7 +36,7 @@ namespace EnemySystem
         protected EnemySensors sensors;
         protected EnemyMovement movement;
 
-        protected void Awake()
+        protected virtual void Awake()
         {
             agent = GetComponent<NavMeshAgent>();
             sensors = GetComponent<EnemySensors>();
@@ -44,7 +44,7 @@ namespace EnemySystem
             resources = GetComponent<EnemyResources>();
         }
 
-        protected void Start()
+        protected virtual void Start()
         {
             if (resources.currentGun != null && resources.currentGun.TryGetComponent(out GrabbableObject grabbable))
             {
@@ -85,7 +85,7 @@ namespace EnemySystem
         }
 
         // Assuming player is visible!
-        internal virtual void CombatAction(float distanceToPlayer)
+        internal virtual void CombatAction()
         {
             if (currentAmmo > 0)
             {

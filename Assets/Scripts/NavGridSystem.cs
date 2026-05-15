@@ -4,8 +4,10 @@ using UnityEngine.AI;
 
 public class NavGridSystem : MonoBehaviour
 {
+    public static NavGridSystem Instance { get ; private set; }
+    
     [Header("Generation Settings")]
-    [Tooltip("Distance between generated cover points on edges.")]
+    [Tooltip("Distance between generated points on edges.")]
     public float pointSpacing = 2.0f;
     
     [Header("Grid Settings")]
@@ -33,6 +35,7 @@ public class NavGridSystem : MonoBehaviour
 
     void Awake()
     {
+        Instance = this;
         GenerateGridFromNavMesh();
     }
 
@@ -87,7 +90,7 @@ public class NavGridSystem : MonoBehaviour
         int x = Mathf.FloorToInt(point.x / cellSize);
         int y = Mathf.FloorToInt(point.y / cellHeight);
         int z = Mathf.FloorToInt(point.z / cellSize);
-        Vector3Int cell = new Vector3Int(x, y, z);
+        Vector3Int cell = new(x, y, z);
         
         if (!grid.ContainsKey(cell))
         {
@@ -102,9 +105,67 @@ public class NavGridSystem : MonoBehaviour
 
     void AddEdge(Dictionary<Edge, int> dict, int v1, int v2)
     {
-        Edge edge = new Edge(v1, v2);
+        Edge edge = new(v1, v2);
         if (dict.ContainsKey(edge)) dict[edge]++;
         else dict[edge] = 1;
+    }
+    
+    // Access
+    public Vector3 GetBestCover(NavMeshAgent agent, LayerMask checkCoverMask, Vector3 playerPos)
+    {
+        Vector3 agentPos = agent.transform.position;
+        
+        // Get cell agent is in
+        int x = Mathf.FloorToInt(agentPos.x / cellSize);
+        int y = Mathf.FloorToInt(agentPos.y / cellHeight);
+        int z = Mathf.FloorToInt(agentPos.z / cellSize);
+        Vector3Int agentCell = new (x, y, z);
+
+        // Get grid points or return agentPos as fallback when not found
+        if (!grid.TryGetValue(agentCell, out List<Vector3> localPoints)) return agentPos;
+        
+        Vector3 bestPoint = agentPos;
+        float shortestPathDistance = float.MaxValue;
+
+        // Iterate ONLY through points in this specific 3D chunk
+        foreach (Vector3 point in localPoints)
+        {
+            if (Physics.Linecast(point + new Vector3(0, 1, 0), playerPos, out RaycastHit hit, checkCoverMask))
+            {
+                if (hit.collider.CompareTag("Player"))
+                {
+                    Debug.DrawLine(point + new Vector3(0, 1, 0), playerPos, Color.darkRed, .1f);
+                    continue;
+                }
+                Debug.DrawLine(point + new Vector3(0, 1, 0), playerPos, Color.green, .1f);
+            }
+            
+            float pathDist = GetPathDistance(agent, point);
+            if (pathDist < shortestPathDistance)
+            {
+                shortestPathDistance = pathDist;
+                bestPoint = point;
+            }
+        }
+        return bestPoint;
+    }
+
+    // Helpers
+    float GetPathDistance(NavMeshAgent agent, Vector3 target)
+    {
+        NavMeshPath path = new ();
+        if (NavMesh.CalculatePath(agent.transform.position, target, agent.areaMask, path))
+        {
+            if (path.status != NavMeshPathStatus.PathComplete) return float.MaxValue;
+
+            float distance = 0f;
+            for (int i = 0; i < path.corners.Length - 1; i++)
+            {
+                distance += Vector3.Distance(path.corners[i], path.corners[i + 1]);
+            }
+            return distance;
+        }
+        return float.MaxValue;
     }
     
 #if UNITY_EDITOR

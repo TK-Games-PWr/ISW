@@ -249,7 +249,7 @@ namespace EnemySystem
             // Handle Shooting
             if (distanceToPlayer <= _combat.WeaponRange && hasLos)
             {
-                _combat.CombatAction(distanceToPlayer);
+                _combat.CombatAction();
             }
         }
 

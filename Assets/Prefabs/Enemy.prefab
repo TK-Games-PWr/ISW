@@ -1772,7 +1772,7 @@ MonoBehaviour:
     m_Bits: 256
   sightObstaclesMask:
     serializedVersion: 2
-    m_Bits: 759
+    m_Bits: 193
   eyeLevel: 1.7
   horizontalFOV: 90
   verticalFOV: 45

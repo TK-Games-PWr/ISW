@@ -10257,6 +10257,10 @@ PrefabInstance:
       propertyPath: drawGizmos
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8951062580451780602, guid: 6cd1fa7741d8df6a18f79341cf97b992, type: 3}
+      propertyPath: pointSpacing
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -12052,6 +12056,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8521726943504668858, guid: cf27e03cd87a0c5a6b40af4ded14c0cd, type: 3}
+      propertyPath: godMode
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -13308,8 +13316,8 @@ Transform:
   m_GameObject: {fileID: 2005089644}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 8.93, y: 4.29, z: 10.76}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 14.86, y: 4.29, z: 9.61}
+  m_LocalScale: {x: 1, y: 1.978, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}

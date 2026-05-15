@@ -6,11 +6,11 @@ namespace EnemySystem
     public class EnemySensors : MonoBehaviour
     {
         [Header("Targeting")]
-        [SerializeField] string playerTag = "Player";
+        [SerializeField] internal string playerTag = "Player";
         [SerializeField] LayerMask enemyLayer;
 
         [Header("Vision Settings")]
-        [SerializeField] LayerMask sightObstaclesMask;
+        [SerializeField] internal LayerMask sightObstaclesMask;
         [SerializeField] float eyeLevel = 1.7f;
         [SerializeField] float horizontalFOV = 100f;
         [SerializeField] float verticalFOV = 40f;
@@ -23,9 +23,9 @@ namespace EnemySystem
         internal Vector3 LastKnownPosition { get; private set; }
         internal PlayerResources PlayerResources { get; private set; }
 
-        private float playerEyeLevel => PlayerTransform != null ? PlayerTransform.GetComponent<PlayerActionsController>().eyeLevel : 1.7f;
+        float playerEyeLevel => PlayerTransform != null ? PlayerTransform.GetComponent<PlayerActionsController>().eyeLevel : 1.7f;
 
-        private void Start()
+        void Start()
         {
             GameObject player = GameObject.FindGameObjectWithTag(playerTag);
             if (player != null)
@@ -91,7 +91,7 @@ namespace EnemySystem
         }
 
 #if UNITY_EDITOR
-        private void OnDrawGizmos()
+        void OnDrawGizmos()
         {
             if (PlayerTransform == null) return;
 
@@ -118,7 +118,7 @@ namespace EnemySystem
             }
         }
 
-        private void OnDrawGizmosSelected()
+        void OnDrawGizmosSelected()
         {
             Vector3 rayStartOrigin = transform.position + Vector3.up * eyeLevel;
 
@@ -167,7 +167,7 @@ namespace EnemySystem
             }
         }
 
-        private void DrawVisibilityRaycast(Vector3 rayStartOrigin, RaycastHit hit, float horizontalAngle, float verticalAngle)
+        void DrawVisibilityRaycast(Vector3 rayStartOrigin, RaycastHit hit, float horizontalAngle, float verticalAngle)
         {
             if (hit.collider.CompareTag(playerTag))
             {

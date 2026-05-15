@@ -87,3 +87,7 @@ MonoBehaviour:
   singleShotDelay: 0.6
   combatSpeedMultiplier: 1.2
   retreatSpeedMultiplier: 0.3
+  hidingSpeedMultiplier: 2
+  playerLayerMask:
+    serializedVersion: 2
+    m_Bits: 128
