@@ -7353,13 +7353,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6523dd607bc0066de81b3b73c00e2d8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemySystem.RamberCombat
-  optimalCombatDistancePct: 0.7
-  weaponRange: 0
-  singleShotDelay: 0.6
+  optimalCombatDistancePct: 0.8
+  weaponRange: 5
+  singleShotDelay: 1
   combatSpeedMultiplier: 1.3
   retreatSpeedMultiplier: 0.3
   preferredGun: {fileID: 7783720580576294447}
-  shotgunRange: 5
 --- !u!114 &7587119339273579207
 MonoBehaviour:
   m_ObjectHideFlags: 0
