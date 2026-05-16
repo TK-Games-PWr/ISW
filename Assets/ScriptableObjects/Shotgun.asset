@@ -42,7 +42,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   isAutomatic: 0
   isMelee: 0
-  fireRate: 0
+  fireRate: 0.4
   ammoType: 4
   maxAmmo: 5
   damageFalloff:
