@@ -14,6 +14,8 @@ namespace EnemySystem
         [SerializeField] float eyeLevel = 1.7f;
         [SerializeField] float horizontalFOV = 100f;
         [SerializeField] float verticalFOV = 40f;
+        [Tooltip("Vertical FOV used when in Alert or Combat state. Lets enemies spot elevated targets once aware.")]
+        [SerializeField] float alertedVerticalFOV = 120f;
         [SerializeField] float maxSightDistance = 40f;
 
         [Header("Hearing Settings")]
@@ -23,10 +25,16 @@ namespace EnemySystem
         internal Vector3 LastKnownPosition { get; private set; }
         internal PlayerResources PlayerResources { get; private set; }
 
+        AICore _ai;
+
         float playerEyeLevel => PlayerTransform != null ? PlayerTransform.GetComponent<PlayerActionsController>().eyeLevel : 1.7f;
+
+        float CurrentVerticalFOV =>
+            (_ai != null && _ai.currentState != AICore.AIState.Patrol) ? alertedVerticalFOV : verticalFOV;
 
         void Start()
         {
+            _ai = GetComponent<AICore>();
             GameObject player = GameObject.FindGameObjectWithTag(playerTag);
             if (player != null)
             {
@@ -53,7 +61,7 @@ namespace EnemySystem
             float flatDistance = Mathf.Sqrt(localDirToPlayer.x * localDirToPlayer.x + localDirToPlayer.z * localDirToPlayer.z);
             float verticalAngle = Mathf.Abs(Mathf.Atan2(localDirToPlayer.y, flatDistance) * Mathf.Rad2Deg);
 
-            if (horizontalAngle > horizontalFOV / 2f || verticalAngle > verticalFOV / 2f)
+            if (horizontalAngle > horizontalFOV / 2f || verticalAngle > CurrentVerticalFOV / 2f)
             {
                 return false;
             }
@@ -171,7 +179,7 @@ namespace EnemySystem
         {
             if (hit.collider.CompareTag(playerTag))
             {
-                if (horizontalAngle > horizontalFOV / 2f || verticalAngle > verticalFOV / 2f)
+                if (horizontalAngle > horizontalFOV / 2f || verticalAngle > CurrentVerticalFOV / 2f)
                 {
                     Gizmos.color = Color.blue; // Blue: Player behind field of view
                 }

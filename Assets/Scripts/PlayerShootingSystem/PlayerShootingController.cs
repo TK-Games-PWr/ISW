@@ -340,13 +340,23 @@ namespace PlayerShootingSystem
             
             Ray ray = fpsCam.ScreenPointToRay(uiCrosshair.crosshairRect.position);
 
+            bool useConeSpread = currentGun.gunInfo.firesShotPerAmmo > 1;
             for (int i = 0; i < currentGun.gunInfo.firesShotPerAmmo; i++)
             {
                 Vector3 direction = ray.direction;
-                
-                // spread
-                float x = UnityEngine.Random.Range(-currentSpread, currentSpread);
-                float y = UnityEngine.Random.Range(-currentSpread, currentSpread);
+
+                float x, y;
+                if (useConeSpread)
+                {
+                    Vector2 disc = UnityEngine.Random.insideUnitCircle * currentSpread;
+                    x = disc.x;
+                    y = disc.y;
+                }
+                else
+                {
+                    x = UnityEngine.Random.Range(-currentSpread, currentSpread);
+                    y = UnityEngine.Random.Range(-currentSpread, currentSpread);
+                }
                 direction += fpsCam.transform.right * x + fpsCam.transform.up * y;
                 direction.Normalize();
             
