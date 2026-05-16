@@ -1462,6 +1462,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   gravityScale: 2
+  leftLeanInput: 0
+  rightLeanInput: 0
 --- !u!114 &8521726943504668858
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1492,6 +1494,8 @@ MonoBehaviour:
     amount: 2
   - ammoType: 2
     amount: 2
+  - ammoType: 4
+    amount: 5
   throwables:
   - {fileID: 11400000, guid: 2e8a36fcfc4c87ecaa656d28741619a1, type: 2}
   knifeObj: {fileID: 3024995441329931677}

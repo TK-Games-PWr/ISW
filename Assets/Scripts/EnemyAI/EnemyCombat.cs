@@ -145,15 +145,25 @@ namespace EnemySystem
 
         RaycastHit? TryRaycastHit(Vector3 direction, Quaternion spreadRotation, Vector3 rayOrigin, float spreadAmount)
         {
-            direction += spreadRotation * Vector3.right * Random.Range(-spreadAmount, spreadAmount);
-            direction += spreadRotation * Vector3.up * Random.Range(-spreadAmount, spreadAmount);
+            float x, y;
+            if (resources.currentGun.gunInfo.firesShotPerAmmo > 1)
+            {
+                Vector2 disc = Random.insideUnitCircle * spreadAmount;
+                x = disc.x;
+                y = disc.y;
+            }
+            else
+            {
+                x = Random.Range(-spreadAmount, spreadAmount);
+                y = Random.Range(-spreadAmount, spreadAmount);
+            }
+            direction += spreadRotation * Vector3.right * x;
+            direction += spreadRotation * Vector3.up * y;
             direction.Normalize();
 
-            // Nothing was hit 
             if (!Physics.Raycast(rayOrigin, direction, out RaycastHit hit, weaponRange))
                 return null;
 
-            // Something other than the player was hit
             if (hit.collider.transform != sensors.PlayerTransform)
                 return null;
 

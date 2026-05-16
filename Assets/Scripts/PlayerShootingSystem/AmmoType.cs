@@ -5,6 +5,7 @@ namespace PlayerShootingSystem
         Pistol,
         Rifle,
         Snipe,
-        Nade
+        Nade,
+        Shotgun
     }
 }
