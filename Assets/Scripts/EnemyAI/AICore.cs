@@ -263,7 +263,7 @@ namespace EnemySystem
         {
             _resources.currentGun.gameObject.SetActive(false);
             _combat = GetCombatModule(type);
-            _resources.currentGun = _combat.preferredGun;
+            _resources.currentGun = _combat.classGun;
             _resources.currentGun.gameObject.SetActive(true);
         }
 

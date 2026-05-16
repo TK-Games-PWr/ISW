@@ -3,6 +3,7 @@ using PlayerShootingSystem;
 using TK_Shared.ObjectInteractions3D;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 namespace EnemySystem
@@ -20,7 +21,7 @@ namespace EnemySystem
         [Tooltip("Extra delay added between shots for semi-automatic weapons to simulate an AI's trigger finger.")]
         [SerializeField] protected float singleShotDelay = 0.6f;
 
-        GunInfo GunInfo => resources.currentGun.gunInfo;
+        GunInfo GunInfo => classGun.gunInfo;
 
         internal float WeaponRange => weaponRange;
         internal float OptimalDistance => weaponRange * optimalCombatDistancePct;
@@ -32,7 +33,7 @@ namespace EnemySystem
         [SerializeField] protected float combatSpeedMultiplier = 1.3f;
         [SerializeField] protected float retreatSpeedMultiplier = 0.3f;
         
-        public Gun preferredGun;
+        [FormerlySerializedAs("preferredGun")] public Gun classGun;
         
         protected NavMeshAgent agent;
         protected EnemySensors sensors;
@@ -48,9 +49,18 @@ namespace EnemySystem
 
         protected virtual void Start()
         {
-            if (resources.currentGun != null && resources.currentGun.TryGetComponent(out GrabbableObject grabbable))
+            if (classGun != null && classGun.TryGetComponent(out GrabbableObject grabbable))
             {
+                bool shouldDisable = false;
+                if (!classGun.gameObject.activeInHierarchy)
+                {
+                    shouldDisable = true;
+                    classGun.gameObject.SetActive(true);
+                }
+                
                 grabbable.Grab(resources.gunPivot);
+                
+                if(shouldDisable) classGun.gameObject.SetActive(false);
             }
 
             availableAmmo = (resources.totalMagazines - 1) * GunInfo.maxAmmo;
