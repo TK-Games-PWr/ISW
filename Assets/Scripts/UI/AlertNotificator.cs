@@ -18,13 +18,13 @@ public class AlertNotificator : MonoBehaviour
     private void OnEnable()
     {
         OnAlertChanged += HandleAlertChanged;
-        EnemyHealth.OnEnemyDied += HandleEnemyDied;
+        EnemyResources.OnEnemyDied += HandleEnemyDied;
     }
 
     private void OnDisable()
     {
         OnAlertChanged -= HandleAlertChanged;
-        EnemyHealth.OnEnemyDied -= HandleEnemyDied;
+        EnemyResources.OnEnemyDied -= HandleEnemyDied;
     }
 
     private void Update()
@@ -68,9 +68,9 @@ public class AlertNotificator : MonoBehaviour
         indicator.SetAlertProgress(value, alertLevel);
     }
 
-    private void HandleEnemyDied(EnemyHealth enemyHealth)
+    private void HandleEnemyDied(EnemyResources enemyResources)
     {
-        AICore enemy = enemyHealth.GetComponent<AICore>();
+        AICore enemy = enemyResources.GetComponent<AICore>();
         if (enemy != null)
         {
             RemoveIndicator(enemy);

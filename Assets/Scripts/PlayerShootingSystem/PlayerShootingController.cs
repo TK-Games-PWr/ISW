@@ -156,7 +156,7 @@ namespace PlayerShootingSystem
             {
                 if (hit.transform.TryGetComponent(out EnemyHitbox hitbox))
                 {
-                    EnemyHealth enemy = hitbox.GetEnemyHealth();
+                    EnemyResources enemy = hitbox.GetEnemyHealth();
                     if (enemy.IsDead) return;
                     if (hitDing) PlayHitSound();
                     uiCrosshair.ShowHit();
@@ -339,10 +339,11 @@ namespace PlayerShootingSystem
             UpdateUI();
             
             Ray ray = fpsCam.ScreenPointToRay(uiCrosshair.crosshairRect.position);
-            Vector3 direction = ray.direction;
 
             for (int i = 0; i < currentGun.gunInfo.firesShotPerAmmo; i++)
             {
+                Vector3 direction = ray.direction;
+                
                 // spread
                 float x = UnityEngine.Random.Range(-currentSpread, currentSpread);
                 float y = UnityEngine.Random.Range(-currentSpread, currentSpread);
@@ -355,7 +356,7 @@ namespace PlayerShootingSystem
                     {
                         BulletImpactManager.Instance.SpawnImpact(hit.point, hit.normal, BulletImpactManager.ImpactType.Flesh);
 
-                        EnemyHealth enemy = hitbox.GetEnemyHealth();
+                        EnemyResources enemy = hitbox.GetEnemyHealth();
                         if (!(enemy == null || enemy.IsDead))
                         {
                             if (hitDing) PlayHitSound();

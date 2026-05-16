@@ -1,5 +1,7 @@
 using EnemySystem;
 using UnityEngine;
+using UnityEngine.Serialization;
+
 namespace PlayerShootingSystem
 {
 
@@ -7,8 +9,8 @@ namespace PlayerShootingSystem
     
     public class EnemyHitbox : MonoBehaviour
     {
-        [SerializeField]
-        EnemyHealth enemyHealth;
+        [FormerlySerializedAs("enemyHealth")] [SerializeField]
+        EnemyResources enemyResources;
         public HitboxType hitboxType = HitboxType.Body;
 
         public float GetDamageMultiplier() => hitboxType switch
@@ -17,6 +19,6 @@ namespace PlayerShootingSystem
             _ => 1f
         };
 
-        public EnemyHealth GetEnemyHealth() => enemyHealth;
+        public EnemyResources GetEnemyHealth() => enemyResources;
     }
 }

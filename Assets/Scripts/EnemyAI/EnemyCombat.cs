@@ -7,51 +7,85 @@ using Random = UnityEngine.Random;
 
 namespace EnemySystem
 {
-    [RequireComponent(typeof(EnemySensors))]
+    [RequireComponent(typeof(EnemySensors), typeof(EnemyMovement), typeof(EnemyResources))]
     public class EnemyCombat : MonoBehaviour
     {
-        [Header("Combat Settings")]
-        public Gun currentGun;
-        [SerializeField] Transform GunPivot;
-        [SerializeField] float optimalCombatDistancePct = 0.7f;
-        [Tooltip("Total amount of bullets, specified in magazines of current weapon")]
-        [SerializeField] int totalMagazines = 1;
-        private int availableAmmo;
-        [SerializeField] float reloadTime = 1.7f;
-        [SerializeField] float weaponRange; // todo: replace from guninfo
-        [SerializeField] int magazineAmmo = 15; // todo: replace from guninfo
+        protected EnemyResources resources;
+        
+        [SerializeField] protected float optimalCombatDistancePct = 0.7f;
+
+        protected int availableAmmo;
+        [SerializeField] protected float weaponRange; 
+
         [Tooltip("Extra delay added between shots for semi-automatic weapons to simulate an AI's trigger finger.")]
-        [SerializeField] float singleShotDelay = 0.6f;
+        [SerializeField] protected float singleShotDelay = 0.6f;
+
+        GunInfo GunInfo => resources.currentGun.gunInfo;
 
         internal float WeaponRange => weaponRange;
         internal float OptimalDistance => weaponRange * optimalCombatDistancePct;
         internal bool IsReloading { get; private set; } = false;
 
-        private int currentAmmo;
-        private float nextFireTime = 0f;
-        private NavMeshAgent agent;
+        protected int currentAmmo;
+        protected float nextFireTime = 0f;
+        
+        [SerializeField] protected float combatSpeedMultiplier = 1.3f;
+        [SerializeField] protected float retreatSpeedMultiplier = 0.3f;
+        
+        protected NavMeshAgent agent;
+        protected EnemySensors sensors;
+        protected EnemyMovement movement;
 
-        private EnemySensors sensors;
-
-        private void Awake()
+        protected virtual void Awake()
         {
             agent = GetComponent<NavMeshAgent>();
             sensors = GetComponent<EnemySensors>();
+            movement = GetComponent<EnemyMovement>();
+            resources = GetComponent<EnemyResources>();
         }
 
-        private void Start()
+        protected virtual void Start()
         {
-            if (currentGun != null && currentGun.TryGetComponent(out GrabbableObject grabbable))
+            if (resources.currentGun != null && resources.currentGun.TryGetComponent(out GrabbableObject grabbable))
             {
-                grabbable.Grab(GunPivot);
+                grabbable.Grab(resources.gunPivot);
             }
 
-            availableAmmo = (totalMagazines - 1) * magazineAmmo;
-            currentAmmo = magazineAmmo;
+            availableAmmo = (resources.totalMagazines - 1) * GunInfo.maxAmmo;
+            currentAmmo = GunInfo.maxAmmo;
+        }
+        
+        // --- Combat Movement Logic ---
+        internal virtual void HandleCombatMovement(Transform playerTransform, float distanceToPlayer, bool hasLOS)
+        {
+            movement.SetSpeedMultiplier(combatSpeedMultiplier);
+
+            Vector3 direction = (playerTransform.position - transform.position).normalized;
+            Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+            transform.rotation =
+                Quaternion.RotateTowards(transform.rotation, lookRotation, agent.angularSpeed * Time.deltaTime);
+
+            if (distanceToPlayer <= weaponRange && hasLOS)
+            {
+                if (distanceToPlayer <= OptimalDistance)
+                {
+                    movement.SetSpeedMultiplier(retreatSpeedMultiplier);
+                    Vector3 retreatDirection = transform.position - playerTransform.position;
+                    agent.SetDestination(transform.position + retreatDirection.normalized * 2f);
+                }
+                else
+                {
+                    agent.SetDestination(transform.position); // Stop and shoot
+                }
+            }
+            else
+            {
+                agent.SetDestination(playerTransform.position); // Chase
+            }
         }
 
         // Assuming player is visible!
-        internal void CombatAction(float distanceToPlayer)
+        internal virtual void CombatAction()
         {
             if (currentAmmo > 0)
             {
@@ -59,9 +93,9 @@ namespace EnemySystem
                 {
                     Shoot();
 
-                    float cooldown = currentGun.gunInfo.fireRate;
+                    float cooldown = resources.currentGun.gunInfo.fireRate;
 
-                    if (!currentGun.gunInfo.isAutomatic)
+                    if (!resources.currentGun.gunInfo.isAutomatic)
                     {
                         cooldown += singleShotDelay;
                     }
@@ -75,12 +109,12 @@ namespace EnemySystem
             }
         }
 
-        private void Shoot()
+        protected void Shoot()
         {
             currentAmmo--;
-            currentGun.PerformShoot();
+            resources.currentGun.PerformShoot();
 
-            Vector3 rayOrigin = GunPivot.position;
+            Vector3 rayOrigin = resources.gunPivot.position;
             
             var playerController = sensors.PlayerTransform.GetComponent<TK_Shared._3DPlayerMovement.PlayerActionsController>();
             Vector3 targetPosition = sensors.PlayerTransform.position + Vector3.up * playerController.eyeLevel;
@@ -91,24 +125,25 @@ namespace EnemySystem
                 ? Mathf.Clamp01(agent.velocity.magnitude / agent.speed)
                 : 0f;
             
-            float spreadAmount = (currentGun.gunInfo.spread + 
-                                  currentGun.gunInfo.movementSpreadPenalty * movementFactor);
+            float spreadAmount = (resources.currentGun.gunInfo.spread + 
+                                  resources.currentGun.gunInfo.movementSpreadPenalty * movementFactor);
             Quaternion spreadRotation = Quaternion.LookRotation(direction);
 
-            for (int i = 0; i < currentGun.gunInfo.firesShotPerAmmo; i++)
+            for (int i = 0; i < resources.currentGun.gunInfo.firesShotPerAmmo; i++)
             {
+                direction = (targetPosition - rayOrigin).normalized;
                 RaycastHit? hit = TryRaycastHit(direction, spreadRotation, rayOrigin, spreadAmount);
                 
                 if (hit != null)
                 {
-                    float multiplier = currentGun.gunInfo.damageFalloff.Evaluate(hit.Value.distance / 100f);
-                    float finalDamage = currentGun.gunInfo.flatDamage * multiplier;
+                    float multiplier = resources.currentGun.gunInfo.damageFalloff.Evaluate(hit.Value.distance / 100f);
+                    float finalDamage = resources.currentGun.gunInfo.flatDamage * multiplier;
                     sensors.PlayerResources.Damage(finalDamage);
                 }
             }
         }
 
-        private RaycastHit? TryRaycastHit(Vector3 direction, Quaternion spreadRotation, Vector3 rayOrigin, float spreadAmount)
+        RaycastHit? TryRaycastHit(Vector3 direction, Quaternion spreadRotation, Vector3 rayOrigin, float spreadAmount)
         {
             direction += spreadRotation * Vector3.right * Random.Range(-spreadAmount, spreadAmount);
             direction += spreadRotation * Vector3.up * Random.Range(-spreadAmount, spreadAmount);
@@ -125,14 +160,14 @@ namespace EnemySystem
             return hit;
         }
 
-        private IEnumerator ReloadRoutine()
+        protected IEnumerator ReloadRoutine()
         {
             IsReloading = true;
             agent.isStopped = true;
 
-            yield return new WaitForSeconds(reloadTime);
+            yield return new WaitForSeconds(GunInfo.reloadTime);
 
-            currentAmmo = availableAmmo > magazineAmmo ?  magazineAmmo : availableAmmo;
+            currentAmmo = availableAmmo > GunInfo.maxAmmo ?  GunInfo.maxAmmo : availableAmmo;
             availableAmmo -= currentAmmo;
             IsReloading = false;
             agent.isStopped = false;

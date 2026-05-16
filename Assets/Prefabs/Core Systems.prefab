@@ -740,6 +740,54 @@ MonoBehaviour:
           m_StringArgument: mainMenu
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!1 &3220299031976196384
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4195943916872864507}
+  - component: {fileID: 8951062580451780602}
+  m_Layer: 0
+  m_Name: NavGridSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4195943916872864507
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3220299031976196384}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7386758032263442935}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8951062580451780602
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3220299031976196384}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22266ed2419607fcebb2edb85eca3abb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NavGridSystem
+  pointSpacing: 2
+  cellSize: 10
+  cellHeight: 4
+  drawGizmos: 0
 --- !u!1 &3356052565642973800
 GameObject:
   m_ObjectHideFlags: 0
@@ -905,8 +953,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3604899088855785236}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.65, y: 6.587085, z: 8.445}
+  m_LocalRotation: {x: 0, y: 0.5735764, z: 0, w: 0.8191521}
+  m_LocalPosition: {x: -2.35677, y: 1.703, z: 7.61691}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1897,6 +1945,7 @@ Transform:
   - {fileID: 379227340926306092}
   - {fileID: 8394390592820845382}
   - {fileID: 3668531052253174637}
+  - {fileID: 4195943916872864507}
   - {fileID: 8817240993754414061}
   - {fileID: 8994807195941742798}
   m_Father: {fileID: 0}

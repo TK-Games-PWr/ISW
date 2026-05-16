@@ -84,7 +84,7 @@ public class LevelManager : MonoBehaviour
         player.GetComponent<HeadBobbing>().enabled = false;
         
         // disabling enemies
-        EnemyHealth[] enemies = FindObjectsByType<EnemyHealth>(FindObjectsSortMode.None);
+        EnemyResources[] enemies = FindObjectsByType<EnemyResources>(FindObjectsSortMode.None);
         foreach (var e in enemies)
         {
             e.Lobotomize();
