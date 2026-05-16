@@ -32,6 +32,8 @@ namespace EnemySystem
         [SerializeField] protected float combatSpeedMultiplier = 1.3f;
         [SerializeField] protected float retreatSpeedMultiplier = 0.3f;
         
+        public Gun preferredGun;
+        
         protected NavMeshAgent agent;
         protected EnemySensors sensors;
         protected EnemyMovement movement;
