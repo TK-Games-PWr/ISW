@@ -104,7 +104,7 @@ public class NavGridSystem : MonoBehaviour
                     }
                 }
             }
-            
+
             if (!isClustered)
             {
                 filteredPoints.Add(candidate);
@@ -144,37 +144,56 @@ public class NavGridSystem : MonoBehaviour
     {
         Vector3 agentPos = agent.transform.position;
 
-        // Get cell agent is in
-        int x = Mathf.FloorToInt(agentPos.x / cellSize);
-        int y = Mathf.FloorToInt(agentPos.y / cellHeight);
-        int z = Mathf.FloorToInt(agentPos.z / cellSize);
-        Vector3Int agentCell = new(x, y, z);
-
-        // Get grid points or return agentPos as fallback when not found
-        if (!grid.TryGetValue(agentCell, out List<Vector3> localPoints)) return agentPos;
+        // Get base cell agent is in
+        int baseX = Mathf.FloorToInt(agentPos.x / cellSize);
+        int baseY = Mathf.FloorToInt(agentPos.y / cellHeight);
+        int baseZ = Mathf.FloorToInt(agentPos.z / cellSize);
 
         Vector3 bestPoint = agentPos;
         float shortestPathDistance = float.MaxValue;
-
-        // Iterate ONLY through points in this specific 3D chunk
-        foreach (Vector3 point in localPoints)
+        
+        void EvaluateCell(Vector3Int cell)
         {
-            if (Physics.Linecast(point + new Vector3(0, 1, 0), playerPos, out RaycastHit hit, checkCoverMask))
+            if (!grid.TryGetValue(cell, out List<Vector3> localPoints)) return;
+
+            // Iterate ONLY through points in this specific 3D chunk
+            foreach (Vector3 point in localPoints)
             {
-                if (hit.collider.CompareTag("Player"))
+                if (Physics.Linecast(point + new Vector3(0, 1, 0), playerPos, out RaycastHit hit, checkCoverMask))
                 {
-                    Debug.DrawLine(point + new Vector3(0, 1, 0), playerPos, Color.darkRed, .1f);
-                    continue;
+                    if (hit.collider.CompareTag("Player"))
+                    {
+                        Debug.DrawLine(point + new Vector3(0, 1, 0), playerPos, Color.red, .1f);
+                        continue;
+                    }
+
+                    Debug.DrawLine(point + new Vector3(0, 1, 0), playerPos, Color.green, .1f);
                 }
 
-                Debug.DrawLine(point + new Vector3(0, 1, 0), playerPos, Color.green, .1f);
+                float pathDist = GetPathDistance(agent, point);
+                if (pathDist < shortestPathDistance)
+                {
+                    shortestPathDistance = pathDist;
+                    bestPoint = point;
+                }
             }
-
-            float pathDist = GetPathDistance(agent, point);
-            if (pathDist < shortestPathDistance)
+        }
+        
+        EvaluateCell(new Vector3Int(baseX, baseY, baseZ));
+        
+        if (Mathf.Approximately(shortestPathDistance, float.MaxValue))
+        {
+            for (int x = -1; x <= 1; x++)
             {
-                shortestPathDistance = pathDist;
-                bestPoint = point;
+                for (int y = -1; y <= 1; y++)
+                {
+                    for (int z = -1; z <= 1; z++)
+                    {
+                        if (x == 0 && y == 0 && z == 0) continue;
+
+                        EvaluateCell(new Vector3Int(baseX + x, baseY + y, baseZ + z));
+                    }
+                }
             }
         }
 
