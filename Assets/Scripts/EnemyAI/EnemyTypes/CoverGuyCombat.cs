@@ -7,7 +7,7 @@ namespace EnemySystem
         [Header("Specific to cover guy")]
         [SerializeField] float hidingSpeedMultiplier = 2f;
         [SerializeField] LayerMask playerLayerMask;
-        public LayerMask _checkCoverMask;
+        LayerMask _checkCoverMask;
 
         protected override void Awake()
         {
@@ -27,17 +27,10 @@ namespace EnemySystem
 
             if (distanceToPlayer <= weaponRange && hasLOS)
             {
-                if (distanceToPlayer <= OptimalDistance)
+                if (!IsCovered(playerTransform))
                 {
-                    if (!IsCovered(playerTransform))
-                    {
-                        Vector3 coverPos = NavGridSystem.Instance.GetBestCover(agent, _checkCoverMask, playerTransform.position + new Vector3(0, 1, 0));
-                        agent.SetDestination(coverPos);
-                    }
-                }
-                else
-                {
-                    agent.SetDestination(transform.position); // Stop and shoot
+                    Vector3 coverPos = NavGridSystem.Instance.GetBestCover(agent, _checkCoverMask, playerTransform.position + new Vector3(0, 1, 0));
+                    agent.SetDestination(coverPos);
                 }
             }
             else
