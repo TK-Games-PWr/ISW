@@ -1708,6 +1708,7 @@ GameObject:
   - component: {fileID: 5232498721366191019}
   - component: {fileID: 3394472783275146617}
   - component: {fileID: 7944648931457534281}
+  - component: {fileID: 3351768052061933975}
   - component: {fileID: 7587119339273579207}
   - component: {fileID: 2558848397387947386}
   - component: {fileID: 4083881536312824282}
@@ -1746,7 +1747,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79a1ecf4c68b1a74e92a1977d8b25102, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AICore
-  enemyType: 0
   alertSensitivity: 5
   timeToLoseAlertLevel: 3
   fightDelay: 1
@@ -1754,6 +1754,9 @@ MonoBehaviour:
   currentState: 0
   currentAlertLevel: 0
   triggerMultiplier: 0
+  baseEnemyCombat: {fileID: 7944648931457534281}
+  rambEnemyCombat: {fileID: 3351768052061933975}
+  coverEnemyCombat: {fileID: 3351768052061933975}
 --- !u!114 &5232498721366191019
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1811,6 +1814,27 @@ MonoBehaviour:
   singleShotDelay: 0.6
   combatSpeedMultiplier: 1.3
   retreatSpeedMultiplier: 0.3
+--- !u!114 &3351768052061933975
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4169945757394515640}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 070ad3631cd3d112fa351708a847bf0e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemySystem.CoverGuyCombat
+  optimalCombatDistancePct: 0.7
+  weaponRange: 20
+  singleShotDelay: 0.6
+  combatSpeedMultiplier: 1.3
+  retreatSpeedMultiplier: 0.3
+  hidingSpeedMultiplier: 2
+  playerLayerMask:
+    serializedVersion: 2
+    m_Bits: 128
 --- !u!114 &7587119339273579207
 MonoBehaviour:
   m_ObjectHideFlags: 0

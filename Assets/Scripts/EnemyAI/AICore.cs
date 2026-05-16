@@ -25,17 +25,8 @@ namespace EnemySystem
             Extreme
         }
 
-        public enum EnemyType
-        {
-            Glock,
-            Shotgun
-        }
-
         // --- Events ---
         public static event Action<AICore, float, AlertLevel> OnAlertChanged;
-
-        [Header("General Settings")] [SerializeField]
-        EnemyType enemyType = EnemyType.Glock;
 
         [Header("Alert System")] [SerializeField]
         float alertSensitivity = 1f;
@@ -59,6 +50,10 @@ namespace EnemySystem
         EnemyCombat _combat;
         EnemyResources _resources;
 
+        [SerializeField] EnemyCombat baseEnemyCombat;
+        [SerializeField] EnemyCombat rambEnemyCombat;
+        [SerializeField] EnemyCombat coverEnemyCombat;
+
         float _lastAlertTime = 0f;
         public float TimeInCombat { get; private set; } = 0f;
 
@@ -66,8 +61,8 @@ namespace EnemySystem
         {
             _sensors = GetComponent<EnemySensors>();
             _movement = GetComponent<EnemyMovement>();
-            _combat = GetComponent<EnemyCombat>();
             _resources = GetComponent<EnemyResources>();
+            _combat = baseEnemyCombat;
         }
         
         async void OnEnable()
@@ -261,6 +256,21 @@ namespace EnemySystem
                 triggerMultiplier = 2f;
                 DetermineAlertLevel();
             }
+        }
+
+        public void ChangeEnemyType(EnemyManager.EnemyType type)
+        {
+            _combat = GetCombatModule(type);
+        }
+
+        EnemyCombat GetCombatModule(EnemyManager.EnemyType enemyType)
+        {
+            return enemyType switch
+            {
+                EnemyManager.EnemyType.Rambenemy => rambEnemyCombat,
+                EnemyManager.EnemyType.CoverGuy => coverEnemyCombat,
+                _ => baseEnemyCombat
+            };
         }
     }
 }

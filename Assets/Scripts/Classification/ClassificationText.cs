@@ -4,6 +4,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Collections.Generic;
+using Debug = UnityEngine.Debug;
 
 
 namespace Classification
@@ -188,6 +189,7 @@ namespace Classification
 
                 if (text != null)
                 {
+                    ClassificationGameplay.Instance.SetCategory(response.Content);
                     // Because we 'awaited' the task, we are safely back on the 
                     // Main Thread and can update UI components directly.
                     text.text = $"{response.Content}\n\nProbability: {(response.Probability * 100):F1}%";
