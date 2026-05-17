@@ -1,6 +1,7 @@
 using UnityEngine;
 using System;
 using UnityEngine.InputSystem.Controls;
+using static EnemyManager;
 
 namespace EnemySystem
 {
@@ -25,17 +26,8 @@ namespace EnemySystem
             Extreme
         }
 
-        public enum EnemyType
-        {
-            Glock,
-            Shotgun
-        }
-
         // --- Events ---
         public static event Action<AICore, float, AlertLevel> OnAlertChanged;
-
-        [Header("General Settings")] [SerializeField]
-        EnemyType enemyType = EnemyType.Glock;
 
         [Header("Alert System")] [SerializeField]
         float alertSensitivity = 1f;
@@ -59,6 +51,10 @@ namespace EnemySystem
         EnemyCombat _combat;
         EnemyResources _resources;
 
+        [SerializeField] EnemyCombat baseEnemyCombat;
+        [SerializeField] EnemyCombat rambEnemyCombat;
+        [SerializeField] EnemyCombat coverEnemyCombat;
+
         float _lastAlertTime = 0f;
         public float TimeInCombat { get; private set; } = 0f;
 
@@ -66,8 +62,8 @@ namespace EnemySystem
         {
             _sensors = GetComponent<EnemySensors>();
             _movement = GetComponent<EnemyMovement>();
-            _combat = GetComponent<EnemyCombat>();
             _resources = GetComponent<EnemyResources>();
+            ChangeEnemyType(EnemyType.Normal);
         }
         
         async void OnEnable()
@@ -260,6 +256,27 @@ namespace EnemySystem
             {
                 triggerMultiplier = 2f;
                 DetermineAlertLevel();
+            }
+        }
+
+        public void ChangeEnemyType(EnemyType type)
+        {
+            _resources.currentGun.gameObject.SetActive(false);
+            _combat = GetCombatModule(type);
+            _resources.currentGun = _combat.classGun;
+            _resources.currentGun.gameObject.SetActive(true);
+        }
+
+        EnemyCombat GetCombatModule(EnemyType enemyType)
+        {
+            switch (enemyType)
+            {
+                case EnemyType.Rambenemy:
+                    return rambEnemyCombat;
+                case EnemyType.CoverGuy:
+                    return coverEnemyCombat;
+                default:
+                    return baseEnemyCombat;
             }
         }
     }

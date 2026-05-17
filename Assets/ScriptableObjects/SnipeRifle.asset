@@ -51,7 +51,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   isAutomatic: 0
   isMelee: 0
-  fireRate: 0
+  fireRate: 0.3
   ammoType: 2
   maxAmmo: 5
   damageFalloff:
@@ -87,6 +87,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  firesShotPerAmmo: 1
   recoilUpward: 90
   recoilHorizontal: 20
   spread: 0.01

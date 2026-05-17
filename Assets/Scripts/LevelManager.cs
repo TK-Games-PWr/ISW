@@ -15,26 +15,25 @@ public class LevelManager : MonoBehaviour
 
     public GameObject player;
     public Camera playerCamera;
-    private CinemachineCamera flyingCamera;
+    CinemachineCamera flyingCamera;
     [Header("Camera Settings")]
     [Tooltip("Select the layers that the camera should not pass through")]
     public LayerMask camObstacleLayers;
     [Tooltip("Target FOV of camera in end screen")]
     public float targetFOV = 100f;
 
-    private void Awake()
+    void Awake()
     {
         if (Instance != null && Instance != this)
         {
-            Destroy(gameObject);
-            return;
+            Destroy(Instance);
         }
         Instance = this;
         
         DontDestroyOnLoad(this);
     }
 
-    private void Start()
+    void Start()
     {
         Reset();
     }
@@ -70,7 +69,7 @@ public class LevelManager : MonoBehaviour
         Destroy(gameObject);
     }
 
-    private void EndGame()
+    void EndGame()
     {
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
