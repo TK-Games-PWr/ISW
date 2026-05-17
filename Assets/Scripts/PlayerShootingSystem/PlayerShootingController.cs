@@ -18,35 +18,30 @@ namespace PlayerShootingSystem
         /*
          * Classification data section
          */
-        [HideInInspector] 
-        public int shots=0;
-        [HideInInspector]
-        public int hits = 0;
-        
+        [HideInInspector] public int shots = 0;
+        [HideInInspector] public int hits = 0;
+
         [SerializeField] Transform cameraTransform;
         Camera fpsCam;
         [SerializeField] UICrosshair uiCrosshair;
         [SerializeField] AudioSource hitDing;
-        [Header("Aiming")]
-        [SerializeField] float aimSpeed = 12f;
+        [Header("Aiming")] [SerializeField] float aimSpeed = 12f;
         [SerializeField] float aimDistance = 0.35f;
-        AudioSource[] hitDingInstances =  new AudioSource[5];
+        AudioSource[] hitDingInstances = new AudioSource[5];
         int hitDingIter = 0;
-        
-        [Header("Melee")]
-        [SerializeField] GunInfo meleeInfo;
+
+        [Header("Melee")] [SerializeField] GunInfo meleeInfo;
         [SerializeField] float meleeRange = 2.5f;
         [SerializeField] Animation meleeAnim;
         [SerializeField] float stealthKillBehindThreshold = -0.4f; // -1 is exactly behind, 0 is exactly to the side
-        [Space(8)]
-        [SerializeField] float throwForce;
+        [Space(8)] [SerializeField] float throwForce;
         [SerializeField] float throwUpwardForce;
         [SerializeField] Transform holdPivot;
         [SerializeField] PlayerResources playerResources;
         [SerializeField] TMP_Text magAmmoAmount;
         [SerializeField] TMP_Text maxAmmoAmount;
         [SerializeField] TMP_Text grenadeAmount;
-        int _currentSlot=0;
+        int _currentSlot = 0;
         public Gun currentGun;
         public ThrowableInfo currentThrowable;
         int currentThrowableIndex;
@@ -62,9 +57,11 @@ namespace PlayerShootingSystem
         Coroutine _reloadCoroutine;
         bool _isActuallyAiming;
         float currentSpread;
-        
+
         int enemyLayerIndex;
-        
+
+        float _nextTimeToFire = 0f;
+
         void Awake()
         {
             PlayerActionsController.OnPickedUp += HandlePickup;
@@ -74,19 +71,20 @@ namespace PlayerShootingSystem
         void Start()
         {
             fpsCam = LevelManager.Instance.playerCamera;
-            if(hitDing)
+            if (hitDing)
             {
                 hitDingInstances[0] = hitDing;
                 for (int i = 0; i < 4; i++)
                 {
                     GameObject copy = Instantiate(hitDing.gameObject, hitDing.transform.parent);
                     copy.GetComponent<AudioSource>().pitch = UnityEngine.Random.Range(0.6f, 0.8f);
-                    hitDingInstances[i+1] = copy.GetComponent<AudioSource>();
+                    hitDingInstances[i + 1] = copy.GetComponent<AudioSource>();
                 }
             }
+
             Assert.True(playerResources.throwables.Count > 0, "Player must have at least one throwable in resources");
-            currentThrowable=playerResources.throwables[0];
-            currentThrowableIndex=0;
+            currentThrowable = playerResources.throwables[0];
+            currentThrowableIndex = 0;
             playerResources.hotbar.HighlightSlot(_currentSlot);
             UpdateUI();
         }
@@ -95,8 +93,13 @@ namespace PlayerShootingSystem
         {
             if (Time.timeScale == 0f) return;
             if (!currentGun) return;
-            // TODO: more spread variables, like reducing it when crouching or scoping
-            currentSpread = currentGun.gunInfo.spread + Mathf.Clamp01(PlayerActionsController.Speed/6f) * currentGun.gunInfo.movementSpreadPenalty;
+
+            currentSpread = Mathf.Clamp01(currentGun.gunInfo.spread +
+                                          Mathf.Clamp01(PlayerActionsController.Speed / 6f) *
+                                          currentGun.gunInfo.movementSpreadPenalty -
+                                          (PlayerActionsController.IsCrouching ? 0.05f : 0f));
+            if (_isActuallyAiming && PlayerActionsController.Speed < 0.1f) currentSpread = 0f;
+
             uiCrosshair.SetSpread(currentSpread);
         }
 
@@ -152,15 +155,15 @@ namespace PlayerShootingSystem
 
         internal void OnMeleeAnimEnd()
         {
-            if(Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out RaycastHit hit, meleeRange))
+            if (Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out RaycastHit hit, meleeRange))
             {
                 if (hit.transform.TryGetComponent(out EnemyHitbox hitbox))
                 {
-                    EnemyHealth enemy = hitbox.GetEnemyHealth();
+                    EnemyResources enemy = hitbox.GetEnemyHealth();
                     if (enemy.IsDead) return;
                     if (hitDing) PlayHitSound();
                     uiCrosshair.ShowHit();
-                    
+
                     Vector3 dirFromEnemyToPlayer = (transform.position - enemy.transform.position).normalized;
                     float dotProduct = Vector3.Dot(enemy.transform.forward, dirFromEnemyToPlayer);
                     bool isStealthKill = dotProduct < stealthKillBehindThreshold;
@@ -172,6 +175,7 @@ namespace PlayerShootingSystem
                     {
                         enemy.Damage(meleeInfo.flatDamage);
                     }
+
                     hits++;
                 }
             }
@@ -182,17 +186,17 @@ namespace PlayerShootingSystem
             if (!currentGun) return;
             if (value.isPressed)
             {
-                    _reloadCoroutine ??= StartCoroutine(ReloadCoroutine(currentGun.gunInfo.reloadTime));
-
+                _reloadCoroutine ??= StartCoroutine(ReloadCoroutine(currentGun.gunInfo.reloadTime));
             }
         }
+
         public void Zoom(InputValue value)
         {
             if (currentGun && currentGun.gunInfo.ammoType == AmmoType.Snipe)
             {
                 _isActuallyAiming = value.isPressed;
-        
-                if(_isActuallyAiming)
+
+                if (_isActuallyAiming)
                 {
                     uiCrosshair.SetActive(false);
                     _hipfireLocalPos = currentGun.transform.localPosition;
@@ -210,33 +214,36 @@ namespace PlayerShootingSystem
                 uiCrosshair.SetActive(true);
             }
         }
+
         public void OnThrowInput(InputValue value)
         {
             if (value.isPressed)
             {
                 if (playerResources.playerAmmo.Find(a => a.ammoType == currentThrowable.ammoType).amount > 0)
                 {
-                    GameObject thrownThrowable=Instantiate(currentThrowable.throwablePrefab,holdPivot.position, Quaternion.identity);
+                    GameObject thrownThrowable = Instantiate(currentThrowable.throwablePrefab, holdPivot.position,
+                        Quaternion.identity);
                     thrownThrowable.GetComponent<Rigidbody>()
-                        .AddForce((cameraTransform.forward * throwForce) + (Vector3.up * throwUpwardForce), ForceMode.VelocityChange);
+                        .AddForce((cameraTransform.forward * throwForce) + (Vector3.up * throwUpwardForce),
+                            ForceMode.VelocityChange);
                     thrownThrowable.GetComponent<IThrowable>().Thrown(currentThrowable);
                     playerResources.playerAmmo.Find(a => a.ammoType == currentThrowable.ammoType).amount--;
                     UpdateUI();
                 }
             }
-
         }
+
         public void OnSwapThrowableInput(InputValue value)
         {
             currentThrowableIndex = (currentThrowableIndex + 1) % playerResources.throwables.Count;
             currentThrowable = playerResources.throwables[currentThrowableIndex];
             UpdateUI();
         }
-        
+
         void LateUpdate()
         {
             if (!currentGun || currentGun.gunInfo.ammoType != AmmoType.Snipe) return;
-    
+
             Vector3 targetWorldPos;
             Quaternion targetWorldRot;
 
@@ -245,7 +252,7 @@ namespace PlayerShootingSystem
                 targetWorldRot = fpsCam.transform.rotation * Quaternion.Inverse(_scopeLocalRot);
                 Vector3 targetScopeWorldPos = fpsCam.transform.position + fpsCam.transform.forward * aimDistance;
                 targetWorldPos = targetScopeWorldPos - (targetWorldRot * _scopeLocalPos);
-        
+
                 currentGun.SetRestRotation(Quaternion.Inverse(holdPivot.rotation) * targetWorldRot);
             }
             else
@@ -254,15 +261,18 @@ namespace PlayerShootingSystem
                 targetWorldRot = holdPivot.rotation * _hipfireLocalRot;
                 currentGun.SetRestRotation(_hipfireLocalRot);
             }
+
             float interpolationFactor = _isActuallyAiming ? aimSpeed : aimSpeed * 1.4f;
-            currentGun.transform.position = Vector3.Lerp(currentGun.transform.position, targetWorldPos, Time.deltaTime * interpolationFactor);
+            currentGun.transform.position = Vector3.Lerp(currentGun.transform.position, targetWorldPos,
+                Time.deltaTime * interpolationFactor);
 
             if (!currentGun.IsRecoiling)
             {
-                currentGun.transform.rotation = Quaternion.Slerp(currentGun.transform.rotation, targetWorldRot, Time.deltaTime * interpolationFactor);
+                currentGun.transform.rotation = Quaternion.Slerp(currentGun.transform.rotation, targetWorldRot,
+                    Time.deltaTime * interpolationFactor);
             }
         }
-        
+
         public void OnInvSlot1(InputValue input)
         {
             _currentSlot = 0;
@@ -287,7 +297,7 @@ namespace PlayerShootingSystem
         public void OnInvSlot4(InputValue input)
         {
             _currentSlot = 3;
-            SwitchWeapons(playerResources.weapons[3]); 
+            SwitchWeapons(playerResources.weapons[3]);
             UpdateUI();
         }
 
@@ -296,7 +306,7 @@ namespace PlayerShootingSystem
             if (currentGun)
             {
                 currentGun.gameObject.SetActive(false);
-                if(_reloadCoroutine != null) StopCoroutine(_reloadCoroutine);
+                if (_reloadCoroutine != null) StopCoroutine(_reloadCoroutine);
                 currentGun = null;
             }
 
@@ -305,61 +315,81 @@ namespace PlayerShootingSystem
                 playerResources.knifeObj.SetActive(true);
                 return;
             }
+
             playerResources.knifeObj.SetActive(false);
             gun.gameObject.SetActive(true);
             currentGun = gun;
             gun.GetComponent<GrabbableObject>().Grab(holdPivot);
-            if(_reloadCoroutine!=null)
+            if (_reloadCoroutine != null)
                 StopCoroutine(_reloadCoroutine);
             _reloadCoroutine = null;
             UpdateUI();
         }
-        
+
 
         void Cook()
         {
-            if(currentGun.ammoInMag<=0) return;
+            if (currentGun.ammoInMag <= 0) return;
             currentGun.ammoInMag -= 1;
             UpdateUI();
             currentGun.CookNade();
         }
+
         void TryShootOnce()
         {
             if (_reloadCoroutine != null)
                 return;
             if (!currentGun) return;
+
+            if (Time.time < _nextTimeToFire) return;
+            _nextTimeToFire = Time.time + currentGun.gunInfo.fireRate;
+
             if (currentGun.ammoInMag <= 0)
             {
                 _reloadCoroutine ??= StartCoroutine(ReloadCoroutine(currentGun.gunInfo.reloadTime));
                 return;
             }
+
             currentGun.PerformShoot();
             currentGun.ammoInMag -= 1;
             shots++;
             UpdateUI();
-            
-            Ray ray = fpsCam.ScreenPointToRay(uiCrosshair.crosshairRect.position);
-            Vector3 direction = ray.direction;
 
+            Ray ray = fpsCam.ScreenPointToRay(uiCrosshair.crosshairRect.position);
+
+            bool useConeSpread = currentGun.gunInfo.firesShotPerAmmo > 1;
             for (int i = 0; i < currentGun.gunInfo.firesShotPerAmmo; i++)
             {
-                // spread
-                float x = UnityEngine.Random.Range(-currentSpread, currentSpread);
-                float y = UnityEngine.Random.Range(-currentSpread, currentSpread);
+                Vector3 direction = ray.direction;
+
+                float x, y;
+                if (useConeSpread)
+                {
+                    Vector2 disc = UnityEngine.Random.insideUnitCircle * currentSpread;
+                    x = disc.x;
+                    y = disc.y;
+                }
+                else
+                {
+                    x = UnityEngine.Random.Range(-currentSpread, currentSpread);
+                    y = UnityEngine.Random.Range(-currentSpread, currentSpread);
+                }
+
                 direction += fpsCam.transform.right * x + fpsCam.transform.up * y;
                 direction.Normalize();
-            
+
                 if (Physics.Raycast(ray.origin, direction, out RaycastHit hit))
                 {
                     if (hit.transform.TryGetComponent(out EnemyHitbox hitbox))
                     {
-                        BulletImpactManager.Instance.SpawnImpact(hit.point, hit.normal, BulletImpactManager.ImpactType.Flesh);
+                        BulletImpactManager.Instance.SpawnImpact(hit.point, hit.normal,
+                            BulletImpactManager.ImpactType.Flesh);
 
-                        EnemyHealth enemy = hitbox.GetEnemyHealth();
+                        EnemyResources enemy = hitbox.GetEnemyHealth();
                         if (!(enemy == null || enemy.IsDead))
                         {
                             if (hitDing) PlayHitSound();
-                            if(uiCrosshair.isActiveAndEnabled)
+                            if (uiCrosshair.isActiveAndEnabled)
                                 uiCrosshair.ShowHit();
 
                             float distance = hit.distance;
@@ -372,12 +402,12 @@ namespace PlayerShootingSystem
                     }
                     else
                     {
-                        BulletImpactManager.Instance.SpawnImpact(hit.point, hit.normal, BulletImpactManager.ImpactType.Ground);
+                        BulletImpactManager.Instance.SpawnImpact(hit.point, hit.normal,
+                            BulletImpactManager.ImpactType.Ground);
                     }
                 }
-
             }
-            
+
             // apply recoil after shooting, so first shoot is accurate
             uiCrosshair.ApplyRecoil(currentGun.gunInfo);
             EmitShootSound();
@@ -386,11 +416,11 @@ namespace PlayerShootingSystem
         void UpdateUI()
         {
             playerResources.hotbar.HighlightSlot(_currentSlot);
-            
+
             grenadeAmount.text = playerResources.playerAmmo.Find(a => a.ammoType == currentThrowable.ammoType)
                 .amount
                 .ToString();
-            
+
             if (!currentGun)
             {
                 maxAmmoAmount.text = 0.ToString();
@@ -399,11 +429,10 @@ namespace PlayerShootingSystem
             }
 
             AmmoEntry ammoEntry = playerResources.playerAmmo.Find(a => a.ammoType == currentGun.gunInfo.ammoType);
-            maxAmmoAmount.text=ammoEntry.amount.ToString();
-            magAmmoAmount.text=currentGun.ammoInMag.ToString();
- 
+            maxAmmoAmount.text = ammoEntry.amount.ToString();
+            magAmmoAmount.text = currentGun.ammoInMag.ToString();
         }
-        
+
         IEnumerator AutomaticFireLoop()
         {
             while (_isHoldingShoot && currentGun && currentGun.gunInfo.isAutomatic)
@@ -419,7 +448,6 @@ namespace PlayerShootingSystem
         {
             if (pickedObject.TryGetComponent(out Gun gun))
             {
-                
                 Gun weaponInCurrentSlot = playerResources.weapons[_currentSlot];
                 if (weaponInCurrentSlot)
                 {
@@ -441,7 +469,6 @@ namespace PlayerShootingSystem
                     playerResources.PutWeaponInInventoryObject(gun.gameObject);
                     SwitchWeapons(playerResources.weapons[_currentSlot]);
                     gun.PickedUp();
-
                 }
 
                 if (_autoFireCoroutine != null)
@@ -458,7 +485,7 @@ namespace PlayerShootingSystem
                 Destroy(pickedObject.gameObject);
             }
         }
-        
+
         void DropNade(Gun weaponInCurrentSlot)
         {
             weaponInCurrentSlot.transform.parent = transform;
@@ -467,15 +494,15 @@ namespace PlayerShootingSystem
                 weaponInCurrentSlot.ammoInMag = 0;
                 AmmoEntry ammoEntry = playerResources.playerAmmo.Find(a => a.ammoType == AmmoType.Nade);
                 ammoEntry.amount++;
-                GameObject equippedNade=weaponInCurrentSlot.equippedNade.gameObject;
+                GameObject equippedNade = weaponInCurrentSlot.equippedNade.gameObject;
                 equippedNade.transform.parent = null;
                 Rigidbody rb = equippedNade.GetComponent<Rigidbody>();
                 rb.isKinematic = false;
                 rb.useGravity = true;
                 equippedNade.GetComponent<Collider>().enabled = true;
-
             }
         }
+
         void Reload()
         {
             int neededAmount = currentGun.gunInfo.maxAmmo - currentGun.ammoInMag;
@@ -483,7 +510,7 @@ namespace PlayerShootingSystem
                 return;
 
             AmmoEntry ammoEntry = playerResources.playerAmmo.Find(a => a.ammoType == currentGun.gunInfo.ammoType);
-            
+
             if (ammoEntry == null)
                 return;
 
@@ -493,16 +520,17 @@ namespace PlayerShootingSystem
 
             ammoEntry.amount -= reloadAmount;
             currentGun.ammoInMag += reloadAmount;
-            
+
             UpdateUI();
         }
+
         IEnumerator ReloadCoroutine(float reloadTime)
         {
             AmmoEntry ammoEntry = playerResources.playerAmmo.Find(a => a.ammoType == currentGun.gunInfo.ammoType);
-            
+
             if (ammoEntry == null)
                 yield break;
-            if(ammoEntry.amount <= 0)
+            if (ammoEntry.amount <= 0)
                 yield break;
             currentGun.Reload(reloadTime);
             yield return new WaitForSecondsRealtime(reloadTime);
@@ -520,10 +548,10 @@ namespace PlayerShootingSystem
         {
             if (currentGun.gunInfo.audioEmitRange < 0.01f) return;
             SoundSystem.Instance.BroadcastSound(
-                transform.position, currentGun.gunInfo.fireVolume, 
-                currentGun.gunInfo.audioEmitRange, false, 
+                transform.position, currentGun.gunInfo.fireVolume,
+                currentGun.gunInfo.audioEmitRange, false,
                 currentGun.gunInfo.damageFalloff
-                );
+            );
         }
 
         int WhatSlotAvailable()
@@ -533,6 +561,7 @@ namespace PlayerShootingSystem
                 if (!playerResources.weapons[i])
                     return i;
             }
+
             return -1;
         }
     }

@@ -8,12 +8,15 @@ namespace EnemySystem
     [RequireComponent(typeof(NavMeshAgent))]
     public class EnemyMovement : MonoBehaviour
     {
-        [Header("Speed Settings")] [SerializeField]
-        float basePlayerVelocity = 4f;
+        [Header("Speed Settings")]
+        
+        [SerializeField] float basePlayerVelocity = 4f;
 
         [SerializeField] float patrolSpeedMultiplier = 1f;
-        [SerializeField] float combatSpeedMultiplier = 1.3f;
-        [SerializeField] float retreatSpeedMultiplier = 0.3f;
+        
+        [SerializeField] float baseAngularSpeed = 120f;
+
+        [SerializeField] float combatAngularSpeed = 360f;
 
         [Header("Patrol Settings")] [SerializeField]
         Transform[] patrolPoints;
@@ -54,9 +57,19 @@ namespace EnemySystem
             agent.speed = basePlayerVelocity * multiplier;
         }
 
+        internal void UpdateAngularSpeed(AICore.AIState state)
+        {
+            agent.angularSpeed = state switch
+            {
+                AICore.AIState.Combat => combatAngularSpeed,
+                _ => baseAngularSpeed
+            };
+        }
+
         // --- Patrol Logic ---
         internal void UpdatePatrolState()
         {
+            UpdateAngularSpeed(AICore.AIState.Patrol);
             if (patrolPoints.Length == 0) return;
             if (!agent.pathPending && agent.remainingDistance < 0.5f && !isWaiting)
             {
@@ -69,36 +82,6 @@ namespace EnemySystem
             if (patrolPoints.Length == 0) return;
             agent.destination = patrolPoints[currentPatrolIndex].position;
             currentPatrolIndex = (currentPatrolIndex + 1) % patrolPoints.Length;
-        }
-
-        // --- Combat Logic ---
-        internal void HandleCombatMovement(Transform playerTransform, float distanceToPlayer, float weaponRange,
-            float optimalDistance, bool hasLOS)
-        {
-            SetSpeedMultiplier(combatSpeedMultiplier);
-
-            Vector3 direction = (playerTransform.position - transform.position).normalized;
-            Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
-            transform.rotation =
-                Quaternion.RotateTowards(transform.rotation, lookRotation, agent.angularSpeed * Time.deltaTime);
-
-            if (distanceToPlayer <= weaponRange && hasLOS)
-            {
-                if (distanceToPlayer <= optimalDistance)
-                {
-                    SetSpeedMultiplier(retreatSpeedMultiplier);
-                    Vector3 retreatDirection = transform.position - playerTransform.position;
-                    agent.SetDestination(transform.position + retreatDirection.normalized * 2f);
-                }
-                else
-                {
-                    agent.SetDestination(transform.position); // Stop and shoot
-                }
-            }
-            else
-            {
-                agent.SetDestination(playerTransform.position); // Chase
-            }
         }
 
         // --- Coroutines & State Handlers ---
@@ -114,6 +97,7 @@ namespace EnemySystem
         {
             StopAllCoroutines();
             isWaiting = false;
+            animationController.AgentLooking(false);
         }
 
         internal void StartLookAround(float duration, AICore brain)

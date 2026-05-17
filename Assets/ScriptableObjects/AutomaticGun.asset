@@ -78,6 +78,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  firesShotPerAmmo: 1
   recoilUpward: 30
   recoilHorizontal: 15
   spread: 0.05

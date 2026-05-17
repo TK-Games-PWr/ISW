@@ -1,0 +1,95 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc5496a18bb9692b6a7cc67528f8a12e, type: 3}
+  m_Name: Shotgun
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerShootingSystem.GunInfo
+  icon: {fileID: 21300000, guid: f20ef80ca604f254b8c83178e77c0b29, type: 3}
+  flatDamage: 3
+  audioEmitRange: 40
+  fireVolume: 1
+  fireVolumeCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: -1
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: -1
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  isAutomatic: 0
+  isMelee: 0
+  fireRate: 0.4
+  ammoType: 4
+  maxAmmo: 5
+  damageFalloff:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: -0.020832062
+      value: 1.0023804
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.49513614
+      value: 0.99174595
+      inSlope: 0.010259934
+      outSlope: 0.010259934
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.108209215
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.53256434
+      value: 0.2234707
+      inSlope: -0.32231832
+      outSlope: -0.32231832
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.042478673
+      outWeight: 0.1550333
+    - serializedVersion: 3
+      time: 1.0003682
+      value: 0.0007330179
+      inSlope: -0.06393875
+      outSlope: -0.06393875
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.07266928
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  firesShotPerAmmo: 8
+  recoilUpward: 70
+  recoilHorizontal: 30
+  spread: 0.1
+  movementSpreadPenalty: 0.05
+  reloadTime: 5

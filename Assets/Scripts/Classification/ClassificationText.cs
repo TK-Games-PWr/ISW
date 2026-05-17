@@ -201,6 +201,7 @@ namespace Classification
 
                 if (text != null)
                 {
+                    ClassificationGameplay.Instance.SetCategory(response.Content);
                     text.text = $"{response.Content}\n\nProbability: {(response.Probability * 100):F1}%";
                 }
             }

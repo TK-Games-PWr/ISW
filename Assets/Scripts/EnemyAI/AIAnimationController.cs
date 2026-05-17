@@ -15,15 +15,11 @@ namespace EnemyAI
         {
             agent = GetComponent<NavMeshAgent>();
         }
-        void Start()
-        {
-        
-        }
 
         // Update is called once per frame
         void Update()
         {
-            animator.SetFloat(Speed, agent.velocity.magnitude);
+            animator.SetFloat(Speed, agent.velocity.magnitude/5f);
         }
         public void AgentLooking(bool looking)
         {
