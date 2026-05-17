@@ -4,17 +4,22 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Collections.Generic;
-
+using UnityEngine.Networking; // For downloading
 
 namespace Classification
 {
     public class ClassificationText : MonoBehaviour
     {
         [SerializeField] TextMeshProUGUI text;
-        [SerializeField] string classifierExeRelativePath = "Scripts/Classification/.PythonModule/inference.exe";
+        [SerializeField] string classifierExeRelativePath = "Scripts/Classification/.PythonModule/dist/";
+        [SerializeField] string classifierBinaryName = "inference";
         [SerializeField] string modelRelativePath = "Scripts/Classification/.PythonModule/model.joblib";
         [SerializeField] string datapointsFileName = "playerdata.csv";
+        
+        [SerializeField] string githubRepo = "rybydrapiezne/ISW";
 
+        string fileName;
+        
         bool _isClassifierReady;
 
         void Start()
@@ -22,6 +27,22 @@ namespace Classification
             if (text == null) text = GetComponent<TextMeshProUGUI>();
 
             if (text != null) text.text = "Initializing classifier...";
+            
+            if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
+            {
+                fileName = classifierBinaryName + ".exe";
+            }
+            else if (Application.platform == RuntimePlatform.LinuxPlayer || Application.platform == RuntimePlatform.LinuxEditor)
+            {
+                fileName = classifierBinaryName;
+            }
+            else
+            {
+                UnityEngine.Debug.LogError($"Unsupported platform: {Application.platform}");
+                return;
+            }
+            
+            classifierExeRelativePath = Path.Combine(classifierExeRelativePath, fileName);
 
             _ = SetupClassifierAsync();
         }
@@ -37,31 +58,97 @@ namespace Classification
             _ = RunClassifierAsync();
         }
 
-        private Task SetupClassifierAsync()
+        private async Task SetupClassifierAsync()
         {
             string exePath = Path.Combine(Application.dataPath, classifierExeRelativePath);
-
+            
             if (!File.Exists(exePath))
             {
-                UnityEngine.Debug.LogError($"Classifier executable not found at: {exePath}");
-                if (text != null) text.text = $"Error: classifier not found at {exePath}";
-                _isClassifierReady = false;
-                return Task.CompletedTask;
-            }
+                string downloadUrl = $"https://github.com/{githubRepo}/releases/download/module/{fileName}";
+                
+                UnityEngine.Debug.Log($"Classifier executable not found. Attempting download... {downloadUrl}");
+                if (text != null) text.text = "Downloading latest classifier...";
+                
+                bool downloadSuccess = await DownloadBinaryAsync(downloadUrl, exePath);
 
+                if (!downloadSuccess)
+                {
+                    if (text != null) text.text = $"Error: Failed to download classifier from {downloadUrl}";
+                    _isClassifierReady = false;
+                    return;
+                }
+            }
+            
             string modelPath = Path.Combine(Application.dataPath, modelRelativePath);
             if (!File.Exists(modelPath))
             {
                 UnityEngine.Debug.LogError($"Model file not found at: {modelPath}");
                 if (text != null) text.text = $"Error: model not found at {modelPath}";
                 _isClassifierReady = false;
-                return Task.CompletedTask;
+                return;
             }
 
-            UnityEngine.Debug.Log("Classifier executable found.");
+            UnityEngine.Debug.Log("Classifier executable and model found.");
             if (text != null) text.text = "Ready.";
             _isClassifierReady = true;
-            return Task.CompletedTask;
+        }
+
+        private async Task<bool> DownloadBinaryAsync(string url, string savePath)
+        {
+            using (UnityWebRequest webRequest = UnityWebRequest.Get(url))
+            {
+                var operation = webRequest.SendWebRequest();
+                
+                while (!operation.isDone)
+                {
+                    await Task.Yield();
+                }
+
+                if (webRequest.result != UnityWebRequest.Result.Success)
+                {
+                    UnityEngine.Debug.LogError($"[Downloader] Error downloading binary: {webRequest.error}");
+                    return false;
+                }
+
+                try
+                {
+                    Directory.CreateDirectory(Path.GetDirectoryName(savePath));
+                    
+                    await File.WriteAllBytesAsync(savePath, webRequest.downloadHandler.data);
+                    UnityEngine.Debug.Log($"[Downloader] Successfully downloaded and saved to: {savePath}");
+
+                    if (Application.platform == RuntimePlatform.LinuxPlayer || Application.platform == RuntimePlatform.LinuxEditor)
+                    {
+                        AssignLinuxPermissions(savePath);
+                    }
+
+                    return true;
+                }
+                catch (System.Exception e)
+                {
+                    UnityEngine.Debug.LogError($"[Downloader] Failed to save binary to disk: {e.Message}");
+                    return false;
+                }
+            }
+        }
+
+        private void AssignLinuxPermissions(string filePath)
+        {
+            try
+            {
+                Process permissionProcess = new Process();
+                permissionProcess.StartInfo.FileName = "chmod";
+                permissionProcess.StartInfo.Arguments = $"+x \"{filePath}\"";
+                permissionProcess.StartInfo.UseShellExecute = false;
+                permissionProcess.StartInfo.CreateNoWindow = true;
+                permissionProcess.Start();
+                permissionProcess.WaitForExit();
+                UnityEngine.Debug.Log("[Downloader] Applied execution permissions (chmod +x) to Linux binary.");
+            }
+            catch (System.Exception e)
+            {
+                UnityEngine.Debug.LogWarning($"[Downloader] Could not automatically set execution permissions: {e.Message}");
+            }
         }
 
         private async Task RunClassifierAsync()
