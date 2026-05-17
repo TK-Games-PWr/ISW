@@ -8,10 +8,15 @@ namespace EnemySystem
     [RequireComponent(typeof(NavMeshAgent))]
     public class EnemyMovement : MonoBehaviour
     {
-        [Header("Speed Settings")] [SerializeField]
-        float basePlayerVelocity = 4f;
+        [Header("Speed Settings")]
+        
+        [SerializeField] float basePlayerVelocity = 4f;
 
         [SerializeField] float patrolSpeedMultiplier = 1f;
+        
+        [SerializeField] float baseAngularSpeed = 120f;
+
+        [SerializeField] float combatAngularSpeed = 360f;
 
         [Header("Patrol Settings")] [SerializeField]
         Transform[] patrolPoints;
@@ -52,9 +57,19 @@ namespace EnemySystem
             agent.speed = basePlayerVelocity * multiplier;
         }
 
+        internal void UpdateAngularSpeed(AICore.AIState state)
+        {
+            agent.angularSpeed = state switch
+            {
+                AICore.AIState.Combat => combatAngularSpeed,
+                _ => baseAngularSpeed
+            };
+        }
+
         // --- Patrol Logic ---
         internal void UpdatePatrolState()
         {
+            UpdateAngularSpeed(AICore.AIState.Patrol);
             if (patrolPoints.Length == 0) return;
             if (!agent.pathPending && agent.remainingDistance < 0.5f && !isWaiting)
             {

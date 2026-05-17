@@ -76,7 +76,7 @@ namespace EnemySystem
 
         internal void UpdateLastKnownPosition()
         {
-            if (PlayerTransform != null) LastKnownPosition = PlayerTransform.position;
+            if (PlayerTransform != null) UpdateLastKnownPosition(PlayerTransform.position);
         }
         
         internal void UpdateLastKnownPosition(Vector3 position)
