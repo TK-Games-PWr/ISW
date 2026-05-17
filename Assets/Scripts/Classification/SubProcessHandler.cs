@@ -15,36 +15,60 @@ namespace Classification
     {
         const string RESPONSE_MARKER = "RESPONSE_DATA:";
         const int TIMEOUT = 10000;
-        private readonly string _pythonPath;
+        private readonly string _executablePath;
         private readonly string _scriptPath;
         private Process _process;
 
-        public SubProcessHandler(string scriptPath) : this("python", scriptPath) { }
-
-        public SubProcessHandler(string pythonPath, string scriptPath)
+        public SubProcessHandler(string executablePath, string scriptPath)
         {
-            _pythonPath = pythonPath ?? throw new ArgumentNullException(nameof(pythonPath));
-            _scriptPath = scriptPath ?? throw new ArgumentNullException(nameof(scriptPath));
+            _executablePath = executablePath ?? throw new ArgumentNullException(nameof(executablePath));
+            _scriptPath = scriptPath;
 
-            if (!File.Exists(_scriptPath))
+            if (_scriptPath != null)
             {
-                throw new FileNotFoundException($"Python script not found: {_scriptPath}");
+                if (!File.Exists(_scriptPath))
+                    throw new FileNotFoundException($"Python script not found: {_scriptPath}");
+            }
+            else if (!File.Exists(_executablePath))
+            {
+                throw new FileNotFoundException($"Classifier executable not found: {_executablePath}");
             }
         }
 
+        public static SubProcessHandler ForExecutable(string executablePath)
+        {
+            if (string.IsNullOrWhiteSpace(executablePath))
+                throw new ArgumentNullException(nameof(executablePath));
+
+            return new SubProcessHandler(executablePath, null);
+        }
+
         public async Task<SubProcessResponse> ExecutePythonAsync(List<string> additionalArguments = null)
+        {
+            return await ExecuteAsync(additionalArguments);
+        }
+
+        public async Task<SubProcessResponse> ExecuteAsync(List<string> additionalArguments = null)
         {
             try
             {
                 additionalArguments ??= new List<string>();
 
-                var arguments = $"\"{_scriptPath}\"";
-                if (additionalArguments.Any())
+                string arguments;
+                if (_scriptPath != null)
                 {
-                    arguments += " " + string.Join(" ", additionalArguments.Select(a => $"\"{a}\""));
+                    arguments = $"\"{_scriptPath}\"";
+                    if (additionalArguments.Any())
+                    {
+                        arguments += " " + string.Join(" ", additionalArguments.Select(a => $"\"{a}\""));
+                    }
+                }
+                else
+                {
+                    arguments = string.Join(" ", additionalArguments.Select(a => $"\"{a}\""));
                 }
 
-                return await Task.Run(() => ExecuteProcessInternal(_pythonPath, arguments));
+                return await Task.Run(() => ExecuteProcessInternal(_executablePath, arguments));
             }
             catch (Exception ex)
             {
@@ -65,6 +89,7 @@ namespace Classification
                 {
                     FileName = fileName,
                     Arguments = arguments,
+                    WorkingDirectory = Path.GetDirectoryName(fileName) ?? "",
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
@@ -72,7 +97,9 @@ namespace Classification
                     StandardOutputEncoding = Encoding.UTF8,
                     StandardErrorEncoding = Encoding.UTF8
                 };
+
                 startInfo.EnvironmentVariables["PYTHONIOENCODING"] = "utf-8";
+                startInfo.EnvironmentVariables["PYTHONUTF8"] = "1";
 
                 using (var process = new Process
                 {
