@@ -62,6 +62,7 @@ namespace EnemySystem
             OnEnemyDied?.Invoke(this);
             Lobotomize();
             _animController.SetRagdoll(true);
+            GetComponent<Collider>().enabled = false;
             int deadLayer = LayerMask.NameToLayer("EnemyFainted");
             SetLayerRecursively(gameObject, deadLayer);
             //Rigidbody rb = gameObject.AddComponent<Rigidbody>();
