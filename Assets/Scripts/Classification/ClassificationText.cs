@@ -4,180 +4,192 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Collections.Generic;
-using Debug = UnityEngine.Debug;
-
+using UnityEngine.Networking; // For downloading
 
 namespace Classification
 {
     public class ClassificationText : MonoBehaviour
     {
         [SerializeField] TextMeshProUGUI text;
+        [SerializeField] string classifierExeRelativePath = "Scripts/Classification/.PythonModule/dist/";
+        [SerializeField] string classifierBinaryName = "inference";
+        [SerializeField] string modelRelativePath = "Scripts/Classification/.PythonModule/model.joblib";
+        [SerializeField] string datapointsFileName = "playerdata.csv";
+        
+        [SerializeField] string githubRepo = "rybydrapiezne/ISW";
 
-        bool _isPythonReady = false;
+        string fileName;
+        
+        bool _isClassifierReady;
 
         void Start()
         {
             if (text == null) text = GetComponent<TextMeshProUGUI>();
 
-            if (text != null) text.text = "Initializing Python Environment...";
+            if (text != null) text.text = "Initializing classifier...";
+            
+            if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
+            {
+                fileName = classifierBinaryName + ".exe";
+            }
+            else if (Application.platform == RuntimePlatform.LinuxPlayer || Application.platform == RuntimePlatform.LinuxEditor)
+            {
+                fileName = classifierBinaryName;
+            }
+            else
+            {
+                UnityEngine.Debug.LogError($"Unsupported platform: {Application.platform}");
+                return;
+            }
+            
+            classifierExeRelativePath = Path.Combine(classifierExeRelativePath, fileName);
 
-            _ = SetupPythonEnvironmentAsync();
+            _ = SetupClassifierAsync();
         }
 
         public void UpdateClassificationResult()
         {
-            if (!_isPythonReady)
+            if (!_isClassifierReady)
             {
-                UnityEngine.Debug.LogWarning("Python environment is still setting up. Please wait.");
+                UnityEngine.Debug.LogWarning("Classifier is not ready. Please wait.");
                 return;
             }
 
-            _ = RunPythonScriptAsync();
+            _ = RunClassifierAsync();
         }
 
-        private async Task SetupPythonEnvironmentAsync()
+        private async Task SetupClassifierAsync()
         {
-            string modulePath = Path.Combine(Application.dataPath, "Scripts/Classification/.PythonModule");
-            string venvPath = Path.Combine(modulePath, "venv");
-
-            if (!Directory.Exists(modulePath))
+            string exePath = Path.Combine(Application.dataPath, classifierExeRelativePath);
+            
+            if (!File.Exists(exePath))
             {
-                UnityEngine.Debug.Log("Module directory doesn't exist at " + modulePath);
-                if (text != null) text.text = "Module directory doesn't exist at " + modulePath;
-                _isPythonReady = false;
-                return;
-            }
+                string downloadUrl = $"https://github.com/{githubRepo}/releases/download/module/{fileName}";
+                
+                UnityEngine.Debug.Log($"Classifier executable not found. Attempting download... {downloadUrl}");
+                if (text != null) text.text = "Downloading latest classifier...";
+                
+                bool downloadSuccess = await DownloadBinaryAsync(downloadUrl, exePath);
 
-            if (Directory.Exists(venvPath))
-            {
-                UnityEngine.Debug.Log("Python venv already exists. Skipping installation.");
-                if (text != null) text.text = "Ready.";
-                _isPythonReady = true;
-                return;
-            }
-
-            UnityEngine.Debug.Log("Setting up Python virtual environment... This might take a minute or two.");
-
-            string processFileName;
-            string processArguments = "";
-            string scriptToCheck;
-
-            if (Application.platform == RuntimePlatform.WindowsEditor ||
-                Application.platform == RuntimePlatform.WindowsPlayer)
-            {
-                processFileName = "cmd.exe";
-                string batPath = Path.Combine(modulePath, "install-packages.bat");
-
-                processArguments = $"/c \"{batPath}\"";
-                scriptToCheck = batPath;
-            }
-            else
-            {
-                // mac/linux
-                processFileName = "/bin/bash";
-                scriptToCheck = Path.Combine(modulePath, "install-packages.sh");
-                processArguments = $"\"{scriptToCheck}\"";
-            }
-
-            if (!File.Exists(scriptToCheck))
-            {
-                UnityEngine.Debug.LogError($"Setup script not found at: {scriptToCheck}");
-                if (text != null) text.text = "Error: Setup script missing.";
-                return;
-            }
-
-            await Task.Run(() =>
-            {
-                ProcessStartInfo startInfo = new ProcessStartInfo
+                if (!downloadSuccess)
                 {
-                    FileName = processFileName,
-                    Arguments = processArguments,
-                    WorkingDirectory = modulePath,
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    CreateNoWindow = true
-                };
+                    if (text != null) text.text = $"Error: Failed to download classifier from {downloadUrl}";
+                    _isClassifierReady = false;
+                    return;
+                }
+            }
+            
+            string modelPath = Path.Combine(Application.dataPath, modelRelativePath);
+            if (!File.Exists(modelPath))
+            {
+                UnityEngine.Debug.LogError($"Model file not found at: {modelPath}");
+                if (text != null) text.text = $"Error: model not found at {modelPath}";
+                _isClassifierReady = false;
+                return;
+            }
+
+            UnityEngine.Debug.Log("Classifier executable and model found.");
+            if (text != null) text.text = "Ready.";
+            _isClassifierReady = true;
+        }
+
+        private async Task<bool> DownloadBinaryAsync(string url, string savePath)
+        {
+            using (UnityWebRequest webRequest = UnityWebRequest.Get(url))
+            {
+                var operation = webRequest.SendWebRequest();
+                
+                while (!operation.isDone)
+                {
+                    await Task.Yield();
+                }
+
+                if (webRequest.result != UnityWebRequest.Result.Success)
+                {
+                    UnityEngine.Debug.LogError($"[Downloader] Error downloading binary: {webRequest.error}");
+                    return false;
+                }
 
                 try
                 {
-                    using (Process process = Process.Start(startInfo))
+                    Directory.CreateDirectory(Path.GetDirectoryName(savePath));
+                    
+                    await File.WriteAllBytesAsync(savePath, webRequest.downloadHandler.data);
+                    UnityEngine.Debug.Log($"[Downloader] Successfully downloaded and saved to: {savePath}");
+
+                    if (Application.platform == RuntimePlatform.LinuxPlayer || Application.platform == RuntimePlatform.LinuxEditor)
                     {
-                        process.WaitForExit();
-
-                        string output = process.StandardOutput.ReadToEnd();
-                        string error = process.StandardError.ReadToEnd();
-
-                        UnityEngine.Debug.Log($"Setup Output:\n{output}");
-
-                        if (!string.IsNullOrEmpty(error))
-                        {
-                            UnityEngine.Debug.LogWarning($"Setup Warnings/Errors:\n{error}");
-                        }
+                        AssignLinuxPermissions(savePath);
                     }
-                }
-                catch (System.Exception ex)
-                {
-                    UnityEngine.Debug.LogError($"Failed to run setup script: {ex.Message}");
-                }
-            });
 
-            UnityEngine.Debug.Log("Python environment setup complete!");
-            if (text != null) text.text = "Ready.";
-            _isPythonReady = true;
+                    return true;
+                }
+                catch (System.Exception e)
+                {
+                    UnityEngine.Debug.LogError($"[Downloader] Failed to save binary to disk: {e.Message}");
+                    return false;
+                }
+            }
         }
 
-        // Changed from IEnumerator to async Task
-        private async Task RunPythonScriptAsync()
+        private void AssignLinuxPermissions(string filePath)
         {
-            UnityEngine.Debug.Log("Starting Python script...");
-
-            Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();
-
-            string scriptPath = Path.Combine(Application.dataPath, "Scripts/Classification/.PythonModule/inference.py");
-            string venvPath = Path.Combine(Application.dataPath, "Scripts/Classification/.PythonModule/venv");
-
-            string pythonExecutable;
-            if (Application.platform == RuntimePlatform.WindowsEditor ||
-                Application.platform == RuntimePlatform.WindowsPlayer)
+            try
             {
-                pythonExecutable = Path.Combine(venvPath, "Scripts/python.exe");
+                Process permissionProcess = new Process();
+                permissionProcess.StartInfo.FileName = "chmod";
+                permissionProcess.StartInfo.Arguments = $"+x \"{filePath}\"";
+                permissionProcess.StartInfo.UseShellExecute = false;
+                permissionProcess.StartInfo.CreateNoWindow = true;
+                permissionProcess.Start();
+                permissionProcess.WaitForExit();
+                UnityEngine.Debug.Log("[Downloader] Applied execution permissions (chmod +x) to Linux binary.");
             }
-            else
+            catch (System.Exception e)
             {
-                // macOS / Linux
-                pythonExecutable = Path.Combine(venvPath, "bin/python");
+                UnityEngine.Debug.LogWarning($"[Downloader] Could not automatically set execution permissions: {e.Message}");
+            }
+        }
+
+        private async Task RunClassifierAsync()
+        {
+            UnityEngine.Debug.Log("Starting classifier...");
+
+            Stopwatch stopwatch = Stopwatch.StartNew();
+
+            string exePath = Path.GetFullPath(Path.Combine(Application.dataPath, classifierExeRelativePath));
+            string datapointsPath = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), datapointsFileName));
+            string modelPath = Path.GetFullPath(Path.Combine(Application.dataPath, modelRelativePath));
+
+            if (!File.Exists(exePath))
+            {
+                UnityEngine.Debug.LogError($"Classifier executable not found at: {exePath}");
+                return;
             }
 
-            if (!File.Exists(scriptPath))
+            if (!File.Exists(datapointsPath))
             {
-                UnityEngine.Debug.LogError($"Python script not found at: {scriptPath}");
+                UnityEngine.Debug.LogError($"Datapoints file not found at: {datapointsPath}");
+                if (text != null) text.text = $"Error: {datapointsFileName} not found.";
                 return;
             }
 
             try
             {
-                // Initialize the handler (it is IDisposable, so 'using' handles cleanup)
-                using (var handler = new SubProcessHandler(pythonExecutable, scriptPath))
+                UnityEngine.Debug.Log($"Classifier paths: exe={exePath}, data={datapointsPath}, model={modelPath}");
+
+                using (var handler = SubProcessHandler.ForExecutable(exePath))
                 {
-                    // The new handler handles the background thread internally.
-                    // 'await' pauses this method and returns control to Unity, 
-                    // then resumes here on the Main Thread when finished.
-                    List<string> args = new List<string>();
-                    args.Add(Path.Combine(Application.dataPath, Directory.GetCurrentDirectory() + "/playerdata.csv"));
-                    args.Add(Path.Combine(Application.dataPath, "Scripts/Classification/.PythonModule/model.joblib"));
-                    SubProcessResponse response = await handler.ExecutePythonAsync(args);
+                    var args = new List<string> { datapointsPath, modelPath };
+                    SubProcessResponse response = await handler.ExecuteAsync(args);
 
                     stopwatch.Stop();
-                    float totalSeconds = (float)stopwatch.Elapsed.TotalSeconds;
-
-                    HandleResponse(response, totalSeconds);
+                    HandleResponse(response, (float)stopwatch.Elapsed.TotalSeconds);
                 }
             }
             catch (System.Exception e)
             {
-                UnityEngine.Debug.LogError($"Error calling python: {e.Message}");
+                UnityEngine.Debug.LogError($"Error calling classifier: {e.Message}");
             }
         }
 
@@ -185,20 +197,24 @@ namespace Classification
         {
             if (response.Status == Status.OK)
             {
-                UnityEngine.Debug.Log($"Python finished in {time:F3}s!");
+                UnityEngine.Debug.Log($"Classifier finished in {time:F3}s!");
 
                 if (text != null)
                 {
                     ClassificationGameplay.Instance.SetCategory(response.Content);
-                    // Because we 'awaited' the task, we are safely back on the 
-                    // Main Thread and can update UI components directly.
                     text.text = $"{response.Content}\n\nProbability: {(response.Probability * 100):F1}%";
                 }
             }
             else
             {
-                UnityEngine.Debug.LogError($"Python Error: {response.ErrorMessage}");
-                if (text != null) text.text = $"Error: {response.ErrorMessage}";
+                string message = response.ErrorMessage;
+                if (message != null && message.Contains("charmap") && message.Contains("\\u274c"))
+                {
+                    message = "Outdated inference.exe (rebuild required). Run rebuild-inference.bat in .PythonModule, then copy inference.exe into that folder.";
+                }
+
+                UnityEngine.Debug.LogError($"Classifier error: {message}");
+                if (text != null) text.text = $"Error: {message}";
             }
         }
     }

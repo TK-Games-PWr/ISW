@@ -40,6 +40,11 @@ namespace EnemySystem
         [Tooltip("Time before TM starts decreasing")] [SerializeField]
         float triggerMultiplierTimeout = 2f;
 
+        [Tooltip("Time after which enemy ends combat and returns to patrol")]
+        [SerializeField] float endCombatTimeout = 10f;
+
+        float _combatLostPlayerTime = 0f;
+
         // --- State Variables ---
         public AIState currentState = AIState.Patrol;
         public AlertLevel currentAlertLevel = AlertLevel.None;
@@ -57,6 +62,8 @@ namespace EnemySystem
 
         float _lastAlertTime = 0f;
         public float TimeInCombat { get; private set; } = 0f;
+
+        public bool IsDead => _resources.IsDead;
 
         void Awake()
         {
@@ -109,10 +116,12 @@ namespace EnemySystem
                     _movement.UpdatePatrolState();
                     break;
                 case AIState.Alert:
+                    _movement.UpdateAngularSpeed(AIState.Alert);
                     // Movement handled by Coroutines triggered in SetAlertLevel
                     break;
                 case AIState.Combat:
                     UpdateCombatLogic();
+                    _movement.UpdateAngularSpeed(AIState.Combat);
                     break;
             }
         }
@@ -241,6 +250,20 @@ namespace EnemySystem
             _combat.HandleCombatMovement(_sensors.PlayerTransform, distanceToPlayer, hasLos);
 
             if (fightDelay > TimeInCombat) return;
+
+            if (!hasLos)
+            {
+                _combatLostPlayerTime += Time.deltaTime;
+                if (_combatLostPlayerTime >= endCombatTimeout)
+                {
+                    triggerMultiplier = 0.9f;
+                    DetermineAlertLevel();
+                }
+            }
+            else
+            {
+                _combatLostPlayerTime = 0f;
+            }
 
             // Handle Shooting
             if (distanceToPlayer <= _combat.WeaponRange && hasLos)

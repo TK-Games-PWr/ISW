@@ -25,16 +25,16 @@ namespace EnemySystem
         internal Vector3 LastKnownPosition { get; private set; }
         internal PlayerResources PlayerResources { get; private set; }
 
-        AICore _ai;
+        AICore _brain;
 
         float playerEyeLevel => PlayerTransform != null ? PlayerTransform.GetComponent<PlayerActionsController>().eyeLevel : 1.7f;
 
         float CurrentVerticalFOV =>
-            (_ai != null && _ai.currentState != AICore.AIState.Patrol) ? alertedVerticalFOV : verticalFOV;
+            (_brain != null && _brain.currentState != AICore.AIState.Patrol) ? alertedVerticalFOV : verticalFOV;
 
         void Start()
         {
-            _ai = GetComponent<AICore>();
+            _brain = GetComponent<AICore>();
             GameObject player = GameObject.FindGameObjectWithTag(playerTag);
             if (player != null)
             {
@@ -76,7 +76,7 @@ namespace EnemySystem
 
         internal void UpdateLastKnownPosition()
         {
-            if (PlayerTransform != null) LastKnownPosition = PlayerTransform.position;
+            if (PlayerTransform != null) UpdateLastKnownPosition(PlayerTransform.position);
         }
         
         internal void UpdateLastKnownPosition(Vector3 position)
@@ -101,7 +101,7 @@ namespace EnemySystem
 #if UNITY_EDITOR
         void OnDrawGizmos()
         {
-            if (PlayerTransform == null) return;
+            if (PlayerTransform == null || _brain.IsDead) return;
 
             Vector3 rayStartOrigin = transform.position + Vector3.up * eyeLevel;
             Vector3 targetPosition = PlayerTransform.position + Vector3.up * playerEyeLevel;
