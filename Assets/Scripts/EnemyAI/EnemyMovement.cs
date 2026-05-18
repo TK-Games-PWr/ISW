@@ -57,11 +57,11 @@ namespace EnemySystem
             agent.speed = basePlayerVelocity * multiplier;
         }
 
-        internal void UpdateAngularSpeed(AICore.AIState state)
+        internal void UpdateAngularSpeed(AgentState agentState)
         {
-            agent.angularSpeed = state switch
+            agent.angularSpeed = agentState switch
             {
-                AICore.AIState.Combat => combatAngularSpeed,
+                AgentState.Combat => combatAngularSpeed,
                 _ => baseAngularSpeed
             };
         }
@@ -69,7 +69,7 @@ namespace EnemySystem
         // --- Patrol Logic ---
         internal void UpdatePatrolState()
         {
-            UpdateAngularSpeed(AICore.AIState.Patrol);
+            UpdateAngularSpeed(AgentState.Patrol);
             if (patrolPoints.Length == 0) return;
             if (!agent.pathPending && agent.remainingDistance < 0.5f && !isWaiting)
             {
@@ -128,7 +128,7 @@ namespace EnemySystem
             agent.isStopped = true;
             yield return StartCoroutine(SweepRotationRoutine(duration, sensors.HasLineOfSight()));
             agent.isStopped = false;
-            brain.ChangeState(AICore.AIState.Patrol);
+            brain.ChangeState(AgentState.Patrol);
         }
 
         IEnumerator InvestigateRoutine(float duration, Vector3 targetPos, AICore brain)
@@ -142,7 +142,7 @@ namespace EnemySystem
             yield return StartCoroutine(SweepRotationRoutine(duration, false));
 
             agent.isStopped = false;
-            brain.ChangeState(AICore.AIState.Patrol);
+            brain.ChangeState(AgentState.Patrol);
         }
 
         IEnumerator SweepRotationRoutine(float duration, bool trackLastKnownPosition, float lookAngle = 70f)

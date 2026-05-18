@@ -1,5 +1,6 @@
 using System.Collections;
 using PlayerShootingSystem;
+using TK_Shared._3DPlayerMovement;
 using TK_Shared.ObjectInteractions3D;
 using UnityEngine;
 using UnityEngine.AI;
@@ -129,7 +130,7 @@ namespace EnemySystem
             Vector3 rayOrigin = resources.gunPivot.position;
             
             var playerController = sensors.PlayerTransform.GetComponent<TK_Shared._3DPlayerMovement.PlayerActionsController>();
-            Vector3 targetPosition = sensors.PlayerTransform.position + Vector3.up * playerController.eyeLevel;
+            Vector3 targetPosition = sensors.PlayerTransform.position + Vector3.up * PlayerActionsController.EyeLevel;
             
             Vector3 direction = (targetPosition - rayOrigin).normalized;
 

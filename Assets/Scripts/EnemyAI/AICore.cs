@@ -9,23 +9,6 @@ namespace EnemySystem
     [RequireComponent(typeof(EnemyResources))]
     public class AICore : MonoBehaviour, IHearingTarget
     {
-        // --- Enums ---
-        public enum AIState
-        {
-            Patrol,
-            Alert,
-            Combat
-        }
-
-        public enum AlertLevel
-        {
-            None,
-            Low,
-            Medium,
-            High,
-            Extreme
-        }
-
         // --- Events ---
         public static event Action<AICore, float, AlertLevel> OnAlertChanged;
 
@@ -46,7 +29,7 @@ namespace EnemySystem
         float _combatLostPlayerTime = 0f;
 
         // --- State Variables ---
-        public AIState currentState = AIState.Patrol;
+        public AgentState currentAgentState = AgentState.Patrol;
         public AlertLevel currentAlertLevel = AlertLevel.None;
         public float triggerMultiplier = 0f;
 
@@ -103,25 +86,25 @@ namespace EnemySystem
         {
             if (_resources.IsDead) return;
 
-            if (currentState != AIState.Combat)
+            if (currentAgentState != AgentState.Combat)
             {
                 UpdateAlertSystem();
             }
 
             OnAlertChanged?.Invoke(this, triggerMultiplier, currentAlertLevel);
 
-            switch (currentState)
+            switch (currentAgentState)
             {
-                case AIState.Patrol:
+                case AgentState.Patrol:
                     _movement.UpdatePatrolState();
                     break;
-                case AIState.Alert:
-                    _movement.UpdateAngularSpeed(AIState.Alert);
+                case AgentState.Alert:
+                    _movement.UpdateAngularSpeed(AgentState.Alert);
                     // Movement handled by Coroutines triggered in SetAlertLevel
                     break;
-                case AIState.Combat:
+                case AgentState.Combat:
                     UpdateCombatLogic();
-                    _movement.UpdateAngularSpeed(AIState.Combat);
+                    _movement.UpdateAngularSpeed(AgentState.Combat);
                     break;
             }
         }
@@ -158,7 +141,7 @@ namespace EnemySystem
             }
             else
             {
-                if (currentState != AIState.Alert && Time.time - _lastAlertTime >= triggerMultiplierTimeout)
+                if (currentAgentState != AgentState.Alert && Time.time - _lastAlertTime >= triggerMultiplierTimeout)
                 {
                     if (triggerMultiplier > 0)
                     {
@@ -170,11 +153,11 @@ namespace EnemySystem
                     }
                 }
 
-                if (currentState != AIState.Combat && Time.time - _lastAlertTime > timeToLoseAlertLevel)
+                if (currentAgentState != AgentState.Combat && Time.time - _lastAlertTime > timeToLoseAlertLevel)
                 {
                     if (currentAlertLevel == AlertLevel.None)
                     {
-                        ChangeState(AIState.Patrol);
+                        ChangeState(AgentState.Patrol);
                     }
                 }
             }
@@ -204,35 +187,35 @@ namespace EnemySystem
                     currentAlertLevel = AlertLevel.None;
                     break;
                 case AlertLevel.Medium:
-                    ChangeState(AIState.Alert);
+                    ChangeState(AgentState.Alert);
                     _movement.StartLookAround(3f, this);
                     break;
                 case AlertLevel.High:
-                    ChangeState(AIState.Alert);
+                    ChangeState(AgentState.Alert);
                     _movement.StartInvestigate(5f, _sensors.LastKnownPosition, this);
                     break;
                 case AlertLevel.Extreme:
-                    ChangeState(AIState.Combat);
+                    ChangeState(AgentState.Combat);
                     _sensors.AlertNearbyEnemies();
                     break;
             }
         }
 
-        internal void ChangeState(AIState newState)
+        internal void ChangeState(AgentState newAgentState)
         {
-            if (currentState == newState) return;
-            currentState = newState;
+            if (currentAgentState == newAgentState) return;
+            currentAgentState = newAgentState;
 
-            switch (newState)
+            switch (newAgentState)
             {
-                case AIState.Patrol:
+                case AgentState.Patrol:
                     _movement.ResumeDefaultMovement();
                     currentAlertLevel = AlertLevel.None;
                     break;
-                case AIState.Alert:
+                case AgentState.Alert:
                     _movement.SetSpeedMultiplier(1f);
                     break;
-                case AIState.Combat:
+                case AgentState.Combat:
                     // Speed set dynamically in combat loop
                     break;
             }
@@ -275,7 +258,7 @@ namespace EnemySystem
         // Called by EnemyResources when damaged from stealth
         internal void ForceAlertSpike()
         {
-            if (currentState != AIState.Combat)
+            if (currentAgentState != AgentState.Combat)
             {
                 triggerMultiplier = 2f;
                 DetermineAlertLevel();
