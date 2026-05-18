@@ -5,7 +5,7 @@ using UnityEngine;
 public class SoundSystem : MonoBehaviour
 {
     [SerializeField] LayerMask occludingLayers;
-    [SerializeField] float wallDampingMultiplier = 4;
+    [SerializeField] float wallDampingMultiplier = 3f;
     
     public static SoundSystem Instance { get; private set; }
 

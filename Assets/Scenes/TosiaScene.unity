@@ -334147,7 +334147,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: c22777d6e868e4f2fb421913386b154e, type: 2}
+  - {fileID: 2100000, guid: aa47683f557e09a44a934e53559ab755, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -481468,6 +481468,10 @@ PrefabInstance:
     - target: {fileID: 379227340926306092, guid: 6cd1fa7741d8df6a18f79341cf97b992, type: 3}
       propertyPath: m_LocalRotation.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4006821671577702440, guid: 6cd1fa7741d8df6a18f79341cf97b992, type: 3}
+      propertyPath: wallDampingMultiplier
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7202533678562181328, guid: 6cd1fa7741d8df6a18f79341cf97b992, type: 3}
       propertyPath: m_Name
