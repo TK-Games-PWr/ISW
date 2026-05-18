@@ -1438,15 +1438,15 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   crouchVolume: 0.05
-  walkVolume: 0.7
-  sprintVolume: 1.2
-  jumpVolume: 2
-  groundHitVolume: 2.5
+  walkVolume: 0.5
+  sprintVolume: 1
+  jumpVolume: 1.25
+  groundHitVolume: 1.5
   leanAngle: 15
   leanHorizontalOffset: 0.3
   leanSpeed: 8
   slideSpeed: 8
-  crouchHeight: 1.5
+  crouchHeight: 1
   uncrouchCeilingLayer:
     serializedVersion: 2
     m_Bits: 119
@@ -1457,7 +1457,7 @@ MonoBehaviour:
   cameraFOVSmoothing: 3
   pitchLimit: 85
   CameraTarget: {fileID: 3626531652512954655}
-  pickupRange: 2
+  pickupRange: 4
   pickupLayer:
     serializedVersion: 2
     m_Bits: 512
@@ -1501,8 +1501,8 @@ MonoBehaviour:
   knifeObj: {fileID: 3024995441329931677}
   maxHealth: 100
   godMode: 0
-  regenRate: 10
-  regenDelay: 5
+  regenRate: 5
+  regenDelay: 3
   canRegenerate: 1
 --- !u!114 &3642215617026583933
 MonoBehaviour:
@@ -1537,7 +1537,7 @@ CharacterController:
   m_Enabled: 1
   serializedVersion: 3
   m_Height: 2
-  m_Radius: 0.5
+  m_Radius: 0.4
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08

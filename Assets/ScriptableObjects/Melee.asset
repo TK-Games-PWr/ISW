@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Melee
   m_EditorClassIdentifier: Assembly-CSharp::PlayerShootingSystem.GunInfo
   icon: {fileID: 21300000, guid: 4f750c5cfc00221dbb8634d3fc79c81e, type: 3}
-  flatDamage: 10
+  flatDamage: 5
   audioEmitRange: 0
   fireVolume: 1
   fireVolumeCurve:
@@ -51,6 +51,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  firesShotPerAmmo: 1
   recoilUpward: 30
   recoilHorizontal: 15
   spread: 0.01

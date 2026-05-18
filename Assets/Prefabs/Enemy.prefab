@@ -7319,7 +7319,7 @@ MonoBehaviour:
   singleShotDelay: 0.6
   combatSpeedMultiplier: 1.3
   retreatSpeedMultiplier: 0.3
-  preferredGun: {fileID: 8862762591890864933}
+  classGun: {fileID: 8862762591890864933}
 --- !u!114 &3351768052061933975
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7337,7 +7337,7 @@ MonoBehaviour:
   singleShotDelay: 0.6
   combatSpeedMultiplier: 1.3
   retreatSpeedMultiplier: 0.3
-  preferredGun: {fileID: 8862762591890864933}
+  classGun: {fileID: 8862762591890864933}
   hidingSpeedMultiplier: 2
   playerLayerMask:
     serializedVersion: 2
@@ -7359,7 +7359,7 @@ MonoBehaviour:
   singleShotDelay: 1
   combatSpeedMultiplier: 1.3
   retreatSpeedMultiplier: 0.3
-  preferredGun: {fileID: 7783720580576294447}
+  classGun: {fileID: 7783720580576294447}
 --- !u!114 &7587119339273579207
 MonoBehaviour:
   m_ObjectHideFlags: 0

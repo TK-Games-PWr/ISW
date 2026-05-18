@@ -5,6 +5,7 @@ using UnityEngine;
 public class SoundSystem : MonoBehaviour
 {
     [SerializeField] LayerMask occludingLayers;
+    [SerializeField] float wallDampingMultiplier = 3f;
     
     public static SoundSystem Instance { get; private set; }
 
@@ -53,7 +54,7 @@ public class SoundSystem : MonoBehaviour
                 
                 if (Physics.Linecast(soundOrigin + new Vector3(0, 0.1f, 0), listener.GetHearingPosition(), occludingLayers))
                 {
-                    baseVolume /= 2;
+                    baseVolume /= wallDampingMultiplier;
                 }
                 
                 listener.OnSoundHeard(soundOrigin, baseVolume, actualDistance, range, capAlertLevel, falloffCurve);
