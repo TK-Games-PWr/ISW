@@ -386,7 +386,7 @@ namespace PlayerShootingSystem
                             BulletImpactManager.ImpactType.Flesh);
 
                         EnemyResources enemy = hitbox.GetEnemyHealth();
-                        if (!(enemy == null || enemy.IsDead))
+                        if (!(!enemy || enemy.IsDead))
                         {
                             if (hitDing) PlayHitSound();
                             if (uiCrosshair.isActiveAndEnabled)

@@ -90,6 +90,11 @@ public class UICrosshair : MonoBehaviour
 
     public void SetActive(bool active)
     {
+        // Reset recoil
+        targetPos = Vector2.zero;
+        currentPos = Vector2.zero;
+        crosshairRect.anchoredPosition = currentPos;
+        
         gameObject.SetActive(active);
     }
 }

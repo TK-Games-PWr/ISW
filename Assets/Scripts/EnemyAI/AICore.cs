@@ -63,6 +63,8 @@ namespace EnemySystem
         float _lastAlertTime = 0f;
         public float TimeInCombat { get; private set; } = 0f;
 
+        public bool IsDead => _resources.IsDead;
+
         void Awake()
         {
             _sensors = GetComponent<EnemySensors>();

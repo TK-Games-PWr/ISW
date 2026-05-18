@@ -12,7 +12,7 @@ public class PauseMenu : MonoBehaviour
         gameObject.SetActive(isPaused);
         Time.timeScale = isPaused ? 0f : 1f;
         Cursor.lockState = isPaused ? CursorLockMode.None : CursorLockMode.Locked;
-        Cursor.visible = !isPaused;
+        Cursor.visible = isPaused;
         playerActionsController.OnGamePaused(isPaused);
     }
 }
