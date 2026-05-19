@@ -24,10 +24,7 @@ public class EnemyManager : SerializedMonoBehaviour
 
     void Awake()
     {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(Instance);
-        }
+        if(Instance && Instance != this) Destroy(gameObject);
 
         Instance = this;
     }
