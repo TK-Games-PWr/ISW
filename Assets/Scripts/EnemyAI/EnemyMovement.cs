@@ -29,6 +29,8 @@ namespace EnemySystem
 
         int currentPatrolIndex = 0;
         bool isWaiting = false;
+        
+        [SerializeField] internal float agentStopDistance = 1f;
 
         Quaternion originalRotation; // Used when there is only one patrol point so enemy doesn't drift
 
@@ -134,10 +136,13 @@ namespace EnemySystem
         IEnumerator InvestigateRoutine(float duration, Vector3 targetPos, AICore brain)
         {
             agent.isStopped = false;
+            agent.stoppingDistance = agentStopDistance;
             agent.SetDestination(targetPos);
 
-            while (agent.pathPending || agent.remainingDistance > 0.5f) yield return null;
+            while (agent.pathPending || agent.remainingDistance > agentStopDistance) yield return null;
 
+            if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance) agent.velocity = Vector3.zero;
+            
             agent.isStopped = true;
             yield return StartCoroutine(SweepRotationRoutine(duration, false, 70f));
 

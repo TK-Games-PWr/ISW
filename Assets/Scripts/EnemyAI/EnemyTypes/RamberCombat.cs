@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace EnemySystem
 {
@@ -19,7 +20,9 @@ namespace EnemySystem
             }
             else
             {
-                agent.SetDestination(playerTransform.position);
+                agent.stoppingDistance = movement.agentStopDistance;
+                agent.SetDestination(playerTransform.position); // Chase
+                if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance) agent.velocity = Vector3.zero;
             }
         }
 
