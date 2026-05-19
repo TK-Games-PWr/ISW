@@ -35,6 +35,9 @@ namespace Classification
         string _fullPath=Directory.GetCurrentDirectory()+"/playerdata.csv";
         string _header;
 
+        [SerializeField]
+        bool logsEnabled = false;
+
         void UpdateDatapoint()
         {
             _datapoint = new ExtractedData
@@ -46,12 +49,12 @@ namespace Classification
                 avgSpeed = moveDataExtractor.speeds.Average(),
                 shots = playerShootingController.shots
             };
-            Debug.Log($"[ExtractedData Debug]\n" +
-          $"avgAccuracy: {_datapoint.avgAccuracy}\n" +
-          $"avgY: {_datapoint.avgY}\n" +
-          $"avgDetection: {_datapoint.avgDetection}\n" +
-          $"avgSpeed: {_datapoint.avgSpeed}\n" +
-          $"shots: {_datapoint.shots}");
+            if(logsEnabled) Debug.Log($"[ExtractedData Debug]\n" +
+                                    $"avgAccuracy: {_datapoint.avgAccuracy}\n" +
+                                    $"avgY: {_datapoint.avgY}\n" +
+                                    $"avgDetection: {_datapoint.avgDetection}\n" +
+                                    $"avgSpeed: {_datapoint.avgSpeed}\n" +
+                                    $"shots: {_datapoint.shots}");
             ClearData();
             
         }
@@ -92,8 +95,7 @@ namespace Classification
                 ));
             }
             File.WriteAllText(path, sb.ToString());
-            Debug.Log($"Written to {path}");
-            
+            if(logsEnabled) Debug.Log($"Written to {path}");
         }
 
         void Start()

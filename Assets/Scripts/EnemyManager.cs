@@ -15,6 +15,8 @@ public class EnemyManager : SerializedMonoBehaviour
         CoverGuy
     }
 
+    [SerializeField] bool logsEnabled = false;
+
     [SerializeField] Dictionary<EnemyType, int> _specialEnemyCount;
     
     [SerializeField]
@@ -52,7 +54,7 @@ public class EnemyManager : SerializedMonoBehaviour
             for (int count = 0; count < specialEnemy.Value; count++)
             {
                 aiData[enemiesIter].ChangeEnemyType(specialEnemy.Key);
-                Debug.Log("changed enemy " + aiData[enemiesIter].name + " type to " + specialEnemy.Key);
+                if(logsEnabled) Debug.Log("changed enemy " + aiData[enemiesIter].name + " type to " + specialEnemy.Key);
                 enemiesIter++;
                 if (enemiesIter >= aiData.Count) break;
             }
