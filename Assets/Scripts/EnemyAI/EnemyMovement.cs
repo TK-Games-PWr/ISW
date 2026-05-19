@@ -137,7 +137,8 @@ namespace EnemySystem
         {
             agent.isStopped = false;
             agent.stoppingDistance = agentStopDistance;
-            agent.SetDestination(targetPos);
+            if (NavMesh.SamplePosition(targetPos, out NavMeshHit hit, 100f, NavMesh.AllAreas))
+                agent.SetDestination(hit.position);
 
             while (agent.pathPending || agent.remainingDistance > agentStopDistance) yield return null;
 

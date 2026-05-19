@@ -152,6 +152,7 @@ public class PlayerResources : MonoBehaviour, ICharacter
 
     void Die()
     {
+        canRegenerate = false;
         OnDeath?.Invoke();
     }
 

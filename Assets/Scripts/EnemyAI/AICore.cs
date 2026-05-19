@@ -260,6 +260,8 @@ namespace EnemySystem
                 {
                     triggerMultiplier = 0.9f;
                     DetermineAlertLevel();
+                    _combatLostPlayerTime = 0f;
+                    return;
                 }
             }
             else
