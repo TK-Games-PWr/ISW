@@ -139,10 +139,10 @@ namespace EnemySystem
             while (agent.pathPending || agent.remainingDistance > 0.5f) yield return null;
 
             agent.isStopped = true;
-            yield return StartCoroutine(SweepRotationRoutine(duration, false));
+            yield return StartCoroutine(SweepRotationRoutine(duration, false, 70f));
 
             agent.isStopped = false;
-            brain.ChangeState(AICore.AIState.Patrol);
+            brain.DetermineAlertLevel(0.2f);
         }
 
         IEnumerator SweepRotationRoutine(float duration, bool trackLastKnownPosition, float lookAngle = 70f)

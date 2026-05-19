@@ -6,14 +6,18 @@ using static EnemySystem.AICore;
 public class AlertIndicatorUI : MonoBehaviour
 {
     public RectTransform rectTransform;
+    CanvasGroup _canvasGroup;
     
     [SerializeField] float maxFillAmount = .2f;
     [SerializeField] Image image1;
     [SerializeField] Image image2;
 
-    private void Awake()
+    [SerializeField] [Range(0,1)] float baseIndicatorOpacity = 0.3f;
+
+    void Awake()
     {
         if (rectTransform == null) rectTransform = GetComponent<RectTransform>();
+        _canvasGroup = GetComponent<CanvasGroup>();
     }
 
     public void SetAlertProgress(float value, AlertLevel alertLevel)
@@ -23,12 +27,15 @@ public class AlertIndicatorUI : MonoBehaviour
         image2.fillAmount = value * maxFillAmount;
         Color newColor = Color.clear;
 
+        float opacity = baseIndicatorOpacity;
+
         switch (alertLevel)
         {
             case AlertLevel.None:
                 newColor = Color.clear;
                 break;
             case AlertLevel.Low:
+                opacity /= 3;
                 newColor = Color.white;
                 break;
             case AlertLevel.Medium:
@@ -44,5 +51,7 @@ public class AlertIndicatorUI : MonoBehaviour
 
         image1.color = newColor;
         image2.color = newColor;
+
+        _canvasGroup.alpha = opacity;
     }
 }

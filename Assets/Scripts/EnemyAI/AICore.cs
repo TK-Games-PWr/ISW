@@ -180,11 +180,11 @@ namespace EnemySystem
             }
         }
 
-        internal void DetermineAlertLevel()
+        internal void DetermineAlertLevel(float tm = -1f)
         {
-            if (triggerMultiplier <= 0) return;
-
-            if (triggerMultiplier <= 0.25f) SetAlertLevel(AlertLevel.Low);
+            if (tm >= 0f) triggerMultiplier = tm;
+            if (triggerMultiplier <= 0f) SetAlertLevel(AlertLevel.None);
+            else if (triggerMultiplier <= 0.25f) SetAlertLevel(AlertLevel.Low);
             else if (triggerMultiplier <= 0.75f) SetAlertLevel(AlertLevel.Medium);
             else if (triggerMultiplier <= 1.0f) SetAlertLevel(AlertLevel.High);
             else SetAlertLevel(AlertLevel.Extreme);
@@ -193,15 +193,19 @@ namespace EnemySystem
         void SetAlertLevel(AlertLevel newLevel)
         {
             if (currentAlertLevel == newLevel) return;
+            AlertLevel lastAlertLevel = currentAlertLevel;
             currentAlertLevel = newLevel;
-
+            
+            if ((lastAlertLevel is AlertLevel.None or AlertLevel.Low &&
+                 newLevel is AlertLevel.None or AlertLevel.Low)) return;
+            
             _movement.StopAllMovementCoroutines();
 
             switch (currentAlertLevel)
             {
-                case AlertLevel.Low:
+                case AlertLevel.None: case AlertLevel.Low:
+                    ChangeState(AIState.Patrol);
                     _movement.ResumeDefaultMovement();
-                    currentAlertLevel = AlertLevel.None;
                     break;
                 case AlertLevel.Medium:
                     ChangeState(AIState.Alert);
@@ -226,8 +230,6 @@ namespace EnemySystem
             switch (newState)
             {
                 case AIState.Patrol:
-                    _movement.ResumeDefaultMovement();
-                    currentAlertLevel = AlertLevel.None;
                     break;
                 case AIState.Alert:
                     _movement.SetSpeedMultiplier(1f);
