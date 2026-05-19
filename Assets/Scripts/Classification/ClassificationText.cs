@@ -12,8 +12,8 @@ namespace Classification
     {
         [SerializeField] TextMeshProUGUI text;
         [SerializeField] string classifierExeRelativePath = "Scripts/Classification/.PythonModule/dist/";
-        [SerializeField] string classifierBinaryName = "inference";
         [SerializeField] string modelRelativePath = "Scripts/Classification/.PythonModule/";
+        [SerializeField] string classifierBinaryName = "inference";
         [SerializeField] string modelFileName = "model.joblib";
         [SerializeField] string datapointsFileName = "playerdata.csv";
         
@@ -31,6 +31,13 @@ namespace Classification
             if (text == null) text = GetComponent<TextMeshProUGUI>();
 
             if (text != null) text.text = "Initializing classifier...";
+
+            if (Application.platform == RuntimePlatform.WindowsPlayer ||
+                Application.platform == RuntimePlatform.LinuxPlayer)
+            {
+                classifierExeRelativePath = "";
+                modelRelativePath = "";
+            }
             
             if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
             {

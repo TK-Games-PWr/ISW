@@ -19,6 +19,8 @@ public class MainMenuController : MonoBehaviour
 
     void Start()
     {
+        Time.timeScale = 1f;
+        
         mainMenu.SetActive(true);
         optionsMenu.SetActive(false);
         

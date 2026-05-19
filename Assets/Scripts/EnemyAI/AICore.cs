@@ -65,6 +65,9 @@ namespace EnemySystem
 
         public bool IsDead => _resources.IsDead;
 
+        [Tooltip("Disables hearing system connection, useful for putting agent in menu background.")] [SerializeField]
+        bool isDeaf = false;
+
         void Awake()
         {
             _sensors = GetComponent<EnemySensors>();
@@ -75,6 +78,7 @@ namespace EnemySystem
         
         async void OnEnable()
         {
+            if (isDeaf) return;
             await Awaitable.EndOfFrameAsync();
             if (SoundSystem.Instance != null)
             {
@@ -86,9 +90,9 @@ namespace EnemySystem
             }
         }
 
-        async void OnDisable()
+        void OnDisable()
         {
-            await Awaitable.EndOfFrameAsync();
+            if (isDeaf) return;
             if (SoundSystem.Instance != null)
             {
                 SoundSystem.Instance.UnregisterListener(this);
