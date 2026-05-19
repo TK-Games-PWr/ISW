@@ -13,8 +13,8 @@ public class SoundSystem : MonoBehaviour
 
     void Awake()
     {
-        if (Instance == null) Instance = this;
-        else Destroy(gameObject);
+        if(Instance && Instance != this) Destroy(gameObject);
+        Instance = this;
     }
 
     // Call this in OnEnable()

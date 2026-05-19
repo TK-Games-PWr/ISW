@@ -48,7 +48,7 @@ namespace Classification
             return await ExecuteAsync(additionalArguments);
         }
 
-        public async Task<SubProcessResponse> ExecuteAsync(List<string> additionalArguments = null)
+        public async Task<SubProcessResponse> ExecuteAsync(List<string> additionalArguments = null, bool logsEnabled = true)
         {
             try
             {
@@ -68,11 +68,11 @@ namespace Classification
                     arguments = string.Join(" ", additionalArguments.Select(a => $"\"{a}\""));
                 }
 
-                return await Task.Run(() => ExecuteProcessInternal(_executablePath, arguments));
+                return await Task.Run(() => ExecuteProcessInternal(_executablePath, arguments, logsEnabled));
             }
             catch (Exception ex)
             {
-                UnityEngine.Debug.LogError($"ExecutePython error: {ex.Message}");
+                if(logsEnabled) UnityEngine.Debug.LogError($"ExecutePython error: {ex.Message}");
                 return new SubProcessResponse
                 {
                     Status = Status.ERROR,
@@ -81,7 +81,7 @@ namespace Classification
             }
         }
 
-        private SubProcessResponse ExecuteProcessInternal(string fileName, string arguments)
+        private SubProcessResponse ExecuteProcessInternal(string fileName, string arguments, bool logsEnabled = true)
         {
             try
             {
@@ -112,10 +112,10 @@ namespace Classification
                     string error = process.StandardError.ReadToEnd();
 
 
-                    UnityEngine.Debug.Log($"OUTPUTTING: {output}");
+                    if(logsEnabled) UnityEngine.Debug.Log($"OUTPUTTING: {output}");
                     process.WaitForExit(TIMEOUT);
 
-                    return ParseResponse(output, error);
+                    return ParseResponse(output, error, logsEnabled);
                 }
             }
             catch (Exception ex)
@@ -128,11 +128,11 @@ namespace Classification
             }
         }
 
-        private SubProcessResponse ParseResponse(string output, string error)
+        private SubProcessResponse ParseResponse(string output, string error, bool logsEnabled = true)
         {
             if (!string.IsNullOrEmpty(error))
             {
-                UnityEngine.Debug.LogError($"Standard error output appeared: {error}");
+                if(logsEnabled) UnityEngine.Debug.LogError($"Standard error output appeared: {error}");
                 return new SubProcessResponse { Status = Status.ERROR, ErrorMessage = error.Trim() };
             }
 
@@ -146,7 +146,7 @@ namespace Classification
                     try
                     {
 
-                        UnityEngine.Debug.Log($"Returned what python returned");
+                        if(logsEnabled) UnityEngine.Debug.Log($"Returned what python returned");
                         return Newtonsoft.Json.JsonConvert.DeserializeObject<SubProcessResponse>(line.Trim());
                     }
                     catch (Newtonsoft.Json.JsonException ex)

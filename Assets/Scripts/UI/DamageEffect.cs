@@ -16,14 +16,10 @@ public class DamageEffect : MonoBehaviour
     [SerializeField] float lowDmgAmount = 10f;
     [Tooltip("What is considered high damage for boldest vignette")]
     [SerializeField] float highDmgAmount = 60f;
-    
-    private void Awake()
+
+    void Awake()
     {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
+        if(Instance && Instance != this) Destroy(gameObject);
         Instance = this;
     }
     
@@ -34,7 +30,7 @@ public class DamageEffect : MonoBehaviour
         StartCoroutine(FadeOutVignette(damage));
     }
 
-    private IEnumerator FadeOutVignette(float damage)
+    IEnumerator FadeOutVignette(float damage)
     {
         float elapsedTime = 0f;
         float baseMult = Mathf.Lerp(0.6f, 1f, Mathf.InverseLerp(lowDmgAmount, highDmgAmount, damage));

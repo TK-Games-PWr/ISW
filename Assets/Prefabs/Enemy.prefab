@@ -7255,6 +7255,7 @@ MonoBehaviour:
   timeToLoseAlertLevel: 3
   fightDelay: 1
   triggerMultiplierTimeout: 2
+  endCombatTimeout: 10
   currentState: 0
   currentAlertLevel: 0
   triggerMultiplier: 0
@@ -7300,8 +7301,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyMovement
   basePlayerVelocity: 4
   patrolSpeedMultiplier: 1
+  baseAngularSpeed: 120
+  combatAngularSpeed: 360
   patrolPoints: []
   waitTimeAtWaypoint: 2
+  agentStopDistance: 1
 --- !u!114 &7944648931457534281
 MonoBehaviour:
   m_ObjectHideFlags: 0

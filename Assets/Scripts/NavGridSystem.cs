@@ -34,6 +34,7 @@ public class NavGridSystem : MonoBehaviour
 
     void Awake()
     {
+        if(Instance && Instance != this) Destroy(gameObject);
         Instance = this;
         GenerateGridFromNavMesh();
     }

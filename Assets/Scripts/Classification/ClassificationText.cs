@@ -12,13 +12,17 @@ namespace Classification
     {
         [SerializeField] TextMeshProUGUI text;
         [SerializeField] string classifierExeRelativePath = "Scripts/Classification/.PythonModule/dist/";
+        [SerializeField] string modelRelativePath = "Scripts/Classification/.PythonModule/";
         [SerializeField] string classifierBinaryName = "inference";
-        [SerializeField] string modelRelativePath = "Scripts/Classification/.PythonModule/model.joblib";
+        [SerializeField] string modelFileName = "model.joblib";
         [SerializeField] string datapointsFileName = "playerdata.csv";
         
         [SerializeField] string githubRepo = "rybydrapiezne/ISW";
+        [SerializeField] string releaseTag = "module";
 
-        string fileName;
+        [SerializeField] bool logsEnabled = false;
+        
+        string _classifierFileName;
         
         bool _isClassifierReady;
 
@@ -27,22 +31,29 @@ namespace Classification
             if (text == null) text = GetComponent<TextMeshProUGUI>();
 
             if (text != null) text.text = "Initializing classifier...";
+
+            if (Application.platform == RuntimePlatform.WindowsPlayer ||
+                Application.platform == RuntimePlatform.LinuxPlayer)
+            {
+                classifierExeRelativePath = "";
+                modelRelativePath = "";
+            }
             
             if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
             {
-                fileName = classifierBinaryName + ".exe";
+                _classifierFileName = classifierBinaryName + ".exe";
             }
             else if (Application.platform == RuntimePlatform.LinuxPlayer || Application.platform == RuntimePlatform.LinuxEditor)
             {
-                fileName = classifierBinaryName;
+                _classifierFileName = classifierBinaryName;
             }
             else
             {
-                UnityEngine.Debug.LogError($"Unsupported platform: {Application.platform}");
+                if(logsEnabled) UnityEngine.Debug.LogError($"Unsupported platform: {Application.platform}");
                 return;
             }
             
-            classifierExeRelativePath = Path.Combine(classifierExeRelativePath, fileName);
+            classifierExeRelativePath = Path.Combine(classifierExeRelativePath, _classifierFileName);
 
             _ = SetupClassifierAsync();
         }
@@ -51,7 +62,7 @@ namespace Classification
         {
             if (!_isClassifierReady)
             {
-                UnityEngine.Debug.LogWarning("Classifier is not ready. Please wait.");
+                if(logsEnabled) UnityEngine.Debug.LogWarning("Classifier is not ready. Please wait.");
                 return;
             }
 
@@ -64,9 +75,9 @@ namespace Classification
             
             if (!File.Exists(exePath))
             {
-                string downloadUrl = $"https://github.com/{githubRepo}/releases/download/module/{fileName}";
+                string downloadUrl = $"https://github.com/{githubRepo}/releases/download/{releaseTag}/{_classifierFileName}";
                 
-                UnityEngine.Debug.Log($"Classifier executable not found. Attempting download... {downloadUrl}");
+                if(logsEnabled) UnityEngine.Debug.Log($"Classifier executable not found. Attempting download... {downloadUrl}");
                 if (text != null) text.text = "Downloading latest classifier...";
                 
                 bool downloadSuccess = await DownloadBinaryAsync(downloadUrl, exePath);
@@ -79,16 +90,25 @@ namespace Classification
                 }
             }
             
-            string modelPath = Path.Combine(Application.dataPath, modelRelativePath);
+            string modelPath = Path.Combine(Application.dataPath, modelRelativePath, modelFileName);
             if (!File.Exists(modelPath))
             {
-                UnityEngine.Debug.LogError($"Model file not found at: {modelPath}");
-                if (text != null) text.text = $"Error: model not found at {modelPath}";
-                _isClassifierReady = false;
-                return;
+                string downloadUrl = $"https://github.com/{githubRepo}/releases/download/{releaseTag}/{modelFileName}";
+                
+                if(logsEnabled) UnityEngine.Debug.Log($"Model file not found. Attempting download... {downloadUrl}");
+                if (text != null) text.text = "Downloading latest model...";
+                
+                bool downloadSuccess = await DownloadBinaryAsync(downloadUrl, modelPath);
+
+                if (!downloadSuccess)
+                {
+                    if (text != null) text.text = $"Error: Failed to download model from {downloadUrl}";
+                    _isClassifierReady = false;
+                    return;
+                }
             }
 
-            UnityEngine.Debug.Log("Classifier executable and model found.");
+            if(logsEnabled) UnityEngine.Debug.Log("Classifier executable and model found.");
             if (text != null) text.text = "Ready.";
             _isClassifierReady = true;
         }
@@ -106,7 +126,7 @@ namespace Classification
 
                 if (webRequest.result != UnityWebRequest.Result.Success)
                 {
-                    UnityEngine.Debug.LogError($"[Downloader] Error downloading binary: {webRequest.error}");
+                    if(logsEnabled) UnityEngine.Debug.LogError($"[Downloader] Error downloading binary: {webRequest.error}");
                     return false;
                 }
 
@@ -115,7 +135,7 @@ namespace Classification
                     Directory.CreateDirectory(Path.GetDirectoryName(savePath));
                     
                     await File.WriteAllBytesAsync(savePath, webRequest.downloadHandler.data);
-                    UnityEngine.Debug.Log($"[Downloader] Successfully downloaded and saved to: {savePath}");
+                    if(logsEnabled) UnityEngine.Debug.Log($"[Downloader] Successfully downloaded and saved to: {savePath}");
 
                     if (Application.platform == RuntimePlatform.LinuxPlayer || Application.platform == RuntimePlatform.LinuxEditor)
                     {
@@ -126,7 +146,7 @@ namespace Classification
                 }
                 catch (System.Exception e)
                 {
-                    UnityEngine.Debug.LogError($"[Downloader] Failed to save binary to disk: {e.Message}");
+                    if(logsEnabled) UnityEngine.Debug.LogError($"[Downloader] Failed to save binary to disk: {e.Message}");
                     return false;
                 }
             }
@@ -143,45 +163,45 @@ namespace Classification
                 permissionProcess.StartInfo.CreateNoWindow = true;
                 permissionProcess.Start();
                 permissionProcess.WaitForExit();
-                UnityEngine.Debug.Log("[Downloader] Applied execution permissions (chmod +x) to Linux binary.");
+                if(logsEnabled) UnityEngine.Debug.Log("[Downloader] Applied execution permissions (chmod +x) to Linux binary.");
             }
             catch (System.Exception e)
             {
-                UnityEngine.Debug.LogWarning($"[Downloader] Could not automatically set execution permissions: {e.Message}");
+                if(logsEnabled) UnityEngine.Debug.LogWarning($"[Downloader] Could not automatically set execution permissions: {e.Message}");
             }
         }
 
         private async Task RunClassifierAsync()
         {
-            UnityEngine.Debug.Log("Starting classifier...");
+            if(logsEnabled) UnityEngine.Debug.Log("Starting classifier...");
 
             Stopwatch stopwatch = Stopwatch.StartNew();
 
             string exePath = Path.GetFullPath(Path.Combine(Application.dataPath, classifierExeRelativePath));
             string datapointsPath = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), datapointsFileName));
-            string modelPath = Path.GetFullPath(Path.Combine(Application.dataPath, modelRelativePath));
+            string modelPath = Path.GetFullPath(Path.Combine(Application.dataPath, modelRelativePath, modelFileName));
 
             if (!File.Exists(exePath))
             {
-                UnityEngine.Debug.LogError($"Classifier executable not found at: {exePath}");
+                if(logsEnabled) UnityEngine.Debug.LogError($"Classifier executable not found at: {exePath}");
                 return;
             }
 
             if (!File.Exists(datapointsPath))
             {
-                UnityEngine.Debug.LogError($"Datapoints file not found at: {datapointsPath}");
+                if(logsEnabled) UnityEngine.Debug.LogError($"Datapoints file not found at: {datapointsPath}");
                 if (text != null) text.text = $"Error: {datapointsFileName} not found.";
                 return;
             }
 
             try
             {
-                UnityEngine.Debug.Log($"Classifier paths: exe={exePath}, data={datapointsPath}, model={modelPath}");
+                if(logsEnabled) UnityEngine.Debug.Log($"Classifier paths: exe={exePath}, data={datapointsPath}, model={modelPath}");
 
                 using (var handler = SubProcessHandler.ForExecutable(exePath))
                 {
                     var args = new List<string> { datapointsPath, modelPath };
-                    SubProcessResponse response = await handler.ExecuteAsync(args);
+                    SubProcessResponse response = await handler.ExecuteAsync(args, logsEnabled);
 
                     stopwatch.Stop();
                     HandleResponse(response, (float)stopwatch.Elapsed.TotalSeconds);
@@ -189,7 +209,7 @@ namespace Classification
             }
             catch (System.Exception e)
             {
-                UnityEngine.Debug.LogError($"Error calling classifier: {e.Message}");
+                if(logsEnabled) UnityEngine.Debug.LogError($"Error calling classifier: {e.Message}");
             }
         }
 
@@ -197,7 +217,7 @@ namespace Classification
         {
             if (response.Status == Status.OK)
             {
-                UnityEngine.Debug.Log($"Classifier finished in {time:F3}s!");
+                if(logsEnabled) UnityEngine.Debug.Log($"Classifier finished in {time:F3}s!");
 
                 if (text != null)
                 {
@@ -213,7 +233,7 @@ namespace Classification
                     message = "Outdated inference.exe (rebuild required). Run rebuild-inference.bat in .PythonModule, then copy inference.exe into that folder.";
                 }
 
-                UnityEngine.Debug.LogError($"Classifier error: {message}");
+                if(logsEnabled) UnityEngine.Debug.LogError($"Classifier error: {message}");
                 if (text != null) text.text = $"Error: {message}";
             }
         }
