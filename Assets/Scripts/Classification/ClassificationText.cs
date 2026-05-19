@@ -13,12 +13,14 @@ namespace Classification
         [SerializeField] TextMeshProUGUI text;
         [SerializeField] string classifierExeRelativePath = "Scripts/Classification/.PythonModule/dist/";
         [SerializeField] string classifierBinaryName = "inference";
-        [SerializeField] string modelRelativePath = "Scripts/Classification/.PythonModule/model.joblib";
+        [SerializeField] string modelRelativePath = "Scripts/Classification/.PythonModule/";
+        [SerializeField] string modelFileName = "model.joblib";
         [SerializeField] string datapointsFileName = "playerdata.csv";
         
         [SerializeField] string githubRepo = "rybydrapiezne/ISW";
+        [SerializeField] string releaseTag = "module";
 
-        string fileName;
+        string _classifierFileName;
         
         bool _isClassifierReady;
 
@@ -30,11 +32,11 @@ namespace Classification
             
             if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
             {
-                fileName = classifierBinaryName + ".exe";
+                _classifierFileName = classifierBinaryName + ".exe";
             }
             else if (Application.platform == RuntimePlatform.LinuxPlayer || Application.platform == RuntimePlatform.LinuxEditor)
             {
-                fileName = classifierBinaryName;
+                _classifierFileName = classifierBinaryName;
             }
             else
             {
@@ -42,7 +44,7 @@ namespace Classification
                 return;
             }
             
-            classifierExeRelativePath = Path.Combine(classifierExeRelativePath, fileName);
+            classifierExeRelativePath = Path.Combine(classifierExeRelativePath, _classifierFileName);
 
             _ = SetupClassifierAsync();
         }
@@ -64,7 +66,7 @@ namespace Classification
             
             if (!File.Exists(exePath))
             {
-                string downloadUrl = $"https://github.com/{githubRepo}/releases/download/module/{fileName}";
+                string downloadUrl = $"https://github.com/{githubRepo}/releases/download/{releaseTag}/{_classifierFileName}";
                 
                 UnityEngine.Debug.Log($"Classifier executable not found. Attempting download... {downloadUrl}");
                 if (text != null) text.text = "Downloading latest classifier...";
@@ -79,13 +81,22 @@ namespace Classification
                 }
             }
             
-            string modelPath = Path.Combine(Application.dataPath, modelRelativePath);
+            string modelPath = Path.Combine(Application.dataPath, modelRelativePath, modelFileName);
             if (!File.Exists(modelPath))
             {
-                UnityEngine.Debug.LogError($"Model file not found at: {modelPath}");
-                if (text != null) text.text = $"Error: model not found at {modelPath}";
-                _isClassifierReady = false;
-                return;
+                string downloadUrl = $"https://github.com/{githubRepo}/releases/download/{releaseTag}/{modelFileName}";
+                
+                UnityEngine.Debug.Log($"Model file not found. Attempting download... {downloadUrl}");
+                if (text != null) text.text = "Downloading latest model...";
+                
+                bool downloadSuccess = await DownloadBinaryAsync(downloadUrl, modelPath);
+
+                if (!downloadSuccess)
+                {
+                    if (text != null) text.text = $"Error: Failed to download model from {downloadUrl}";
+                    _isClassifierReady = false;
+                    return;
+                }
             }
 
             UnityEngine.Debug.Log("Classifier executable and model found.");
@@ -159,7 +170,7 @@ namespace Classification
 
             string exePath = Path.GetFullPath(Path.Combine(Application.dataPath, classifierExeRelativePath));
             string datapointsPath = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), datapointsFileName));
-            string modelPath = Path.GetFullPath(Path.Combine(Application.dataPath, modelRelativePath));
+            string modelPath = Path.GetFullPath(Path.Combine(Application.dataPath, modelRelativePath, modelFileName));
 
             if (!File.Exists(exePath))
             {
