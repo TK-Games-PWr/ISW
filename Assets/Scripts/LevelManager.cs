@@ -24,13 +24,8 @@ public class LevelManager : MonoBehaviour
 
     void Awake()
     {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(Instance);
-        }
+        if(Instance && Instance != this) Destroy(gameObject);
         Instance = this;
-        
-        DontDestroyOnLoad(this);
     }
 
     void Start()

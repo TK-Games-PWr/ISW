@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using EnemySystem;
-using NUnit.Framework;
+using UnityEngine.Assertions;
 using TK_Shared._3DPlayerMovement;
 using TK_Shared.ObjectInteractions3D;
 using TMPro;
@@ -82,7 +82,7 @@ namespace PlayerShootingSystem
                 }
             }
 
-            Assert.True(playerResources.throwables.Count > 0, "Player must have at least one throwable in resources");
+            Assert.IsTrue(playerResources.throwables.Count > 0, "Player must have at least one throwable in resources");
             currentThrowable = playerResources.throwables[0];
             currentThrowableIndex = 0;
             playerResources.hotbar.HighlightSlot(_currentSlot);
@@ -175,8 +175,6 @@ namespace PlayerShootingSystem
                     {
                         enemy.Damage(meleeInfo.flatDamage);
                     }
-
-                    hits++;
                 }
             }
         }

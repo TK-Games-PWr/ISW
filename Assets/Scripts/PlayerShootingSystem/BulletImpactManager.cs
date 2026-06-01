@@ -12,19 +12,17 @@ public class BulletImpactManager : MonoBehaviour
         Flesh
     }
     
-    [SerializeField] private PooledParticle groundHitPrefab;
-    [SerializeField] private PooledParticle fleshHitPrefab;
-    
-    private ObjectPool<PooledParticle> groundImpactPool;
-    private ObjectPool<PooledParticle> fleshImpactPool;
+    [SerializeField]
+    PooledParticle groundHitPrefab;
+    [SerializeField]
+    PooledParticle fleshHitPrefab;
 
-    private void Awake()
+    ObjectPool<PooledParticle> groundImpactPool;
+    ObjectPool<PooledParticle> fleshImpactPool;
+
+    void Awake()
     {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
+        if(Instance && Instance != this) Destroy(gameObject);
         Instance = this;
     }
 

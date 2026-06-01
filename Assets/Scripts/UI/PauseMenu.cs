@@ -1,5 +1,6 @@
 using TK_Shared._3DPlayerMovement;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour
 {
@@ -14,5 +15,22 @@ public class PauseMenu : MonoBehaviour
         Cursor.lockState = isPaused ? CursorLockMode.None : CursorLockMode.Locked;
         Cursor.visible = isPaused;
         playerActionsController.OnGamePaused(isPaused);
+    }
+    
+    public void LoadScene(string name)
+    {
+        if (!MainMenuController.Scenes.ContainsKey(name))
+        {
+            Debug.LogError("Scene not found: " + name);
+            return;
+        }
+        SceneManager.LoadScene(MainMenuController.Scenes[name]);
+        Destroy(gameObject);
+    }
+    
+    public void RestartLevel()
+    {
+        string currentSceneName = SceneManager.GetActiveScene().name;
+        SceneManager.LoadScene(currentSceneName);
     }
 }

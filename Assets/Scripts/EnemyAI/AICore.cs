@@ -48,6 +48,9 @@ namespace EnemySystem
 
         public bool IsDead => _resources.IsDead;
 
+        [Tooltip("Disables hearing system connection, useful for putting agent in menu background.")] [SerializeField]
+        bool isDeaf = false;
+
         void Awake()
         {
             _sensors = GetComponent<EnemySensors>();
@@ -58,6 +61,7 @@ namespace EnemySystem
         
         async void OnEnable()
         {
+            if (isDeaf) return;
             await Awaitable.EndOfFrameAsync();
             if (SoundSystem.Instance != null)
             {
@@ -69,9 +73,9 @@ namespace EnemySystem
             }
         }
 
-        async void OnDisable()
+        void OnDisable()
         {
-            await Awaitable.EndOfFrameAsync();
+            if (isDeaf) return;
             if (SoundSystem.Instance != null)
             {
                 SoundSystem.Instance.UnregisterListener(this);
@@ -163,11 +167,11 @@ namespace EnemySystem
             }
         }
 
-        internal void DetermineAlertLevel()
+        internal void DetermineAlertLevel(float tm = -1f)
         {
-            if (triggerMultiplier <= 0) return;
-
-            if (triggerMultiplier <= 0.25f) SetAlertLevel(AlertLevel.Low);
+            if (tm >= 0f) triggerMultiplier = tm;
+            if (triggerMultiplier <= 0f) SetAlertLevel(AlertLevel.None);
+            else if (triggerMultiplier <= 0.25f) SetAlertLevel(AlertLevel.Low);
             else if (triggerMultiplier <= 0.75f) SetAlertLevel(AlertLevel.Medium);
             else if (triggerMultiplier <= 1.0f) SetAlertLevel(AlertLevel.High);
             else SetAlertLevel(AlertLevel.Extreme);
@@ -176,15 +180,19 @@ namespace EnemySystem
         void SetAlertLevel(AlertLevel newLevel)
         {
             if (currentAlertLevel == newLevel) return;
+            AlertLevel lastAlertLevel = currentAlertLevel;
             currentAlertLevel = newLevel;
-
+            
+            if ((lastAlertLevel is AlertLevel.None or AlertLevel.Low &&
+                 newLevel is AlertLevel.None or AlertLevel.Low)) return;
+            
             _movement.StopAllMovementCoroutines();
 
             switch (currentAlertLevel)
             {
-                case AlertLevel.Low:
+                case AlertLevel.None: case AlertLevel.Low:
+                    ChangeState(AIState.Patrol);
                     _movement.ResumeDefaultMovement();
-                    currentAlertLevel = AlertLevel.None;
                     break;
                 case AlertLevel.Medium:
                     ChangeState(AgentState.Alert);
@@ -209,8 +217,6 @@ namespace EnemySystem
             switch (newAgentState)
             {
                 case AgentState.Patrol:
-                    _movement.ResumeDefaultMovement();
-                    currentAlertLevel = AlertLevel.None;
                     break;
                 case AgentState.Alert:
                     _movement.SetSpeedMultiplier(1f);
@@ -241,6 +247,8 @@ namespace EnemySystem
                 {
                     triggerMultiplier = 0.9f;
                     DetermineAlertLevel();
+                    _combatLostPlayerTime = 0f;
+                    return;
                 }
             }
             else
