@@ -175,8 +175,6 @@ namespace PlayerShootingSystem
                     {
                         enemy.Damage(meleeInfo.flatDamage);
                     }
-
-                    hits++;
                 }
             }
         }
