@@ -191,7 +191,7 @@ namespace EnemySystem
             switch (currentAlertLevel)
             {
                 case AlertLevel.None: case AlertLevel.Low:
-                    ChangeState(AIState.Patrol);
+                    ChangeState(AgentState.Patrol);
                     _movement.ResumeDefaultMovement();
                     break;
                 case AlertLevel.Medium:
