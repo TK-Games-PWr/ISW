@@ -1,7 +1,7 @@
 ---
 name: Feature Request
 about: Suggest an idea for a new feature, mechanic, or improvement
-title: '[Feature] '
+title: '[Idea] '
 labels: 'feature, needs-triage'
 assignees: ''
 ---
