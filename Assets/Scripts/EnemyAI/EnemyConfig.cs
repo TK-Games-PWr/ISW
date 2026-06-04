@@ -48,6 +48,9 @@ public class MovementConfig
 
     [Header("Patrol Settings")]
     public float waitTimeAtWaypoint = 2f;
+    
+    [Header("Agent Parameters")]
+    public float agentStopDistance = 1f;
 }
 
 [System.Serializable]

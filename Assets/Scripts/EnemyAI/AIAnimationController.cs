@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace EnemyAI
+namespace EnemySystem
 {
     public class AIAnimationController : MonoBehaviour
     {

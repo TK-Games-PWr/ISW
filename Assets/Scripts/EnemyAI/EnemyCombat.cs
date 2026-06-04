@@ -9,7 +9,6 @@ using Random = UnityEngine.Random;
 
 namespace EnemySystem
 {
-    [RequireComponent(typeof(EnemySensors), typeof(EnemyMovement), typeof(EnemyResources))]
     public class EnemyCombat : MonoBehaviour
     {
         protected EnemyResources resources;
@@ -38,18 +37,18 @@ namespace EnemySystem
         
         protected NavMeshAgent agent;
         protected EnemySensors sensors;
-        protected EnemyMovement movement;
+        protected EnemyMovementOld movementOld;
 
         protected virtual void Awake()
         {
             agent = GetComponent<NavMeshAgent>();
-            sensors = GetComponent<EnemySensors>();
-            movement = GetComponent<EnemyMovement>();
+            movementOld = GetComponent<EnemyMovementOld>();
             resources = GetComponent<EnemyResources>();
         }
 
         protected virtual void Start()
         {
+            sensors = GetComponent<AICore>().sensors;
             if (classGun != null && classGun.TryGetComponent(out GrabbableObject grabbable))
             {
                 bool shouldDisable = false;
@@ -71,7 +70,7 @@ namespace EnemySystem
         // --- Combat Movement Logic ---
         internal virtual void HandleCombatMovement(Transform playerTransform, float distanceToPlayer, bool hasLOS)
         {
-            movement.SetSpeedMultiplier(combatSpeedMultiplier);
+            movementOld.SetSpeedMultiplier(combatSpeedMultiplier);
 
             Vector3 direction = (playerTransform.position - transform.position).normalized;
             Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
@@ -82,7 +81,7 @@ namespace EnemySystem
             {
                 if (distanceToPlayer <= OptimalDistance)
                 {
-                    movement.SetSpeedMultiplier(retreatSpeedMultiplier);
+                    movementOld.SetSpeedMultiplier(retreatSpeedMultiplier);
                     Vector3 retreatDirection = transform.position - playerTransform.position;
                     agent.SetDestination(transform.position + retreatDirection.normalized * 2f);
                 }
@@ -93,7 +92,7 @@ namespace EnemySystem
             }
             else
             {
-                agent.stoppingDistance = movement.agentStopDistance;
+                agent.stoppingDistance = movementOld.agentStopDistance;
                 agent.SetDestination(playerTransform.position); // Chase
                 if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance) agent.velocity = Vector3.zero;
             }

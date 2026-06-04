@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a444d05e3c00f31087ae37aa6722afe, type: 3}
+  m_Name: EnemyConfig
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyConfig
+  maxHealth: 100
+  movement:
+    basePlayerSpeed: 4
+    patrolSpeedMultiplier: 1
+    baseAngularSpeed: 120
+    combatAngularSpeed: 360
+    waitTimeAtWaypoint: 2
+    agentStopDistance: 1
+  sensors:
+    playerTag: Player
+    enemyLayer:
+      serializedVersion: 2
+      m_Bits: 256
+    sightObstaclesMask:
+      serializedVersion: 2
+      m_Bits: 193
+    eyeLevel: 1.7
+    horizontalFOV: 100
+    verticalFOV: 40
+    alertedVerticalFOV: 120
+    maxSightDistance: 40
+    hearingRadius: 30
+  alert:
+    alertSensitivity: 5
+    timeToLoseAlertLevel: 3
+    fightDelay: 1
+    triggerMultiplierTimeout: 2
+    endCombatTimeout: 10

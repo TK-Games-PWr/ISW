@@ -7251,17 +7251,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79a1ecf4c68b1a74e92a1977d8b25102, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AICore
-  alertSensitivity: 5
-  timeToLoseAlertLevel: 3
-  fightDelay: 1
-  triggerMultiplierTimeout: 2
-  endCombatTimeout: 10
-  currentState: 0
-  currentAlertLevel: 0
-  triggerMultiplier: 0
+  config: {fileID: 11400000, guid: 74e9ad1c99ac2c7a8ab18c471a7bbe89, type: 2}
+  patrolPoints: []
   baseEnemyCombat: {fileID: 7944648931457534281}
   rambEnemyCombat: {fileID: 7718934382253550536}
   coverEnemyCombat: {fileID: 3351768052061933975}
+  isDeaf: 0
+  currentAgentState: 0
+  currentAlertLevel: 0
+  triggerMultiplier: 0
 --- !u!114 &5232498721366191019
 MonoBehaviour:
   m_ObjectHideFlags: 0

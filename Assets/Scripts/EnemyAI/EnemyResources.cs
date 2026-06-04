@@ -1,6 +1,5 @@
 using UnityEngine;
 using System;
-using EnemyAI;
 using TK_Shared._3DPlayerMovement;
 using UnityEngine.AI;
 

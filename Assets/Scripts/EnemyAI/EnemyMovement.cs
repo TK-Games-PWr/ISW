@@ -1,70 +1,63 @@
 using UnityEngine;
 using UnityEngine.AI;
 using System.Collections;
-using EnemyAI;
 
 namespace EnemySystem
 {
-    [RequireComponent(typeof(NavMeshAgent))]
-    public class EnemyMovement : MonoBehaviour
+    public class EnemyMovement
     {
-        [Header("Speed Settings")]
-        
-        [SerializeField] float basePlayerVelocity = 4f;
+        MovementConfig _config;
+        NavMeshAgent _agent;
+        EnemySensors _sensors;
+        AIAnimationController _animationController;
+        AICore _brain;
+        Transform _transform;
 
-        [SerializeField] float patrolSpeedMultiplier = 1f;
-        
-        [SerializeField] float baseAngularSpeed = 120f;
+        Transform[] _patrolPoints;
+        int _currentPatrolIndex = 0;
+        bool _isWaiting = false;
 
-        [SerializeField] float combatAngularSpeed = 360f;
+        Quaternion _originalRotation; // Used when there is only one patrol point so enemy doesn't drift
 
-        [Header("Patrol Settings")] [SerializeField]
-        Transform[] patrolPoints;
-
-        [SerializeField] float waitTimeAtWaypoint = 2f;
-
-        NavMeshAgent agent;
-        EnemySensors sensors;
-        AIAnimationController  animationController;
-
-        int currentPatrolIndex = 0;
-        bool isWaiting = false;
-        
-        [SerializeField] internal float agentStopDistance = 1f;
-
-        Quaternion originalRotation; // Used when there is only one patrol point so enemy doesn't drift
-
-        void Awake()
+        public EnemyMovement(AICore brain, Transform transform, NavMeshAgent agent, EnemySensors sensors, AIAnimationController animationController, MovementConfig config, Transform[] patrolPoints)
         {
-            agent = GetComponent<NavMeshAgent>();
-            sensors = GetComponent<EnemySensors>();
-            animationController = GetComponent<AIAnimationController>();
-        }
+            _brain = brain;
+            _transform = transform;
+            _agent = agent;
+            _sensors = sensors;
+            _animationController = animationController;
+            _config = config;
+            _patrolPoints = patrolPoints;
 
-        void Start()
-        {
-            originalRotation = transform.rotation;
-            ResumeDefaultMovement();
-            if (patrolPoints.Length == 0)
+            _originalRotation = _transform.rotation;
+            
+            if (_patrolPoints == null || _patrolPoints.Length == 0)
             {
-                GameObject point = new GameObject("patrolPoint");
-                point.transform.position = transform.position;
-                point.transform.parent = transform.parent;
-                patrolPoints = new[] { point.transform };
+                GameObject point = new ("patrolPoint")
+                {
+                    transform =
+                    {
+                        position = _transform.position,
+                        parent = _transform.parent
+                    }
+                };
+                _patrolPoints = new[] { point.transform };
             }
+
+            ResumeDefaultMovement();
         }
 
         internal void SetSpeedMultiplier(float multiplier)
         {
-            agent.speed = basePlayerVelocity * multiplier;
+            _agent.speed = _config.basePlayerSpeed * multiplier;
         }
 
         internal void UpdateAngularSpeed(AgentState agentState)
         {
-            agent.angularSpeed = agentState switch
+            _agent.angularSpeed = agentState switch
             {
-                AgentState.Combat => combatAngularSpeed,
-                _ => baseAngularSpeed
+                AgentState.Combat => _config.combatAngularSpeed,
+                _ => _config.baseAngularSpeed
             };
         }
 
@@ -72,82 +65,82 @@ namespace EnemySystem
         internal void UpdatePatrolState()
         {
             UpdateAngularSpeed(AgentState.Patrol);
-            if (patrolPoints.Length == 0) return;
-            if (!agent.pathPending && agent.remainingDistance < 0.5f && !isWaiting)
+            if (_patrolPoints.Length == 0) return;
+            if (!_agent.pathPending && _agent.remainingDistance < 0.5f && !_isWaiting)
             {
-                StartCoroutine(PatrolWaitRoutine());
+                _brain.StartCoroutine(PatrolWaitRoutine());
             }
         }
 
         void GoToNextPatrolPoint()
         {
-            if (patrolPoints.Length == 0) return;
-            agent.destination = patrolPoints[currentPatrolIndex].position;
-            currentPatrolIndex = (currentPatrolIndex + 1) % patrolPoints.Length;
+            if (_patrolPoints.Length == 0) return;
+            _agent.destination = _patrolPoints[_currentPatrolIndex].position;
+            _currentPatrolIndex = (_currentPatrolIndex + 1) % _patrolPoints.Length;
         }
 
         // --- Coroutines & State Handlers ---
         internal void ResumeDefaultMovement()
         {
-            SetSpeedMultiplier(patrolSpeedMultiplier);
-            agent.isStopped = false;
-            isWaiting = false;
+            SetSpeedMultiplier(_config.patrolSpeedMultiplier);
+            _agent.isStopped = false;
+            _isWaiting = false;
             GoToNextPatrolPoint();
         }
 
         internal void StopAllMovementCoroutines()
         {
-            StopAllCoroutines();
-            isWaiting = false;
-            animationController.AgentLooking(false);
+            _brain.StopAllCoroutines();
+            _isWaiting = false;
+            _animationController.AgentLooking(false);
         }
 
         internal void StartLookAround(float duration, AICore brain)
         {
-            StartCoroutine(LookAroundRoutine(duration, brain));
+            _brain.StartCoroutine(LookAroundRoutine(duration, brain));
         }
 
         internal void StartInvestigate(float duration, Vector3 targetPos, AICore brain)
         {
-            StartCoroutine(InvestigateRoutine(duration, targetPos, brain));
+            _brain.StartCoroutine(InvestigateRoutine(duration, targetPos, brain));
         }
 
         IEnumerator PatrolWaitRoutine()
         {
-            isWaiting = true;
-            agent.isStopped = true;
-            animationController.AgentLooking(true);
-            yield return StartCoroutine(SweepRotationRoutine(waitTimeAtWaypoint, false, 30));
-            animationController.AgentLooking(false);
-            agent.isStopped = false;
+            _isWaiting = true;
+            _agent.isStopped = true;
+            _animationController.AgentLooking(true);
+            yield return _brain.StartCoroutine(SweepRotationRoutine(_config.waitTimeAtWaypoint, false, 30));
+            _animationController.AgentLooking(false);
+            _agent.isStopped = false;
             GoToNextPatrolPoint();
-            if (patrolPoints.Length <= 1) yield return StartCoroutine(FixRotationRoutine(originalRotation, waitTimeAtWaypoint));
-            isWaiting = false;
+            if (_patrolPoints.Length <= 1) yield return _brain.StartCoroutine(FixRotationRoutine(_originalRotation, _config.waitTimeAtWaypoint));
+            _isWaiting = false;
         }
 
         IEnumerator LookAroundRoutine(float duration, AICore brain)
         {
-            agent.isStopped = true;
-            yield return StartCoroutine(SweepRotationRoutine(duration, sensors.HasLineOfSight()));
-            agent.isStopped = false;
+            _agent.isStopped = true;
+            yield return _brain.StartCoroutine(SweepRotationRoutine(duration, _sensors.IsPlayerVisible));
+            _agent.isStopped = false;
             brain.ChangeState(AgentState.Patrol);
         }
 
         IEnumerator InvestigateRoutine(float duration, Vector3 targetPos, AICore brain)
         {
-            agent.isStopped = false;
-            agent.stoppingDistance = agentStopDistance;
+            _agent.isStopped = false;
+            _agent.stoppingDistance = _config.agentStopDistance;
             if (NavMesh.SamplePosition(targetPos, out NavMeshHit hit, 100f, NavMesh.AllAreas))
-                agent.SetDestination(hit.position);
+                _agent.SetDestination(hit.position);
 
-            while (agent.pathPending || agent.remainingDistance > agentStopDistance) yield return null;
+            while (_agent.pathPending || _agent.remainingDistance > _config.agentStopDistance) yield return null;
 
-            if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance) agent.velocity = Vector3.zero;
+            if (!_agent.pathPending && _agent.remainingDistance <= _agent.stoppingDistance) _agent.velocity = Vector3.zero;
             
-            agent.isStopped = true;
-            yield return StartCoroutine(SweepRotationRoutine(duration, false, 70f));
+            _agent.isStopped = true;
+            yield return _brain.StartCoroutine(SweepRotationRoutine(duration, false, 70f));
 
-            agent.isStopped = false;
+            _agent.isStopped = false;
             brain.DetermineAlertLevel(0.2f);
         }
 
@@ -155,36 +148,36 @@ namespace EnemySystem
         {
             float timer = 0f;
             bool lookingLeft = true;
-            Quaternion centerRotation = transform.rotation;
+            Quaternion centerRotation = _transform.rotation;
 
             while (timer < duration)
             {
                 if (trackLastKnownPosition)
                 {
-                    Vector3 direction = (sensors.LastKnownPosition - transform.position).normalized;
+                    Vector3 direction = (_sensors.LastKnownPosition - _transform.position).normalized;
                     if (direction != Vector3.zero)
                         centerRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
 
-                    if (sensors.HasLineOfSight())
+                    if (_sensors.IsPlayerVisible)
                     {
                         timer = 0f;
-                        transform.rotation = Quaternion.RotateTowards(transform.rotation, centerRotation,
-                            agent.angularSpeed * Time.deltaTime);
+                        _transform.rotation = Quaternion.RotateTowards(_transform.rotation, centerRotation,
+                            _agent.angularSpeed * Time.deltaTime);
                         yield return null;
                         continue;
                     }
                 }
                 else
                 {
-                    if (sensors.HasLineOfSight()) break;
+                    if (_sensors.IsPlayerVisible) break;
                 }
 
                 timer += Time.deltaTime;
                 Quaternion targetSweep = centerRotation * Quaternion.Euler(0, lookingLeft ? -lookAngle : lookAngle, 0);
-                transform.rotation = Quaternion.RotateTowards(transform.rotation, targetSweep,
-                    agent.angularSpeed * Time.deltaTime / 2f);
+                _transform.rotation = Quaternion.RotateTowards(_transform.rotation, targetSweep,
+                    _agent.angularSpeed * Time.deltaTime / 2f);
 
-                if (Quaternion.Angle(transform.rotation, targetSweep) < 1f) lookingLeft = !lookingLeft;
+                if (Quaternion.Angle(_transform.rotation, targetSweep) < 1f) lookingLeft = !lookingLeft;
                 yield return null;
             }
         }
@@ -196,8 +189,8 @@ namespace EnemySystem
             while (timer < duration)
             {
                 timer += Time.deltaTime;
-                transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation,
-                    agent.angularSpeed * Time.deltaTime / 2f);
+                _transform.rotation = Quaternion.RotateTowards(_transform.rotation, targetRotation,
+                    _agent.angularSpeed * Time.deltaTime / 2f);
                 
                 yield return null;
             }

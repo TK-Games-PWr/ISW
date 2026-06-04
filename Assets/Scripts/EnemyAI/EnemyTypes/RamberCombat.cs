@@ -7,7 +7,7 @@ namespace EnemySystem
     {
         internal override void HandleCombatMovement(Transform playerTransform, float distanceToPlayer, bool hasLOS)
         {
-            movement.SetSpeedMultiplier(combatSpeedMultiplier);
+            movementOld.SetSpeedMultiplier(combatSpeedMultiplier);
 
             Vector3 direction = (playerTransform.position - transform.position).normalized;
             Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
@@ -20,7 +20,7 @@ namespace EnemySystem
             }
             else
             {
-                agent.stoppingDistance = movement.agentStopDistance;
+                agent.stoppingDistance = movementOld.agentStopDistance;
                 agent.SetDestination(playerTransform.position); // Chase
                 if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance) agent.velocity = Vector3.zero;
             }
