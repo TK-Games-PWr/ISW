@@ -3,6 +3,13 @@ using UnityEngine;
 using EnemySystem;
 using UnityEngine.AI;
 
+public enum EnemyType
+{
+    Normal,
+    Rambenemy,
+    CoverGuy
+}
+
 public enum AgentState
 {
     Patrol,
@@ -17,6 +24,12 @@ public enum AlertLevel
     Medium,
     High,
     Extreme
+}
+
+public enum WeaponType 
+{ 
+    Pistol, 
+    Shotgun
 }
 
 [CreateAssetMenu(fileName = "NewEnemyConfig", menuName = "AI/Enemy Configuration")]
@@ -36,7 +49,21 @@ public class EnemyConfig : ScriptableObject
 
     [Title("Combat Settings")]
     [SerializeReference]
-    public CombatConfig combat = new NormalCombatConfig();
+    public CombatConfig normalCombat = new NormalCombatConfig();
+    [SerializeReference]
+    public CombatConfig coverGuyCombat = new CoverGuyCombatConfig();
+    [SerializeReference]
+    public CombatConfig rambenemyCombat = new RambenemyCombatConfig();
+    
+    public CombatConfig GetCombatConfig(EnemyType type)
+    {
+        return type switch
+        {
+            EnemyType.CoverGuy => coverGuyCombat,
+            EnemyType.Rambenemy => rambenemyCombat,
+            _ => normalCombat // Default fallback
+        };
+    }
 }
 
 [System.Serializable]
@@ -100,6 +127,8 @@ public class AlertConfig
 [System.Serializable]
 public abstract class CombatConfig
 {
+    [Header("Equipment")]
+    public WeaponType preferredWeapon = WeaponType.Pistol;
     public float weaponRange = 25f;
     public float optimalCombatDistancePct = 0.7f;
     public float combatSpeedMultiplier = 1.3f;

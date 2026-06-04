@@ -67,6 +67,7 @@ namespace EnemySystem
         internal virtual void HandleCombatMovement(Transform playerTransform, float distanceToPlayer, bool hasLOS)
         {
             movement.SetSpeedMultiplier(config.combatSpeedMultiplier);
+            agent.isStopped = false;
 
             Vector3 direction = (playerTransform.position - transform.position).normalized;
             Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));

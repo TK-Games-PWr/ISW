@@ -40,3 +40,40 @@ MonoBehaviour:
     fightDelay: 1
     triggerMultiplierTimeout: 2
     endCombatTimeout: 10
+  normalCombat:
+    rid: 4080402104110547108
+  coverGuyCombat:
+    rid: 4080402104110547109
+  rambenemyCombat:
+    rid: 4080402104110547110
+  references:
+    version: 2
+    RefIds:
+    - rid: 4080402104110547108
+      type: {class: NormalCombatConfig, ns: , asm: Assembly-CSharp}
+      data:
+        preferredWeapon: 0
+        weaponRange: 25
+        optimalCombatDistancePct: 0.7
+        combatSpeedMultiplier: 1.3
+        retreatSpeedMultiplier: 0.3
+        singleShotDelay: 0.6
+    - rid: 4080402104110547109
+      type: {class: CoverGuyCombatConfig, ns: , asm: Assembly-CSharp}
+      data:
+        preferredWeapon: 0
+        weaponRange: 20
+        optimalCombatDistancePct: 0.7
+        combatSpeedMultiplier: 1.3
+        retreatSpeedMultiplier: 0.3
+        singleShotDelay: 0.6
+        hidingSpeedMultiplier: 2
+    - rid: 4080402104110547110
+      type: {class: RambenemyCombatConfig, ns: , asm: Assembly-CSharp}
+      data:
+        preferredWeapon: 1
+        weaponRange: 10
+        optimalCombatDistancePct: 0.7
+        combatSpeedMultiplier: 1.3
+        retreatSpeedMultiplier: 0.3
+        singleShotDelay: 0.6

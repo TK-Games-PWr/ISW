@@ -8,13 +8,6 @@ public class EnemyManager : SerializedMonoBehaviour
 {
     public static EnemyManager Instance { get; private set; }
 
-    public enum EnemyType
-    {
-        Normal,
-        Rambenemy,
-        CoverGuy
-    }
-
     [SerializeField] bool logsEnabled = false;
 
     [SerializeField] Dictionary<EnemyType, int> _specialEnemyCount;

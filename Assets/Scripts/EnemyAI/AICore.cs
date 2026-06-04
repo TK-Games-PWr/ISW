@@ -27,10 +27,6 @@ namespace EnemySystem
         public EnemyResources Resources { get; private set; }
         public EnemyAlertSystem AlertSystem { get; private set; }
 
-        EnemyCombat _baseEnemyCombat;
-        EnemyCombat _rambEnemyCombat;
-        EnemyCombat _coverEnemyCombat;
-
         float _lastAlertTime = 0f;
         public float TimeInCombat { get; private set; } = 0f;
 
@@ -174,30 +170,14 @@ namespace EnemySystem
 
         public void ChangeEnemyType(EnemyType type)
         {
-            if (Resources.currentGun)
-            {
-                Resources.currentGun.gameObject.SetActive(false);
-            }
-
-            Resources.currentGun = FindGunForType(type);
-            Resources.currentGun.gameObject.SetActive(true);
-
-            // Instantiate and swap the combat module polymorphically
+            CombatConfig selectedConfig = config.GetCombatConfig(type);
+            
+            Resources.SwitchWeapon(selectedConfig.preferredWeapon);
+            
             NavMeshAgent agent = GetComponent<NavMeshAgent>();
-            Combat = config.combat.CreateCombatInstance(this, transform, agent, Sensors, Movement, Resources);
-
-            // Initialize the new combat module
+            Combat = selectedConfig.CreateCombatInstance(this, transform, agent, Sensors, Movement, Resources);
+            
             Combat.Init();
-        }
-
-        PlayerShootingSystem.Gun FindGunForType(EnemyType type)
-        {
-            if (type == EnemyType.Rambenemy)
-            {
-                return Resources.shotgunWeapon;
-            }
-
-            return Resources.glockWeapon;
         }
     }
 }

@@ -36,6 +36,20 @@ namespace EnemySystem
 
         }
 
+        public void SwitchWeapon(WeaponType weaponType)
+        {
+            currentGun.gameObject.SetActive(false);
+            
+            currentGun = weaponType switch
+            {
+                WeaponType.Shotgun => shotgunWeapon,
+                WeaponType.Pistol => glockWeapon,
+                _ => glockWeapon // Default fallback
+            };
+            
+            currentGun.gameObject.SetActive(true);
+        }
+
         public void Damage(float amount)
         {
             if (IsDead) return;
