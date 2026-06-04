@@ -29,7 +29,7 @@ namespace EnemySystem
             }
             else
             {
-                agent.stoppingDistance = brain.config.movement.agentStopDistance;
+                agent.stoppingDistance = brain.Config.movement.agentStopDistance;
                 agent.SetDestination(playerTransform.position); // Chase
                 if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance) agent.velocity = Vector3.zero;
             }

@@ -24,7 +24,7 @@ namespace EnemySystem
 
         public void Tick(float tickRate)
         {
-            if (_brain._currentAgentState != AgentState.Combat)
+            if (_brain.currentAgentState != AgentState.Combat)
             {
                 UpdateAlertSystem(tickRate);
             }
@@ -44,7 +44,7 @@ namespace EnemySystem
             }
             else
             {
-                if (_brain._currentAgentState != AgentState.Alert && Time.time - _lastAlertTime >= _config.triggerMultiplierTimeout)
+                if (_brain.currentAgentState != AgentState.Alert && Time.time - _lastAlertTime >= _config.triggerMultiplierTimeout)
                 {
                     if (TriggerMultiplier > 0)
                     {
@@ -56,7 +56,7 @@ namespace EnemySystem
                     }
                 }
 
-                if (_brain._currentAgentState != AgentState.Combat && Time.time - _lastAlertTime > _config.timeToLoseAlertLevel)
+                if (_brain.currentAgentState != AgentState.Combat && Time.time - _lastAlertTime > _config.timeToLoseAlertLevel)
                 {
                     if (CurrentAlertLevel == AlertLevel.None)
                     {
@@ -124,7 +124,7 @@ namespace EnemySystem
         // Called by EnemyResources when damaged from stealth
         internal void ForceAlertSpike()
         {
-            if (_brain._currentAgentState != AgentState.Combat)
+            if (_brain.currentAgentState != AgentState.Combat)
             {
                 TriggerMultiplier = 2f;
                 DetermineAlertLevel();

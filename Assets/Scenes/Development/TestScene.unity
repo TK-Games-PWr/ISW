@@ -3795,6 +3795,82 @@ PrefabInstance:
       propertyPath: m_Name
       value: Enemy (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[1].enumValue
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[0].floatValue
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[0].currentType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[1].currentType
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[1].stringValue
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[2].currentType
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[3].currentType
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[0].variablePath
+      value: maxHealth
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[1].variablePath
+      value: sensors.enemyLayer
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[2].variablePath
+      value: sensors.sightObstaclesMask
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[3].variablePath
+      value: coverGuyCombat.preferredWeapon
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[0].overrideValue
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[1].overrideValue
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[3].enumStringValue
+      value: Shotgun
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[1].layerMaskValue.m_Bits
+      value: 256
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[2].layerMaskValue.m_Bits
+      value: 209
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[1].enumAssemblyQualifiedName
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[3].enumAssemblyQualifiedName
+      value: WeaponType, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4866,6 +4942,10 @@ PrefabInstance:
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
       propertyPath: 'patrolPoints.Array.data[0]'
       value: 
       objectReference: {fileID: 811993973}
@@ -4877,6 +4957,22 @@ PrefabInstance:
       propertyPath: 'patrolPoints.Array.data[2]'
       value: 
       objectReference: {fileID: 1541572116}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[0].variablePath
+      value: sensors.horizontalFOV
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[1].variablePath
+      value: sensors.maxSightDistance
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[0].overrideValue
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[1].overrideValue
+      value: 50
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

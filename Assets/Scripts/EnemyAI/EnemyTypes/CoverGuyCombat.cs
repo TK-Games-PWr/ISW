@@ -16,7 +16,7 @@ namespace EnemySystem
 
         protected internal override void Init()
         {
-            _checkCoverMask = brain.config.sensors.sightObstaclesMask;
+            _checkCoverMask = brain.Config.sensors.sightObstaclesMask;
             _checkCoverMask |= (1 << playerLayerMask);
             base.Init();
         }
@@ -35,7 +35,7 @@ namespace EnemySystem
             }
             else
             {
-                agent.stoppingDistance = brain.config.movement.agentStopDistance;
+                agent.stoppingDistance = brain.Config.movement.agentStopDistance;
                 agent.SetDestination(playerTransform.position); // Chase
                 if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance) agent.velocity = Vector3.zero;
             }
@@ -51,7 +51,7 @@ namespace EnemySystem
         {
             if (Physics.Linecast(transform.position + new Vector3(0, 1, 0), playerTransform.position, out RaycastHit hit, _checkCoverMask))
             {
-                if (!hit.collider.CompareTag(brain.config.sensors.playerTag)) return true;
+                if (!hit.collider.CompareTag(brain.Config.sensors.playerTag)) return true;
             }
 
             return false;

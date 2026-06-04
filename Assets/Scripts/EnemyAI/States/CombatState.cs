@@ -39,12 +39,12 @@ namespace EnemySystem.States
             _hasLos = _brain.Sensors.IsPlayerVisible;
             _brain.Combat.RotateTowardsPlayer(_brain.Sensors.PlayerTransform);
 
-            if (_brain.config.alert.fightDelay > _timeInCombat) return;
+            if (_brain.Config.alert.fightDelay > _timeInCombat) return;
 
             if (!_hasLos)
             {
                 _combatLostPlayerTime += Time.deltaTime;
-                if (_combatLostPlayerTime >= _brain.config.alert.endCombatTimeout)
+                if (_combatLostPlayerTime >= _brain.Config.alert.endCombatTimeout)
                 {
                     _brain.AlertSystem.TriggerMultiplier = 0.9f;
                     _brain.AlertSystem.DetermineAlertLevel();

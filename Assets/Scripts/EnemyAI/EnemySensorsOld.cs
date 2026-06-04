@@ -33,7 +33,7 @@ namespace EnemySystem
         float playerEyeLevel => PlayerActionsController.EyeLevel;
 
         float CurrentVerticalFOV =>
-            (_brain != null && _brain._currentAgentState != AgentState.Patrol) ? alertedVerticalFOV : verticalFOV;
+            (_brain != null && _brain.currentAgentState != AgentState.Patrol) ? alertedVerticalFOV : verticalFOV;
 
         void Start()
         {
@@ -93,7 +93,7 @@ namespace EnemySystem
             foreach (var hitCollider in hitColliders)
             {
                 AICore nearbyEnemy = hitCollider.GetComponent<AICore>();
-                if (nearbyEnemy != null && nearbyEnemy != GetComponent<AICore>() && nearbyEnemy._currentAgentState != AgentState.Combat)
+                if (nearbyEnemy != null && nearbyEnemy != GetComponent<AICore>() && nearbyEnemy.currentAgentState != AgentState.Combat)
                 {
                     // nearbyEnemy.triggerMultiplier = 2f;
                     // nearbyEnemy.DetermineAlertLevel();

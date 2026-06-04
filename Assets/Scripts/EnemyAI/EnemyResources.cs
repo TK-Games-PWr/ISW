@@ -10,7 +10,7 @@ namespace EnemySystem
     {
         public static event Action<EnemyResources> OnEnemyDied;
 
-        [SerializeField] float maxHealth = 75f;
+        float _maxHealth;
 
         float _currentHealth;
         AICore _brain;
@@ -28,12 +28,12 @@ namespace EnemySystem
         [Tooltip("Total amount of bullets, specified in magazines of current weapon")]
         [SerializeField] internal int totalMagazines = 1;
 
-        void Awake()
+        internal void Init()
         {
-            _currentHealth = maxHealth;
             _brain = GetComponent<AICore>();
+            _maxHealth = _brain.Config.maxHealth;
+            _currentHealth = _maxHealth;
            _animController = GetComponent<AIAnimationController>();
-
         }
 
         public void SwitchWeapon(WeaponType weaponType)
@@ -54,7 +54,7 @@ namespace EnemySystem
         {
             if (IsDead) return;
 
-            _currentHealth = Mathf.Clamp(_currentHealth - amount, 0, maxHealth);
+            _currentHealth = Mathf.Clamp(_currentHealth - amount, 0, _maxHealth);
 
             if (IsDead)
             {

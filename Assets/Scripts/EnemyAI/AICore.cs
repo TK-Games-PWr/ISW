@@ -1,18 +1,21 @@
 using UnityEngine;
 using System;
+using System.Collections.Generic;
 using EnemySystem.States;
+using Sirenix.OdinInspector;
 using UnityEngine.AI;
 
 namespace EnemySystem
 {
     [RequireComponent(typeof(EnemyResources))]
-    public class AICore : MonoBehaviour, IHearingTarget
+    public partial class AICore : MonoBehaviour, IHearingTarget
     {
         // --- Events ---
         public static event Action<AICore, float, AlertLevel> OnAlertChanged;
-        
+
         [Header("Configuration")]
-        public EnemyConfig config;
+        public EnemyConfig baseConfig;
+        public EnemyConfig Config { get; private set; }
 
         [Header("Patrol Settings")]
         public Transform[] patrolPoints;
@@ -29,8 +32,7 @@ namespace EnemySystem
         PatrolState _patrolState;
         AlertState _alertState;
         CombatState _combatState;
-
-        float _lastAlertTime = 0f;
+        
         float _tickTimer = 0f;
         [SerializeField] float tickRate = 0.1f;
 
@@ -39,17 +41,26 @@ namespace EnemySystem
         [Tooltip("Disables hearing system connection, useful for putting agent in menu background.")] [SerializeField]
         bool isDeaf = false;
         
-        internal AgentState _currentAgentState = AgentState.Patrol;
+        [Header("Stat Overrides")]
+        [ListDrawerSettings(ShowIndexLabels = false)]
+        public List<StatOverride> statOverrides = new ();
+        
+        internal AgentState currentAgentState = AgentState.Patrol;
 
         void Awake()
         {
+            Config = Instantiate(baseConfig);
+            ApplyOverrides();
+            
             Resources = GetComponent<EnemyResources>();
+            Resources.Init();
+            
             NavMeshAgent agent = GetComponent<NavMeshAgent>();
             AIAnimationController animController = GetComponent<AIAnimationController>();
             
-            Sensors = new EnemySensors(this, transform, config.sensors);
-            Movement = new EnemyMovement(this, transform, agent, Sensors, animController, config.movement, patrolPoints);
-            AlertSystem = new EnemyAlertSystem(this, Sensors, Movement, config.alert);
+            Sensors = new EnemySensors(this, transform, Config.sensors);
+            Movement = new EnemyMovement(this, transform, agent, Sensors, animController, Config.movement, patrolPoints);
+            AlertSystem = new EnemyAlertSystem(this, Sensors, Movement, Config.alert);
             
             _patrolState = new PatrolState(this);
             _alertState = new AlertState(this);
@@ -121,10 +132,10 @@ namespace EnemySystem
 
         internal void ChangeState(AgentState newAgentState)
         {
-            if (_currentAgentState == newAgentState) return;
+            if (currentAgentState == newAgentState) return;
             _currentState?.Exit();
             
-            _currentAgentState = newAgentState;
+            currentAgentState = newAgentState;
 
             _currentState = newAgentState switch
             {
@@ -144,7 +155,7 @@ namespace EnemySystem
 
         public void ChangeEnemyType(EnemyType type)
         {
-            CombatConfig selectedConfig = config.GetCombatConfig(type);
+            CombatConfig selectedConfig = Config.GetCombatConfig(type);
             
             Resources.SwitchWeapon(selectedConfig.preferredWeapon);
             
