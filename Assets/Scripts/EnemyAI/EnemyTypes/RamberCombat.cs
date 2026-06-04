@@ -5,7 +5,7 @@ namespace EnemySystem
 {
     public class RamberCombat : EnemyCombat
     {
-        public RamberCombat(AICore brain, Transform transform, NavMeshAgent agent, EnemySensors sensors, EnemyMovement movement, EnemyResources resources, RambenemyCombatConfig config) 
+        public RamberCombat(EnemyBrain brain, Transform transform, NavMeshAgent agent, EnemySensors sensors, EnemyMovement movement, EnemyResources resources, RambenemyCombatConfig config) 
             : base(brain, transform, agent, sensors, movement, resources, config)
         {
         }

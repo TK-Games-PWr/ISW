@@ -2,9 +2,9 @@ namespace EnemySystem.States
 {
     public class PatrolState : IEnemyState
     {
-        AICore _brain;
+        EnemyBrain _brain;
 
-        public PatrolState(AICore brain)
+        public PatrolState(EnemyBrain brain)
         {
             _brain = brain;
         }

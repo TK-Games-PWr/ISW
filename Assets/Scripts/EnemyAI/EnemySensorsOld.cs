@@ -6,7 +6,7 @@ namespace EnemySystem
 {
     public class EnemySensorsOld : MonoBehaviour
     {
-        [InfoBox("This script is deprecated. Remove it after migrating settings to overrides in AICore and/or EnemyConfig Scriptable Object.", InfoMessageType.Warning)]
+        [InfoBox("This script is deprecated. Remove it after migrating settings to overrides in EnemyBrain and/or EnemyConfig Scriptable Object.", InfoMessageType.Warning)]
         
         [Header("Targeting")]
         [SerializeField] internal string playerTag = "Player";
@@ -28,7 +28,7 @@ namespace EnemySystem
         internal Vector3 LastKnownPosition { get; private set; }
         internal PlayerResources PlayerResources { get; private set; }
 
-        AICore _brain;
+        EnemyBrain _brain;
 
         float playerEyeLevel => PlayerActionsController.EyeLevel;
 
@@ -37,7 +37,7 @@ namespace EnemySystem
 
         void Start()
         {
-            _brain = GetComponent<AICore>();
+            _brain = GetComponent<EnemyBrain>();
             GameObject player = GameObject.FindGameObjectWithTag(playerTag);
             if (player != null)
             {
@@ -92,8 +92,8 @@ namespace EnemySystem
             Collider[] hitColliders = Physics.OverlapSphere(transform.position, hearingRadius, enemyLayer);
             foreach (var hitCollider in hitColliders)
             {
-                AICore nearbyEnemy = hitCollider.GetComponent<AICore>();
-                if (nearbyEnemy != null && nearbyEnemy != GetComponent<AICore>() && nearbyEnemy.currentAgentState != AgentState.Combat)
+                EnemyBrain nearbyEnemy = hitCollider.GetComponent<EnemyBrain>();
+                if (nearbyEnemy != null && nearbyEnemy != GetComponent<EnemyBrain>() && nearbyEnemy.currentAgentState != AgentState.Combat)
                 {
                     // nearbyEnemy.triggerMultiplier = 2f;
                     // nearbyEnemy.DetermineAlertLevel();

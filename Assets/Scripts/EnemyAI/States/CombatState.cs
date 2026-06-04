@@ -4,14 +4,14 @@ namespace EnemySystem.States
 {
     public class CombatState : IEnemyState
     {
-        AICore _brain;
+        EnemyBrain _brain;
         float _combatLostPlayerTime = 0f;
         float _timeInCombat = 0f;
 
         bool _hasLos = false;
         float _distanceToPlayer = Mathf.Infinity;
 
-        public CombatState(AICore brain)
+        public CombatState(EnemyBrain brain)
         {
             _brain = brain;
         }

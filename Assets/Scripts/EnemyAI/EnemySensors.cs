@@ -12,14 +12,14 @@ namespace EnemySystem
 
         SensorConfig _config;
         Transform _transform;
-        AICore _brain;
+        EnemyBrain _brain;
 
         float playerEyeLevel => PlayerActionsController.EyeLevel;
 
         float CurrentVerticalFOV =>
             (_brain != null && _brain.currentAgentState != AgentState.Patrol) ? _config.alertedVerticalFOV : _config.verticalFOV;
 
-        public EnemySensors(AICore brain, Transform transform, SensorConfig config)
+        public EnemySensors(EnemyBrain brain, Transform transform, SensorConfig config)
         {
             _brain = brain;
             _transform = transform;
@@ -84,7 +84,7 @@ namespace EnemySystem
             Collider[] hitColliders = Physics.OverlapSphere(_transform.position, _config.hearingRadius, _config.enemyLayer);
             foreach (var hitCollider in hitColliders)
             {
-                AICore nearbyEnemy = hitCollider.GetComponent<AICore>();
+                EnemyBrain nearbyEnemy = hitCollider.GetComponent<EnemyBrain>();
                 if (nearbyEnemy != null && nearbyEnemy != _brain && nearbyEnemy.currentAgentState != AgentState.Combat)
                 {
                     nearbyEnemy.AlertSystem.TriggerMultiplier = 2f;

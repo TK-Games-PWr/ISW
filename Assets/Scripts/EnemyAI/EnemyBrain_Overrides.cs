@@ -90,7 +90,7 @@ namespace EnemySystem
 #endif
     }
     
-    public partial class AICore
+    public partial class EnemyBrain
     {
         void ApplyOverrides()
         {

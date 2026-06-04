@@ -13,7 +13,7 @@ namespace EnemySystem
         float _maxHealth;
 
         float _currentHealth;
-        AICore _brain;
+        EnemyBrain _brain;
         AIAnimationController _animController;
 
         public bool IsDead => _currentHealth <= 0;
@@ -30,7 +30,7 @@ namespace EnemySystem
 
         internal void Init()
         {
-            _brain = GetComponent<AICore>();
+            _brain = GetComponent<EnemyBrain>();
             _maxHealth = _brain.Config.maxHealth;
             _currentHealth = _maxHealth;
            _animController = GetComponent<AIAnimationController>();

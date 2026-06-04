@@ -136,13 +136,13 @@ public abstract class CombatConfig
     [Tooltip("Extra delay added between shots for semi-automatic weapons to simulate an AI's trigger finger.")]
     public float singleShotDelay = 0.6f;
 
-    public abstract EnemyCombat CreateCombatInstance(AICore brain, Transform transform, NavMeshAgent agent, EnemySensors sensors, EnemyMovement movement, EnemyResources resources);
+    public abstract EnemyCombat CreateCombatInstance(EnemyBrain brain, Transform transform, NavMeshAgent agent, EnemySensors sensors, EnemyMovement movement, EnemyResources resources);
 }
 
 [System.Serializable]
 public class NormalCombatConfig : CombatConfig
 {
-    public override EnemyCombat CreateCombatInstance(AICore brain, Transform transform, NavMeshAgent agent, EnemySensors sensors, EnemyMovement movement, EnemyResources resources)
+    public override EnemyCombat CreateCombatInstance(EnemyBrain brain, Transform transform, NavMeshAgent agent, EnemySensors sensors, EnemyMovement movement, EnemyResources resources)
     {
         return new EnemyCombat(brain, transform, agent, sensors, movement, resources, this);
     }
@@ -151,7 +151,7 @@ public class NormalCombatConfig : CombatConfig
 [System.Serializable]
 public class RambenemyCombatConfig : CombatConfig
 {
-    public override EnemyCombat CreateCombatInstance(AICore brain, Transform transform, NavMeshAgent agent, EnemySensors sensors, EnemyMovement movement, EnemyResources resources)
+    public override EnemyCombat CreateCombatInstance(EnemyBrain brain, Transform transform, NavMeshAgent agent, EnemySensors sensors, EnemyMovement movement, EnemyResources resources)
     {
         return new RamberCombat(brain, transform, agent, sensors, movement, resources, this);
     }
@@ -163,7 +163,7 @@ public class CoverGuyCombatConfig : CombatConfig
     [Header("Cover Guy Specific")]
     public float hidingSpeedMultiplier = 2f;
 
-    public override EnemyCombat CreateCombatInstance(AICore brain, Transform transform, NavMeshAgent agent, EnemySensors sensors, EnemyMovement movement, EnemyResources resources)
+    public override EnemyCombat CreateCombatInstance(EnemyBrain brain, Transform transform, NavMeshAgent agent, EnemySensors sensors, EnemyMovement movement, EnemyResources resources)
     {
         return new CoverGuyCombat(brain, transform, agent, sensors, movement, resources, this);
     }

@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
-using static EnemySystem.AICore;
+using static EnemySystem.EnemyBrain;
 
 [RequireComponent(typeof(RectTransform))]
 public class AlertIndicatorUI : MonoBehaviour

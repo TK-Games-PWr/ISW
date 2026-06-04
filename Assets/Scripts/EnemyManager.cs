@@ -13,7 +13,7 @@ public class EnemyManager : SerializedMonoBehaviour
     [SerializeField] Dictionary<EnemyType, int> _specialEnemyCount;
     
     [SerializeField]
-    List<AICore> aiData;
+    List<EnemyBrain> aiData;
 
     void Awake()
     {
@@ -29,7 +29,7 @@ public class EnemyManager : SerializedMonoBehaviour
 
     void Reset()
     {
-        aiData = FindObjectsByType<AICore>(FindObjectsSortMode.None).ToList();
+        aiData = FindObjectsByType<EnemyBrain>(FindObjectsSortMode.None).ToList();
     }
 
     public void InitializeLevel()

@@ -8,7 +8,7 @@ namespace EnemySystem
         LayerMask playerLayerMask;
         LayerMask _checkCoverMask;
         
-        public CoverGuyCombat(AICore brain, Transform transform, NavMeshAgent agent, EnemySensors sensors, EnemyMovement movement, EnemyResources resources, CoverGuyCombatConfig config) 
+        public CoverGuyCombat(EnemyBrain brain, Transform transform, NavMeshAgent agent, EnemySensors sensors, EnemyMovement movement, EnemyResources resources, CoverGuyCombatConfig config) 
             : base(brain, transform, agent, sensors, movement, resources, config)
         {
             this.config = config;

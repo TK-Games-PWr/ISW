@@ -10,7 +10,7 @@ namespace EnemySystem
         NavMeshAgent _agent;
         EnemySensors _sensors;
         AIAnimationController _animationController;
-        AICore _brain;
+        EnemyBrain _brain;
         Transform _transform;
 
         Transform[] _patrolPoints;
@@ -19,7 +19,7 @@ namespace EnemySystem
 
         Quaternion _originalRotation; // Used when there is only one patrol point so enemy doesn't drift
 
-        public EnemyMovement(AICore brain, Transform transform, NavMeshAgent agent, EnemySensors sensors, AIAnimationController animationController, MovementConfig config, Transform[] patrolPoints)
+        public EnemyMovement(EnemyBrain brain, Transform transform, NavMeshAgent agent, EnemySensors sensors, AIAnimationController animationController, MovementConfig config, Transform[] patrolPoints)
         {
             _brain = brain;
             _transform = transform;
@@ -95,12 +95,12 @@ namespace EnemySystem
             _animationController.AgentLooking(false);
         }
 
-        internal void StartLookAround(float duration, AICore brain)
+        internal void StartLookAround(float duration, EnemyBrain brain)
         {
             _brain.StartCoroutine(LookAroundRoutine(duration, brain));
         }
 
-        internal void StartInvestigate(float duration, Vector3 targetPos, AICore brain)
+        internal void StartInvestigate(float duration, Vector3 targetPos, EnemyBrain brain)
         {
             _brain.StartCoroutine(InvestigateRoutine(duration, targetPos, brain));
         }
@@ -118,7 +118,7 @@ namespace EnemySystem
             _isWaiting = false;
         }
 
-        IEnumerator LookAroundRoutine(float duration, AICore brain)
+        IEnumerator LookAroundRoutine(float duration, EnemyBrain brain)
         {
             _agent.isStopped = true;
             yield return _brain.StartCoroutine(SweepRotationRoutine(duration, _sensors.IsPlayerVisible));
@@ -126,7 +126,7 @@ namespace EnemySystem
             brain.ChangeState(AgentState.Patrol);
         }
 
-        IEnumerator InvestigateRoutine(float duration, Vector3 targetPos, AICore brain)
+        IEnumerator InvestigateRoutine(float duration, Vector3 targetPos, EnemyBrain brain)
         {
             _agent.isStopped = false;
             _agent.stoppingDistance = _config.agentStopDistance;

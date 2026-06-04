@@ -7,14 +7,14 @@ namespace EnemySystem
         public AlertLevel CurrentAlertLevel { get; private set; } = AlertLevel.None;
         public float TriggerMultiplier { get; set; } = 0f;
 
-        AICore _brain;
+        EnemyBrain _brain;
         EnemySensors _sensors;
         EnemyMovement _movement;
         AlertConfig _config;
 
         float _lastAlertTime = 0f;
 
-        public EnemyAlertSystem(AICore brain, EnemySensors sensors, EnemyMovement movement, AlertConfig config)
+        public EnemyAlertSystem(EnemyBrain brain, EnemySensors sensors, EnemyMovement movement, AlertConfig config)
         {
             _brain = brain;
             _sensors = sensors;

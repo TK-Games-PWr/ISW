@@ -8,10 +8,10 @@ using UnityEngine.AI;
 namespace EnemySystem
 {
     [RequireComponent(typeof(EnemyResources))]
-    public partial class AICore : MonoBehaviour, IHearingTarget
+    public partial class EnemyBrain : MonoBehaviour, IHearingTarget
     {
         // --- Events ---
-        public static event Action<AICore, float, AlertLevel> OnAlertChanged;
+        public static event Action<EnemyBrain, float, AlertLevel> OnAlertChanged;
 
         [Header("Configuration")]
         public EnemyConfig baseConfig;

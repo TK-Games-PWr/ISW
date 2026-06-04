@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using EnemySystem;
-using static EnemySystem.AICore;
+using static EnemySystem.EnemyBrain;
 
 public class AlertNotificator : MonoBehaviour
 {
@@ -13,7 +13,7 @@ public class AlertNotificator : MonoBehaviour
     [Tooltip("The UI container where these indicators will be spawned.")]
     [SerializeField] Transform container;
 
-    private Dictionary<AICore, AlertIndicatorUI> activeIndicators = new Dictionary<AICore, AlertIndicatorUI>();
+    private Dictionary<EnemyBrain, AlertIndicatorUI> activeIndicators = new Dictionary<EnemyBrain, AlertIndicatorUI>();
 
     private void OnEnable()
     {
@@ -33,7 +33,7 @@ public class AlertNotificator : MonoBehaviour
 
         foreach (var kvp in activeIndicators)
         {
-            AICore enemy = kvp.Key;
+            EnemyBrain enemy = kvp.Key;
             AlertIndicatorUI indicator = kvp.Value;
 
             if (enemy != null && indicator != null)
@@ -51,7 +51,7 @@ public class AlertNotificator : MonoBehaviour
         }
     }
 
-    private void HandleAlertChanged(AICore enemy, float value, AlertLevel alertLevel)
+    private void HandleAlertChanged(EnemyBrain enemy, float value, AlertLevel alertLevel)
     {
         if (alertLevel == AlertLevel.None && value <= 0f)
         {
@@ -70,14 +70,14 @@ public class AlertNotificator : MonoBehaviour
 
     private void HandleEnemyDied(EnemyResources enemyResources)
     {
-        AICore enemy = enemyResources.GetComponent<AICore>();
+        EnemyBrain enemy = enemyResources.GetComponent<EnemyBrain>();
         if (enemy != null)
         {
             RemoveIndicator(enemy);
         }
     }
 
-    private void RemoveIndicator(AICore enemy)
+    private void RemoveIndicator(EnemyBrain enemy)
     {
         if (activeIndicators.TryGetValue(enemy, out AlertIndicatorUI indicator))
         {

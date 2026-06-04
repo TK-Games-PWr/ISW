@@ -16,7 +16,7 @@ namespace EnemySystem
         protected EnemySensors sensors;
         protected EnemyMovement movement;
         protected EnemyResources resources;
-        protected AICore brain;
+        protected EnemyBrain brain;
 
         protected int availableAmmo;
 
@@ -29,7 +29,7 @@ namespace EnemySystem
         protected int currentAmmo;
         protected float nextFireTime = 0f;
         
-        public EnemyCombat(AICore brain, Transform transform, NavMeshAgent agent, EnemySensors sensors, EnemyMovement movement, EnemyResources resources, CombatConfig config)
+        public EnemyCombat(EnemyBrain brain, Transform transform, NavMeshAgent agent, EnemySensors sensors, EnemyMovement movement, EnemyResources resources, CombatConfig config)
         {
             this.brain = brain;
             this.transform = transform;

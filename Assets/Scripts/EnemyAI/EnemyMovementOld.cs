@@ -8,7 +8,7 @@ namespace EnemySystem
     [RequireComponent(typeof(NavMeshAgent))]
     public class EnemyMovementOld : MonoBehaviour
     {
-        [InfoBox("This script is deprecated. Remove it after migrating settings to overrides in AICore and/or EnemyConfig Scriptable Object.", InfoMessageType.Warning)]
+        [InfoBox("This script is deprecated. Remove it after migrating settings to overrides in EnemyBrain and/or EnemyConfig Scriptable Object.", InfoMessageType.Warning)]
 
         [Header("Speed Settings")]
         
@@ -104,12 +104,12 @@ namespace EnemySystem
             animationController.AgentLooking(false);
         }
 
-        internal void StartLookAround(float duration, AICore brain)
+        internal void StartLookAround(float duration, EnemyBrain brain)
         {
             StartCoroutine(LookAroundRoutine(duration, brain));
         }
 
-        internal void StartInvestigate(float duration, Vector3 targetPos, AICore brain)
+        internal void StartInvestigate(float duration, Vector3 targetPos, EnemyBrain brain)
         {
             StartCoroutine(InvestigateRoutine(duration, targetPos, brain));
         }
@@ -127,7 +127,7 @@ namespace EnemySystem
             isWaiting = false;
         }
 
-        IEnumerator LookAroundRoutine(float duration, AICore brain)
+        IEnumerator LookAroundRoutine(float duration, EnemyBrain brain)
         {
             agent.isStopped = true;
             yield return StartCoroutine(SweepRotationRoutine(duration, sensors.HasLineOfSight()));
@@ -135,7 +135,7 @@ namespace EnemySystem
             brain.ChangeState(AgentState.Patrol);
         }
 
-        IEnumerator InvestigateRoutine(float duration, Vector3 targetPos, AICore brain)
+        IEnumerator InvestigateRoutine(float duration, Vector3 targetPos, EnemyBrain brain)
         {
             agent.isStopped = false;
             agent.stoppingDistance = agentStopDistance;
