@@ -96,7 +96,7 @@ namespace EnemySystem
                 if (nearbyEnemy != null && nearbyEnemy != GetComponent<AICore>() && nearbyEnemy.currentAgentState != AgentState.Combat)
                 {
                     nearbyEnemy.triggerMultiplier = 2f;
-                    nearbyEnemy.DetermineAlertLevel();
+                    // nearbyEnemy.DetermineAlertLevel();
                 }
             }
         }

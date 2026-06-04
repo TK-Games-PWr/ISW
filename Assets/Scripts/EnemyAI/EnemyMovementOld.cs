@@ -150,7 +150,7 @@ namespace EnemySystem
             yield return StartCoroutine(SweepRotationRoutine(duration, false, 70f));
 
             agent.isStopped = false;
-            brain.DetermineAlertLevel(0.2f);
+            // brain.DetermineAlertLevel(0.2f);
         }
 
         IEnumerator SweepRotationRoutine(float duration, bool trackLastKnownPosition, float lookAngle = 70f)

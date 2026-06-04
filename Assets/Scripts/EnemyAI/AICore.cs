@@ -21,19 +21,20 @@ namespace EnemySystem
         float _combatLostPlayerTime = 0f;
 
         // --- References ---
-        internal EnemySensors sensors;
-        internal  EnemyMovement movement;
-        EnemyCombat _combat;
-        internal EnemyResources resources;
+        public EnemySensors Sensors { get; private set; }
+        public EnemyMovement Movement { get; private set; }
+        public EnemyCombat Combat { get; private set; }
+        public EnemyResources Resources { get; private set; }
+        public EnemyAlertSystem AlertSystem { get; private set; }
 
-        [SerializeField] EnemyCombat baseEnemyCombat;
-        [SerializeField] EnemyCombat rambEnemyCombat;
-        [SerializeField] EnemyCombat coverEnemyCombat;
+        EnemyCombat _baseEnemyCombat;
+        EnemyCombat _rambEnemyCombat;
+        EnemyCombat _coverEnemyCombat;
 
         float _lastAlertTime = 0f;
         public float TimeInCombat { get; private set; } = 0f;
 
-        public bool IsDead => resources.IsDead;
+        public bool IsDead => Resources.IsDead;
 
         [Tooltip("Disables hearing system connection, useful for putting agent in menu background.")] [SerializeField]
         bool isDeaf = false;
@@ -46,12 +47,13 @@ namespace EnemySystem
 
         void Awake()
         {
-            resources = GetComponent<EnemyResources>();
+            Resources = GetComponent<EnemyResources>();
             NavMeshAgent agent = GetComponent<NavMeshAgent>();
             AIAnimationController animController = GetComponent<AIAnimationController>();
             
-            sensors = new EnemySensors(this, transform, config.sensors);
-            movement = new EnemyMovement(this, transform, agent, sensors, animController, config.movement, patrolPoints);
+            Sensors = new EnemySensors(this, transform, config.sensors);
+            Movement = new EnemyMovement(this, transform, agent, Sensors, animController, config.movement, patrolPoints);
+            AlertSystem = new EnemyAlertSystem(this, Sensors, Movement, config.alert);
             
             ChangeEnemyType(EnemyType.Normal);
         }
@@ -85,29 +87,26 @@ namespace EnemySystem
 
         void Update()
         {
-            if (resources.IsDead) return;
+            if (Resources.IsDead) return;
             
-            sensors.Tick();
-
-            if (currentAgentState != AgentState.Combat)
-            {
-                UpdateAlertSystem();
-            }
+            // TODO transfer these to state manager to tick every 100ms
+            Sensors.Tick();
+            AlertSystem.Tick(Time.deltaTime);
 
             OnAlertChanged?.Invoke(this, triggerMultiplier, currentAlertLevel);
 
             switch (currentAgentState)
             {
                 case AgentState.Patrol:
-                    movement.UpdatePatrolState();
+                    Movement.UpdatePatrolState();
                     break;
                 case AgentState.Alert:
-                    movement.UpdateAngularSpeed(AgentState.Alert);
+                    Movement.UpdateAngularSpeed(AgentState.Alert);
                     // Movement handled by Coroutines triggered in SetAlertLevel
                     break;
                 case AgentState.Combat:
                     UpdateCombatLogic();
-                    movement.UpdateAngularSpeed(AgentState.Combat);
+                    Movement.UpdateAngularSpeed(AgentState.Combat);
                     break;
             }
         }
@@ -117,95 +116,10 @@ namespace EnemySystem
             return transform.position + new Vector3(0, 1.5f, 0); 
         }
 
-        public void OnSoundHeard(Vector3 soundOrigin, float baseVolume, float distance, float range, bool capAlertLevel, AnimationCurve falloffCurve)
+        public void OnSoundHeard(Vector3 soundOrigin, float baseVolume, float distance, float range, bool capAlertLevel,
+            AnimationCurve falloffCurve)
         {
-            float dist = Mathf.Clamp01((range - distance) / range);
-            dist = baseVolume * (falloffCurve?.Evaluate(1f - dist) ?? dist);
-            if (!capAlertLevel || triggerMultiplier < 0.76f)
-            {
-                triggerMultiplier += capAlertLevel ? Mathf.Min(dist, 0.76f - triggerMultiplier) : dist;
-            }
-            _lastAlertTime = Time.time;
-            if(triggerMultiplier > 0.75f) sensors.UpdateLastKnownPosition(soundOrigin); // enemy will go to the sound it hears if alerted
-            DetermineAlertLevel();
-        }
-
-        void UpdateAlertSystem()
-        {
-            if (sensors.IsPlayerVisible)
-            {
-                float distanceToPlayer = Vector3.Distance(transform.position, sensors.PlayerTransform.position);
-                triggerMultiplier += Time.deltaTime * config.alert.alertSensitivity / distanceToPlayer;
-                triggerMultiplier = Mathf.Clamp(triggerMultiplier, 0f, 10f);
-                sensors.UpdateLastKnownPosition();
-                _lastAlertTime = Time.time;
-
-                DetermineAlertLevel();
-            }
-            else
-            {
-                if (currentAgentState != AgentState.Alert && Time.time - _lastAlertTime >= config.alert.triggerMultiplierTimeout)
-                {
-                    if (triggerMultiplier > 0)
-                    {
-                        triggerMultiplier -= Time.deltaTime;
-                    }
-                    else
-                    {
-                        triggerMultiplier = 0f;
-                    }
-                }
-
-                if (currentAgentState != AgentState.Combat && Time.time - _lastAlertTime > config.alert.timeToLoseAlertLevel)
-                {
-                    if (currentAlertLevel == AlertLevel.None)
-                    {
-                        ChangeState(AgentState.Patrol);
-                    }
-                }
-            }
-        }
-
-        internal void DetermineAlertLevel(float tm = -1f)
-        {
-            if (tm >= 0f) triggerMultiplier = tm;
-            if (triggerMultiplier <= 0f) SetAlertLevel(AlertLevel.None);
-            else if (triggerMultiplier <= 0.25f) SetAlertLevel(AlertLevel.Low);
-            else if (triggerMultiplier <= 0.75f) SetAlertLevel(AlertLevel.Medium);
-            else if (triggerMultiplier <= 1.0f) SetAlertLevel(AlertLevel.High);
-            else SetAlertLevel(AlertLevel.Extreme);
-        }
-
-        void SetAlertLevel(AlertLevel newLevel)
-        {
-            if (currentAlertLevel == newLevel) return;
-            AlertLevel lastAlertLevel = currentAlertLevel;
-            currentAlertLevel = newLevel;
-            
-            if ((lastAlertLevel is AlertLevel.None or AlertLevel.Low &&
-                 newLevel is AlertLevel.None or AlertLevel.Low)) return;
-            
-            movement.StopAllMovementCoroutines();
-
-            switch (currentAlertLevel)
-            {
-                case AlertLevel.None: case AlertLevel.Low:
-                    ChangeState(AgentState.Patrol);
-                    movement.ResumeDefaultMovement();
-                    break;
-                case AlertLevel.Medium:
-                    ChangeState(AgentState.Alert);
-                    movement.StartLookAround(3f, this);
-                    break;
-                case AlertLevel.High:
-                    ChangeState(AgentState.Alert);
-                    movement.StartInvestigate(5f, sensors.LastKnownPosition, this);
-                    break;
-                case AlertLevel.Extreme:
-                    ChangeState(AgentState.Combat);
-                    sensors.AlertNearbyEnemies();
-                    break;
-            }
+            AlertSystem.OnSoundHeard(soundOrigin, baseVolume, distance, range, capAlertLevel, falloffCurve);
         }
 
         internal void ChangeState(AgentState newAgentState)
@@ -218,7 +132,7 @@ namespace EnemySystem
                 case AgentState.Patrol:
                     break;
                 case AgentState.Alert:
-                    movement.SetSpeedMultiplier(1f);
+                    Movement.SetSpeedMultiplier(1f);
                     break;
                 case AgentState.Combat:
                     // Speed set dynamically in combat loop
@@ -229,13 +143,13 @@ namespace EnemySystem
         void UpdateCombatLogic()
         {
             TimeInCombat += Time.deltaTime;
-            if (sensors.PlayerTransform == null || _combat.IsReloading) return;
+            if (Sensors.PlayerTransform == null || Combat.IsReloading) return;
 
-            bool hasLos = sensors.IsPlayerVisible;
-            float distanceToPlayer = Vector3.Distance(transform.position, sensors.PlayerTransform.position);
+            bool hasLos = Sensors.IsPlayerVisible;
+            float distanceToPlayer = Vector3.Distance(transform.position, Sensors.PlayerTransform.position);
 
             // Handle Movement
-            _combat.HandleCombatMovement(sensors.PlayerTransform, distanceToPlayer, hasLos);
+            Combat.HandleCombatMovement(Sensors.PlayerTransform, distanceToPlayer, hasLos);
 
             if (config.alert.fightDelay > TimeInCombat) return;
 
@@ -245,7 +159,7 @@ namespace EnemySystem
                 if (_combatLostPlayerTime >= config.alert.endCombatTimeout)
                 {
                     triggerMultiplier = 0.9f;
-                    DetermineAlertLevel();
+                    AlertSystem.DetermineAlertLevel();
                     _combatLostPlayerTime = 0f;
                     return;
                 }
@@ -256,28 +170,18 @@ namespace EnemySystem
             }
 
             // Handle Shooting
-            if (distanceToPlayer <= _combat.WeaponRange && hasLos)
+            if (distanceToPlayer <= Combat.WeaponRange && hasLos)
             {
-                _combat.CombatAction();
-            }
-        }
-
-        // Called by EnemyResources when damaged from stealth
-        internal void ForceAlertSpike()
-        {
-            if (currentAgentState != AgentState.Combat)
-            {
-                triggerMultiplier = 2f;
-                DetermineAlertLevel();
+                Combat.CombatAction();
             }
         }
 
         public void ChangeEnemyType(EnemyType type)
         {
-            resources.currentGun.gameObject.SetActive(false);
-            _combat = GetCombatModule(type);
-            resources.currentGun = _combat.classGun;
-            resources.currentGun.gameObject.SetActive(true);
+            Resources.currentGun.gameObject.SetActive(false);
+            Combat = GetCombatModule(type);
+            Resources.currentGun = Combat.classGun;
+            Resources.currentGun.gameObject.SetActive(true);
         }
 
         EnemyCombat GetCombatModule(EnemyType enemyType)
@@ -285,11 +189,11 @@ namespace EnemySystem
             switch (enemyType)
             {
                 case EnemyType.Rambenemy:
-                    return rambEnemyCombat;
+                    return _rambEnemyCombat;
                 case EnemyType.CoverGuy:
-                    return coverEnemyCombat;
+                    return _coverEnemyCombat;
                 default:
-                    return baseEnemyCombat;
+                    return _baseEnemyCombat;
             }
         }
     }

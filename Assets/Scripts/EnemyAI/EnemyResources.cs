@@ -45,7 +45,7 @@ namespace EnemySystem
             else
             {
                 // Alert the brain if we were shot from stealth
-                _brain.ForceAlertSpike();
+                _brain.AlertSystem.ForceAlertSpike();
             }
         }
 

@@ -1,6 +1,5 @@
 using UnityEngine;
 using TK_Shared._3DPlayerMovement;
-using UnityEditor.PackageManager;
 
 namespace EnemySystem
 {
@@ -89,7 +88,7 @@ namespace EnemySystem
                 if (nearbyEnemy != null && nearbyEnemy != _brain && nearbyEnemy.currentAgentState != AgentState.Combat)
                 {
                     nearbyEnemy.triggerMultiplier = 2f;
-                    nearbyEnemy.DetermineAlertLevel();
+                    nearbyEnemy.AlertSystem.DetermineAlertLevel();
                 }
             }
         }

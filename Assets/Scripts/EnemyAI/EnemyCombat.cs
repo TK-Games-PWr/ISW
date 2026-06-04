@@ -48,7 +48,7 @@ namespace EnemySystem
 
         protected virtual void Start()
         {
-            sensors = GetComponent<AICore>().sensors;
+            sensors = GetComponent<AICore>().Sensors;
             if (classGun != null && classGun.TryGetComponent(out GrabbableObject grabbable))
             {
                 bool shouldDisable = false;
