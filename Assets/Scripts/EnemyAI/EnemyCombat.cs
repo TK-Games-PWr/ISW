@@ -62,19 +62,21 @@ namespace EnemySystem
                 currentAmmo = GunInfo.maxAmmo;
             }
         }
+
+        internal virtual void RotateTowardsPlayer(Transform playerTransform)
+        {
+            Vector3 direction = (playerTransform.position - transform.position).normalized;
+            Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+            transform.rotation =
+                Quaternion.RotateTowards(transform.rotation, lookRotation, agent.angularSpeed * Time.deltaTime);
+        }
         
         // --- Combat Movement Logic ---
         internal virtual void HandleCombatMovement(Transform playerTransform, float distanceToPlayer, bool hasLOS)
         {
             movement.SetSpeedMultiplier(config.combatSpeedMultiplier);
-            agent.isStopped = false;
 
-            Vector3 direction = (playerTransform.position - transform.position).normalized;
-            Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
-            transform.rotation =
-                Quaternion.RotateTowards(transform.rotation, lookRotation, agent.angularSpeed * Time.deltaTime);
-
-            if (distanceToPlayer <= config.weaponRange && hasLOS)
+            if (distanceToPlayer <= WeaponRange && hasLOS)
             {
                 if (distanceToPlayer <= OptimalDistance)
                 {
@@ -127,7 +129,6 @@ namespace EnemySystem
 
             Vector3 rayOrigin = resources.gunPivot.position;
             
-            var playerController = sensors.PlayerTransform.GetComponent<TK_Shared._3DPlayerMovement.PlayerActionsController>();
             Vector3 targetPosition = sensors.PlayerTransform.position + Vector3.up * PlayerActionsController.EyeLevel;
             
             Vector3 direction = (targetPosition - rayOrigin).normalized;
@@ -192,6 +193,15 @@ namespace EnemySystem
             availableAmmo -= currentAmmo;
             IsReloading = false;
             agent.isStopped = false;
+        }
+        
+        public virtual void ResetCombatState()
+        {
+            IsReloading = false;
+            if (agent != null && agent.gameObject.activeInHierarchy && agent.isOnNavMesh)
+            {
+                agent.isStopped = false;
+            }
         }
     }
 }

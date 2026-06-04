@@ -72,8 +72,8 @@ MonoBehaviour:
       type: {class: RambenemyCombatConfig, ns: , asm: Assembly-CSharp}
       data:
         preferredWeapon: 1
-        weaponRange: 10
-        optimalCombatDistancePct: 0.7
+        weaponRange: 5
+        optimalCombatDistancePct: 0.3
         combatSpeedMultiplier: 1.3
         retreatSpeedMultiplier: 0.3
         singleShotDelay: 0.6

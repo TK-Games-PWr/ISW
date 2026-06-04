@@ -1,8 +1,7 @@
 using UnityEngine;
 using System;
+using EnemySystem.States;
 using UnityEngine.AI;
-using UnityEngine.InputSystem.Controls;
-using static EnemyManager;
 
 namespace EnemySystem
 {
@@ -18,17 +17,22 @@ namespace EnemySystem
         [Header("Patrol Settings")]
         public Transform[] patrolPoints;
 
-        float _combatLostPlayerTime = 0f;
-
         // --- References ---
         public EnemySensors Sensors { get; private set; }
         public EnemyMovement Movement { get; private set; }
         public EnemyCombat Combat { get; private set; }
         public EnemyResources Resources { get; private set; }
         public EnemyAlertSystem AlertSystem { get; private set; }
+        
+        // --- States ---
+        IEnemyState _currentState;
+        PatrolState _patrolState;
+        AlertState _alertState;
+        CombatState _combatState;
 
         float _lastAlertTime = 0f;
-        public float TimeInCombat { get; private set; } = 0f;
+        float _tickTimer = 0f;
+        [SerializeField] float tickRate = 0.1f;
 
         public bool IsDead => Resources.IsDead;
 
@@ -46,6 +50,10 @@ namespace EnemySystem
             Sensors = new EnemySensors(this, transform, config.sensors);
             Movement = new EnemyMovement(this, transform, agent, Sensors, animController, config.movement, patrolPoints);
             AlertSystem = new EnemyAlertSystem(this, Sensors, Movement, config.alert);
+            
+            _patrolState = new PatrolState(this);
+            _alertState = new AlertState(this);
+            _combatState = new CombatState(this);
             
             ChangeEnemyType(EnemyType.Normal);
         }
@@ -81,26 +89,23 @@ namespace EnemySystem
         {
             if (Resources.IsDead) return;
             
-            // TODO transfer these to state manager to tick every 100ms
-            Sensors.Tick();
-            AlertSystem.Tick(Time.deltaTime);
+            _tickTimer += Time.deltaTime;
+            if (_tickTimer >= tickRate)
+            {
+                Tick();
+                _tickTimer = 0f;
+            }
+            
+            _currentState?.Update();
 
             OnAlertChanged?.Invoke(this, AlertSystem.TriggerMultiplier, AlertSystem.CurrentAlertLevel);
+        }
 
-            switch (_currentAgentState)
-            {
-                case AgentState.Patrol:
-                    Movement.UpdatePatrolState();
-                    break;
-                case AgentState.Alert:
-                    Movement.UpdateAngularSpeed(AgentState.Alert);
-                    // Movement handled by Coroutines triggered in SetAlertLevel
-                    break;
-                case AgentState.Combat:
-                    UpdateCombatLogic();
-                    Movement.UpdateAngularSpeed(AgentState.Combat);
-                    break;
-            }
+        void Tick()
+        {
+            Sensors.Tick();
+            AlertSystem.Tick(tickRate);
+            _currentState?.Tick();
         }
         
         public Vector3 GetHearingPosition()
@@ -117,55 +122,24 @@ namespace EnemySystem
         internal void ChangeState(AgentState newAgentState)
         {
             if (_currentAgentState == newAgentState) return;
+            _currentState?.Exit();
+            
             _currentAgentState = newAgentState;
 
-            switch (newAgentState)
+            _currentState = newAgentState switch
             {
-                case AgentState.Patrol:
-                    break;
-                case AgentState.Alert:
-                    Movement.SetSpeedMultiplier(1f);
-                    break;
-                case AgentState.Combat:
-                    // Speed set dynamically in combat loop
-                    break;
-            }
-        }
+                AgentState.Patrol => _patrolState,
+                AgentState.Alert => _patrolState,
+                AgentState.Combat => _combatState,
+                _ => _currentState
+            };
 
-        void UpdateCombatLogic()
-        {
-            TimeInCombat += Time.deltaTime;
-            if (Sensors.PlayerTransform == null || Combat.IsReloading) return;
-
-            bool hasLos = Sensors.IsPlayerVisible;
-            float distanceToPlayer = Vector3.Distance(transform.position, Sensors.PlayerTransform.position);
-
-            // Handle Movement
-            Combat.HandleCombatMovement(Sensors.PlayerTransform, distanceToPlayer, hasLos);
-
-            if (config.alert.fightDelay > TimeInCombat) return;
-
-            if (!hasLos)
+            if (newAgentState != AgentState.Combat && Combat != null)
             {
-                _combatLostPlayerTime += Time.deltaTime;
-                if (_combatLostPlayerTime >= config.alert.endCombatTimeout)
-                {
-                    AlertSystem.TriggerMultiplier = 0.9f;
-                    AlertSystem.DetermineAlertLevel();
-                    _combatLostPlayerTime = 0f;
-                    return;
-                }
-            }
-            else
-            {
-                _combatLostPlayerTime = 0f;
+                Combat.ResetCombatState();
             }
 
-            // Handle Shooting
-            if (distanceToPlayer <= Combat.WeaponRange && hasLos)
-            {
-                Combat.CombatAction();
-            }
+            _currentState?.Enter();
         }
 
         public void ChangeEnemyType(EnemyType type)

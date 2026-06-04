@@ -24,14 +24,8 @@ namespace EnemySystem
         internal override void HandleCombatMovement(Transform playerTransform, float distanceToPlayer, bool hasLOS)
         {
             movement.SetSpeedMultiplier(config.combatSpeedMultiplier);
-            agent.isStopped = false;
 
-            Vector3 direction = (playerTransform.position - transform.position).normalized;
-            Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
-            transform.rotation =
-                Quaternion.RotateTowards(transform.rotation, lookRotation, agent.angularSpeed * Time.deltaTime);
-
-            if (distanceToPlayer <= config.weaponRange && hasLOS)
+            if (distanceToPlayer <= WeaponRange && hasLOS)
             {
                 if (!IsCovered(playerTransform))
                 {
@@ -57,7 +51,7 @@ namespace EnemySystem
         {
             if (Physics.Linecast(transform.position + new Vector3(0, 1, 0), playerTransform.position, out RaycastHit hit, _checkCoverMask))
             {
-                if (!hit.collider.CompareTag("Player")) return true;
+                if (!hit.collider.CompareTag(brain.config.sensors.playerTag)) return true;
             }
 
             return false;
