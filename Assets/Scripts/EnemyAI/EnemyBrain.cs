@@ -33,8 +33,7 @@ namespace EnemySystem
         AlertState _alertState;
         CombatState _combatState;
         
-        float _tickTimer = 0f;
-        [SerializeField] float tickRate = 0.1f;
+        float _tickTimer;
 
         public bool IsDead => Resources.IsDead;
 
@@ -101,7 +100,7 @@ namespace EnemySystem
             if (Resources.IsDead) return;
             
             _tickTimer += Time.deltaTime;
-            if (_tickTimer >= tickRate)
+            if (_tickTimer >= Config.tickRate)
             {
                 Tick();
                 _tickTimer = 0f;
@@ -115,7 +114,7 @@ namespace EnemySystem
         void Tick()
         {
             Sensors.Tick();
-            AlertSystem.Tick(tickRate);
+            AlertSystem.Tick(Config.tickRate);
             _currentState?.Tick();
         }
         

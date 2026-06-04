@@ -29,11 +29,11 @@ MonoBehaviour:
       serializedVersion: 2
       m_Bits: 193
     eyeLevel: 1.7
-    horizontalFOV: 100
-    verticalFOV: 40
-    alertedVerticalFOV: 120
-    maxSightDistance: 40
-    hearingRadius: 30
+    horizontalFOV: 90
+    verticalFOV: 45
+    alertedVerticalFOV: 180
+    maxSightDistance: 25
+    hearingRadius: 15
   alert:
     alertSensitivity: 5
     timeToLoseAlertLevel: 3
@@ -53,7 +53,7 @@ MonoBehaviour:
       type: {class: NormalCombatConfig, ns: , asm: Assembly-CSharp}
       data:
         preferredWeapon: 0
-        weaponRange: 25
+        weaponRange: 20
         optimalCombatDistancePct: 0.7
         combatSpeedMultiplier: 1.3
         retreatSpeedMultiplier: 0.3
@@ -73,7 +73,7 @@ MonoBehaviour:
       data:
         preferredWeapon: 1
         weaponRange: 5
-        optimalCombatDistancePct: 0.3
+        optimalCombatDistancePct: 0.8
         combatSpeedMultiplier: 1.3
         retreatSpeedMultiplier: 0.3
-        singleShotDelay: 0.6
+        singleShotDelay: 1

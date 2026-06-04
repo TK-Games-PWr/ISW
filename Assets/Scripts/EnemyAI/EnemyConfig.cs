@@ -38,6 +38,8 @@ public class EnemyConfig : ScriptableObject
     [Title("General")]
     public float maxHealth = 100f;
 
+    public float tickRate = 0.1f;
+
     [Title("Movement Settings")]
     public MovementConfig movement;
 
