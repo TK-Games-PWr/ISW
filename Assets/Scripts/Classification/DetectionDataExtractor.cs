@@ -37,7 +37,7 @@ namespace Classification
                     {
                         if (aiData[i] && !_toRemove.Contains(i))
                         {
-                            detection += aiData[i].triggerMultiplier;
+                            detection += aiData[i].AlertSystem.TriggerMultiplier;
                         }
                         else
                         {

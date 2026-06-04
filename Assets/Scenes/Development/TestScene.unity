@@ -4977,7 +4977,7 @@ PrefabInstance:
     - target: {fileID: 8526894629808006087, guid: 6cd1fa7741d8df6a18f79341cf97b992, type: 3}
       propertyPath: 'serializationData.PrefabModifications.Array.data[0]'
       value: '"path":"_specialEnemyCount.{1es}","value":{"$id":0,"$type":"System.Int32,
-        mscorlib",2}'
+        mscorlib",1}'
       objectReference: {fileID: 0}
     - target: {fileID: 8526894629808006087, guid: 6cd1fa7741d8df6a18f79341cf97b992, type: 3}
       propertyPath: 'serializationData.PrefabModifications.Array.data[1]'

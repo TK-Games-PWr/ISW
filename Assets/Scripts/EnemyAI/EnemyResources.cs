@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using PlayerShootingSystem;
 using TK_Shared._3DPlayerMovement;
 using UnityEngine.AI;
 
@@ -20,6 +21,9 @@ namespace EnemySystem
         [Header("Combat Settings")]
         public PlayerShootingSystem.Gun currentGun;
         [SerializeField] internal Transform gunPivot;
+        [Space(10)]
+        [SerializeField] internal Gun glockWeapon;
+        [SerializeField] internal Gun shotgunWeapon;
         
         [Tooltip("Total amount of bullets, specified in magazines of current weapon")]
         [SerializeField] internal int totalMagazines = 1;

@@ -7209,9 +7209,6 @@ GameObject:
   - component: {fileID: 6540825745156625354}
   - component: {fileID: 5232498721366191019}
   - component: {fileID: 3394472783275146617}
-  - component: {fileID: 7944648931457534281}
-  - component: {fileID: 3351768052061933975}
-  - component: {fileID: 7718934382253550536}
   - component: {fileID: 7587119339273579207}
   - component: {fileID: 2558848397387947386}
   - component: {fileID: 4083881536312824282}
@@ -7253,9 +7250,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AICore
   config: {fileID: 11400000, guid: 74e9ad1c99ac2c7a8ab18c471a7bbe89, type: 2}
   patrolPoints: []
-  baseEnemyCombat: {fileID: 7944648931457534281}
-  rambEnemyCombat: {fileID: 7718934382253550536}
-  coverEnemyCombat: {fileID: 3351768052061933975}
   isDeaf: 0
   currentAgentState: 0
   currentAlertLevel: 0
@@ -7304,64 +7298,6 @@ MonoBehaviour:
   patrolPoints: []
   waitTimeAtWaypoint: 2
   agentStopDistance: 1
---- !u!114 &7944648931457534281
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4169945757394515640}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f56595d06a9ebfc88a8f04ee1813138, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyCombat
-  optimalCombatDistancePct: 0.7
-  weaponRange: 20
-  singleShotDelay: 0.6
-  combatSpeedMultiplier: 1.3
-  retreatSpeedMultiplier: 0.3
-  classGun: {fileID: 8862762591890864933}
---- !u!114 &3351768052061933975
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4169945757394515640}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 070ad3631cd3d112fa351708a847bf0e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemySystem.CoverGuyCombat
-  optimalCombatDistancePct: 0.7
-  weaponRange: 20
-  singleShotDelay: 0.6
-  combatSpeedMultiplier: 1.3
-  retreatSpeedMultiplier: 0.3
-  classGun: {fileID: 8862762591890864933}
-  hidingSpeedMultiplier: 2
-  playerLayerMask:
-    serializedVersion: 2
-    m_Bits: 128
---- !u!114 &7718934382253550536
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4169945757394515640}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6523dd607bc0066de81b3b73c00e2d8f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemySystem.RamberCombat
-  optimalCombatDistancePct: 0.8
-  weaponRange: 5
-  singleShotDelay: 1
-  combatSpeedMultiplier: 1.3
-  retreatSpeedMultiplier: 0.3
-  classGun: {fileID: 7783720580576294447}
 --- !u!114 &7587119339273579207
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7377,6 +7313,8 @@ MonoBehaviour:
   maxHealth: 20
   currentGun: {fileID: 8862762591890864933}
   gunPivot: {fileID: 6296989899685151540}
+  glockWeapon: {fileID: 8862762591890864933}
+  shotgunWeapon: {fileID: 7783720580576294447}
   totalMagazines: 99999
 --- !u!195 &2558848397387947386
 NavMeshAgent:

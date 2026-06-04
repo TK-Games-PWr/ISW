@@ -4,84 +4,80 @@ using TK_Shared._3DPlayerMovement;
 using TK_Shared.ObjectInteractions3D;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 namespace EnemySystem
 {
-    public class EnemyCombat : MonoBehaviour
+    public class EnemyCombat
     {
+        protected CombatConfig config;
+        protected Transform transform;
+        protected NavMeshAgent agent;
+        protected EnemySensors sensors;
+        protected EnemyMovement movement;
         protected EnemyResources resources;
-        
-        [SerializeField] protected float optimalCombatDistancePct = 0.7f;
+        protected AICore brain;
 
         protected int availableAmmo;
-        [SerializeField] protected float weaponRange; 
 
-        [Tooltip("Extra delay added between shots for semi-automatic weapons to simulate an AI's trigger finger.")]
-        [SerializeField] protected float singleShotDelay = 0.6f;
+        GunInfo GunInfo => resources.currentGun.gunInfo;
 
-        GunInfo GunInfo => classGun.gunInfo;
-
-        internal float WeaponRange => weaponRange;
-        internal float OptimalDistance => weaponRange * optimalCombatDistancePct;
-        internal bool IsReloading { get; private set; } = false;
+        public float WeaponRange => config.weaponRange;
+        public float OptimalDistance => config.weaponRange * config.optimalCombatDistancePct;
+        public bool IsReloading { get; protected set; } = false;
 
         protected int currentAmmo;
         protected float nextFireTime = 0f;
         
-        [SerializeField] protected float combatSpeedMultiplier = 1.3f;
-        [SerializeField] protected float retreatSpeedMultiplier = 0.3f;
-        
-        [FormerlySerializedAs("preferredGun")] public Gun classGun;
-        
-        protected NavMeshAgent agent;
-        protected EnemySensors sensors;
-        protected EnemyMovementOld movementOld;
-
-        protected virtual void Awake()
+        public EnemyCombat(AICore brain, Transform transform, NavMeshAgent agent, EnemySensors sensors, EnemyMovement movement, EnemyResources resources, CombatConfig config)
         {
-            agent = GetComponent<NavMeshAgent>();
-            movementOld = GetComponent<EnemyMovementOld>();
-            resources = GetComponent<EnemyResources>();
+            this.brain = brain;
+            this.transform = transform;
+            this.agent = agent;
+            this.sensors = sensors;
+            this.movement = movement;
+            this.resources = resources;
+            this.config = config;
         }
 
-        protected virtual void Start()
+        protected internal virtual void Init()
         {
-            sensors = GetComponent<AICore>().Sensors;
-            if (classGun != null && classGun.TryGetComponent(out GrabbableObject grabbable))
+            if (resources.currentGun != null && resources.currentGun.TryGetComponent(out GrabbableObject grabbable))
             {
                 bool shouldDisable = false;
-                if (!classGun.gameObject.activeInHierarchy)
+                if (!resources.currentGun.gameObject.activeInHierarchy)
                 {
                     shouldDisable = true;
-                    classGun.gameObject.SetActive(true);
+                    resources.currentGun.gameObject.SetActive(true);
                 }
                 
                 grabbable.Grab(resources.gunPivot);
                 
-                if(shouldDisable) classGun.gameObject.SetActive(false);
+                if(shouldDisable) resources.currentGun.gameObject.SetActive(false);
             }
 
-            availableAmmo = (resources.totalMagazines - 1) * GunInfo.maxAmmo;
-            currentAmmo = GunInfo.maxAmmo;
+            if (resources.currentGun != null)
+            {
+                availableAmmo = (resources.totalMagazines - 1) * GunInfo.maxAmmo;
+                currentAmmo = GunInfo.maxAmmo;
+            }
         }
         
         // --- Combat Movement Logic ---
         internal virtual void HandleCombatMovement(Transform playerTransform, float distanceToPlayer, bool hasLOS)
         {
-            movementOld.SetSpeedMultiplier(combatSpeedMultiplier);
+            movement.SetSpeedMultiplier(config.combatSpeedMultiplier);
 
             Vector3 direction = (playerTransform.position - transform.position).normalized;
             Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
             transform.rotation =
                 Quaternion.RotateTowards(transform.rotation, lookRotation, agent.angularSpeed * Time.deltaTime);
 
-            if (distanceToPlayer <= weaponRange && hasLOS)
+            if (distanceToPlayer <= config.weaponRange && hasLOS)
             {
                 if (distanceToPlayer <= OptimalDistance)
                 {
-                    movementOld.SetSpeedMultiplier(retreatSpeedMultiplier);
+                    movement.SetSpeedMultiplier(config.retreatSpeedMultiplier);
                     Vector3 retreatDirection = transform.position - playerTransform.position;
                     agent.SetDestination(transform.position + retreatDirection.normalized * 2f);
                 }
@@ -92,7 +88,7 @@ namespace EnemySystem
             }
             else
             {
-                agent.stoppingDistance = movementOld.agentStopDistance;
+                agent.stoppingDistance = brain.config.movement.agentStopDistance;
                 agent.SetDestination(playerTransform.position); // Chase
                 if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance) agent.velocity = Vector3.zero;
             }
@@ -111,7 +107,7 @@ namespace EnemySystem
 
                     if (!resources.currentGun.gunInfo.isAutomatic)
                     {
-                        cooldown += singleShotDelay;
+                        cooldown += config.singleShotDelay;
                     }
 
                     nextFireTime = Time.time + cooldown;
@@ -119,7 +115,7 @@ namespace EnemySystem
             }
             else if (availableAmmo > 0 && !IsReloading)
             {
-                StartCoroutine(ReloadRoutine());
+                brain.StartCoroutine(ReloadRoutine());
             }
         }
 
@@ -175,7 +171,7 @@ namespace EnemySystem
             direction += spreadRotation * Vector3.up * y;
             direction.Normalize();
 
-            if (!Physics.Raycast(rayOrigin, direction, out RaycastHit hit, weaponRange))
+            if (!Physics.Raycast(rayOrigin, direction, out RaycastHit hit, config.weaponRange))
                 return null;
 
             if (hit.collider.transform != sensors.PlayerTransform)

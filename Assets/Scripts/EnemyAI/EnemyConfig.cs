@@ -1,5 +1,7 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
+using EnemySystem;
+using UnityEngine.AI;
 
 public enum AgentState
 {
@@ -33,7 +35,8 @@ public class EnemyConfig : ScriptableObject
     public AlertConfig alert;
 
     [Title("Combat Settings")]
-    public CombatConfig combat;
+    [SerializeReference]
+    public CombatConfig combat = new NormalCombatConfig();
 }
 
 [System.Serializable]
@@ -95,6 +98,44 @@ public class AlertConfig
 }
 
 [System.Serializable]
-public class CombatConfig
+public abstract class CombatConfig
 {
+    public float weaponRange = 25f;
+    public float optimalCombatDistancePct = 0.7f;
+    public float combatSpeedMultiplier = 1.3f;
+    public float retreatSpeedMultiplier = 0.3f;
+    [Tooltip("Extra delay added between shots for semi-automatic weapons to simulate an AI's trigger finger.")]
+    public float singleShotDelay = 0.6f;
+
+    public abstract EnemyCombat CreateCombatInstance(AICore brain, Transform transform, NavMeshAgent agent, EnemySensors sensors, EnemyMovement movement, EnemyResources resources);
+}
+
+[System.Serializable]
+public class NormalCombatConfig : CombatConfig
+{
+    public override EnemyCombat CreateCombatInstance(AICore brain, Transform transform, NavMeshAgent agent, EnemySensors sensors, EnemyMovement movement, EnemyResources resources)
+    {
+        return new EnemyCombat(brain, transform, agent, sensors, movement, resources, this);
+    }
+}
+
+[System.Serializable]
+public class RambenemyCombatConfig : CombatConfig
+{
+    public override EnemyCombat CreateCombatInstance(AICore brain, Transform transform, NavMeshAgent agent, EnemySensors sensors, EnemyMovement movement, EnemyResources resources)
+    {
+        return new RamberCombat(brain, transform, agent, sensors, movement, resources, this);
+    }
+}
+
+[System.Serializable]
+public class CoverGuyCombatConfig : CombatConfig
+{
+    [Header("Cover Guy Specific")]
+    public float hidingSpeedMultiplier = 2f;
+
+    public override EnemyCombat CreateCombatInstance(AICore brain, Transform transform, NavMeshAgent agent, EnemySensors sensors, EnemyMovement movement, EnemyResources resources)
+    {
+        return new CoverGuyCombat(brain, transform, agent, sensors, movement, resources, this);
+    }
 }

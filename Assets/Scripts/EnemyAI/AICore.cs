@@ -39,11 +39,7 @@ namespace EnemySystem
         [Tooltip("Disables hearing system connection, useful for putting agent in menu background.")] [SerializeField]
         bool isDeaf = false;
         
-        // --- State Variables ---
-        [Header("DEBUG")]
-        public AgentState currentAgentState = AgentState.Patrol;
-        public AlertLevel currentAlertLevel = AlertLevel.None;
-        public float triggerMultiplier = 0f;
+        internal AgentState _currentAgentState = AgentState.Patrol;
 
         void Awake()
         {
@@ -93,9 +89,9 @@ namespace EnemySystem
             Sensors.Tick();
             AlertSystem.Tick(Time.deltaTime);
 
-            OnAlertChanged?.Invoke(this, triggerMultiplier, currentAlertLevel);
+            OnAlertChanged?.Invoke(this, AlertSystem.TriggerMultiplier, AlertSystem.CurrentAlertLevel);
 
-            switch (currentAgentState)
+            switch (_currentAgentState)
             {
                 case AgentState.Patrol:
                     Movement.UpdatePatrolState();
@@ -124,8 +120,8 @@ namespace EnemySystem
 
         internal void ChangeState(AgentState newAgentState)
         {
-            if (currentAgentState == newAgentState) return;
-            currentAgentState = newAgentState;
+            if (_currentAgentState == newAgentState) return;
+            _currentAgentState = newAgentState;
 
             switch (newAgentState)
             {
@@ -158,7 +154,7 @@ namespace EnemySystem
                 _combatLostPlayerTime += Time.deltaTime;
                 if (_combatLostPlayerTime >= config.alert.endCombatTimeout)
                 {
-                    triggerMultiplier = 0.9f;
+                    AlertSystem.TriggerMultiplier = 0.9f;
                     AlertSystem.DetermineAlertLevel();
                     _combatLostPlayerTime = 0f;
                     return;
@@ -178,23 +174,30 @@ namespace EnemySystem
 
         public void ChangeEnemyType(EnemyType type)
         {
-            Resources.currentGun.gameObject.SetActive(false);
-            Combat = GetCombatModule(type);
-            Resources.currentGun = Combat.classGun;
+            if (Resources.currentGun)
+            {
+                Resources.currentGun.gameObject.SetActive(false);
+            }
+
+            Resources.currentGun = FindGunForType(type);
             Resources.currentGun.gameObject.SetActive(true);
+
+            // Instantiate and swap the combat module polymorphically
+            NavMeshAgent agent = GetComponent<NavMeshAgent>();
+            Combat = config.combat.CreateCombatInstance(this, transform, agent, Sensors, Movement, Resources);
+
+            // Initialize the new combat module
+            Combat.Init();
         }
 
-        EnemyCombat GetCombatModule(EnemyType enemyType)
+        PlayerShootingSystem.Gun FindGunForType(EnemyType type)
         {
-            switch (enemyType)
+            if (type == EnemyType.Rambenemy)
             {
-                case EnemyType.Rambenemy:
-                    return _rambEnemyCombat;
-                case EnemyType.CoverGuy:
-                    return _coverEnemyCombat;
-                default:
-                    return _baseEnemyCombat;
+                return Resources.shotgunWeapon;
             }
+
+            return Resources.glockWeapon;
         }
     }
 }
