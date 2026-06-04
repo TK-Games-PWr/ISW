@@ -21,7 +21,7 @@ namespace EnemySystem
         [SerializeField] float combatAngularSpeed = 360f;
 
         [Header("Patrol Settings")] [SerializeField]
-        Transform[] patrolPoints;
+        public Transform[] patrolPoints;
 
         [SerializeField] float waitTimeAtWaypoint = 2f;
 
