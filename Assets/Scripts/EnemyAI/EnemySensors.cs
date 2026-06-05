@@ -10,9 +10,9 @@ namespace EnemySystem
         internal PlayerResources PlayerResources { get; private set; }
         internal bool IsPlayerVisible { get; private set; }
 
-        SensorConfig _config;
-        Transform _transform;
-        EnemyBrain _brain;
+        readonly SensorConfig _config;
+        readonly Transform _transform;
+        readonly EnemyBrain _brain;
 
         float PlayerEyeLevel => PlayerActionsController.EyeLevel;
 

@@ -2,7 +2,7 @@ namespace EnemySystem.States
 {
     public class PatrolState : IEnemyState
     {
-        EnemyBrain _brain;
+        readonly EnemyBrain _brain;
 
         public PatrolState(EnemyBrain brain)
         {

@@ -5,13 +5,14 @@ namespace EnemySystem
 {
     public class CoverGuyCombat : EnemyCombat
     {
-        LayerMask _checkCoverMask;
-        CoverGuyCombatConfig _coverConfig;
+        readonly LayerMask _checkCoverMask;
+        readonly CoverGuyCombatConfig _coverConfig;
         
         public CoverGuyCombat(EnemyBrain brain, Transform transform, NavMeshAgent agent, EnemySensors sensors, EnemyMovement movement, EnemyResources resources, CoverGuyCombatConfig config) 
             : base(brain, transform, agent, sensors, movement, resources, config)
         {
-            this.config = config;
+            _checkCoverMask = brain.Config.sensors.sightObstaclesMask;
+            
             if (brain.Config.coverGuyCombat is CoverGuyCombatConfig coverConfig)
             {
                 _coverConfig = coverConfig;
@@ -20,12 +21,6 @@ namespace EnemySystem
             {
                 Debug.LogError("Wrong EnemyConfig provided, expected CoverGuyCombatConfig");
             }
-        }
-
-        protected internal override void Init()
-        {
-            _checkCoverMask = brain.Config.sensors.sightObstaclesMask;
-            base.Init();
         }
         
         internal override void HandleCombatMovement(Transform playerTransform, float distanceToPlayer, bool hasLOS)

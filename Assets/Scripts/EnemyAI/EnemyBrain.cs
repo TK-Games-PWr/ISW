@@ -59,11 +59,11 @@ namespace EnemySystem
             
             Sensors = new EnemySensors(this, transform, Config.sensors);
             Movement = new EnemyMovement(this, transform, agent, Sensors, animController, Config.movement, patrolPoints);
-            AlertSystem = new EnemyAlertSystem(this, Sensors, Movement, Config.alert);
+            AlertSystem = new EnemyAlertSystem(this, Sensors, Config.alert);
             
             _patrolState = new PatrolState(this);
             _alertState = new AlertState(this);
-            _combatState = new CombatState(this);
+            _combatState = new CombatState(this, Sensors, AlertSystem);
             
             ChangeEnemyType(EnemyType.Normal);
             ChangeState(AgentState.Patrol);

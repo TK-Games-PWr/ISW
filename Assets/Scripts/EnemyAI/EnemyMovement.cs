@@ -6,18 +6,18 @@ namespace EnemySystem
 {
     public class EnemyMovement
     {
-        MovementConfig _config;
-        NavMeshAgent _agent;
-        EnemySensors _sensors;
-        AIAnimationController _animationController;
-        EnemyBrain _brain;
-        Transform _transform;
+        readonly MovementConfig _config;
+        readonly NavMeshAgent _agent;
+        readonly EnemySensors _sensors;
+        readonly AIAnimationController _animationController;
+        readonly EnemyBrain _brain;
+        readonly Transform _transform;
 
-        Transform[] _patrolPoints;
+        readonly Transform[] _patrolPoints;
         int _currentPatrolIndex = 0;
         bool _isWaiting = false;
 
-        Quaternion _originalRotation; // Used when there is only one patrol point so enemy doesn't drift
+        readonly Quaternion _originalRotation; // Used when there is only one patrol point so enemy doesn't drift
 
         public EnemyMovement(EnemyBrain brain, Transform transform, NavMeshAgent agent, EnemySensors sensors, AIAnimationController animationController, MovementConfig config, Transform[] patrolPoints)
         {
