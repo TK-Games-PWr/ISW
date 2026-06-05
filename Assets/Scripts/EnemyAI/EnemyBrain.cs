@@ -140,7 +140,7 @@ namespace EnemySystem
             _currentState = newAgentState switch
             {
                 AgentState.Patrol => _patrolState,
-                AgentState.Alert => _patrolState,
+                AgentState.Alert => _alertState,
                 AgentState.Combat => _combatState,
                 _ => _currentState
             };

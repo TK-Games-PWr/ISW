@@ -14,17 +14,28 @@ public class AlertIndicatorUI : MonoBehaviour
 
     [SerializeField] [Range(0,1)] float baseIndicatorOpacity = 0.3f;
 
+    float _targetValue;
+
     void Awake()
     {
         if (rectTransform == null) rectTransform = GetComponent<RectTransform>();
         _canvasGroup = GetComponent<CanvasGroup>();
+        image1.fillAmount = 0f;
+        image2.fillAmount = 0f;
+    }
+
+    void Update()
+    {
+        float fillAmount = Mathf.Lerp(image1.fillAmount, _targetValue, 
+            Time.deltaTime / Mathf.Clamp(Mathf.Abs(_targetValue - image1.fillAmount)*10f, 0.01f, 1f));
+        image1.fillAmount = fillAmount;
+        image2.fillAmount = fillAmount;
     }
 
     public void SetAlertProgress(float value, AlertLevel alertLevel)
     {
         value = Mathf.Clamp(value, 0, 1);
-        image1.fillAmount = value * maxFillAmount;
-        image2.fillAmount = value * maxFillAmount;
+        _targetValue = value * maxFillAmount;
         Color newColor = Color.clear;
 
         float opacity = baseIndicatorOpacity;
