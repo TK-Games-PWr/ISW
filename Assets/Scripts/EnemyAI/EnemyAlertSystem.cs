@@ -92,31 +92,19 @@ namespace EnemySystem
         void SetAlertLevel(AlertLevel newLevel)
         {
             if (CurrentAlertLevel == newLevel) return;
-            AlertLevel lastAlertLevel = CurrentAlertLevel;
             CurrentAlertLevel = newLevel;
             
-            if ((lastAlertLevel is AlertLevel.None or AlertLevel.Low &&
-                 newLevel is AlertLevel.None or AlertLevel.Low)) return;
-            
-            _movement.StopAllMovementCoroutines();
-
             switch (CurrentAlertLevel)
             {
                 case AlertLevel.None: case AlertLevel.Low:
                     _brain.ChangeState(AgentState.Patrol);
-                    _movement.ResumeDefaultMovement();
                     break;
                 case AlertLevel.Medium:
-                    _brain.ChangeState(AgentState.Alert);
-                    _movement.StartLookAround(3f, _brain);
-                    break;
                 case AlertLevel.High:
                     _brain.ChangeState(AgentState.Alert);
-                    _movement.StartInvestigate(5f, _sensors.LastKnownPosition, _brain);
                     break;
                 case AlertLevel.Extreme:
                     _brain.ChangeState(AgentState.Combat);
-                    _sensors.AlertNearbyEnemies();
                     break;
             }
         }

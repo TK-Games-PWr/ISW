@@ -20,6 +20,8 @@ namespace EnemySystem.States
         {
             _timeInCombat = 0f;
             _combatLostPlayerTime = 0f;
+            _brain.Movement.StopAllMovementCoroutines();
+            _brain.Sensors.AlertNearbyEnemies();
             _brain.Combat.ResetCombatState();
             _brain.Movement.UpdateAngularSpeed(AgentState.Combat);
         }

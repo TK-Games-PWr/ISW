@@ -1,13 +1,9 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using EnemySystem;
 using UnityEngine.Assertions;
 using TK_Shared._3DPlayerMovement;
 using TK_Shared.ObjectInteractions3D;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -163,9 +159,13 @@ namespace PlayerShootingSystem
                     if (enemy.IsDead) return;
                     if (hitDing) PlayHitSound();
                     uiCrosshair.ShowHit();
+                    
+                    Vector3 playerPosXZ = new (transform.position.x, 0f, transform.position.z);
+                    Vector3 enemyPosXZ = new (enemy.transform.position.x, 0f, enemy.transform.position.z);
+                    Vector3 enemyForwardXZ = new Vector3(enemy.transform.forward.x, 0f, enemy.transform.forward.z).normalized;
 
-                    Vector3 dirFromEnemyToPlayer = (transform.position - enemy.transform.position).normalized;
-                    float dotProduct = Vector3.Dot(enemy.transform.forward, dirFromEnemyToPlayer);
+                    Vector3 dirFromEnemyToPlayer = (playerPosXZ - enemyPosXZ).normalized;
+                    float dotProduct = Vector3.Dot(enemyForwardXZ, dirFromEnemyToPlayer);
                     bool isStealthKill = dotProduct < stealthKillBehindThreshold;
                     if (isStealthKill)
                     {

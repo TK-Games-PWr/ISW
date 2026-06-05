@@ -11,6 +11,7 @@ namespace EnemySystem.States
 
         public void Enter()
         {
+            _brain.Movement.ResumeDefaultMovement();
         }
 
         public void Tick()
@@ -24,6 +25,7 @@ namespace EnemySystem.States
 
         public void Exit()
         {
+            _brain.Movement.StopAllMovementCoroutines();
         }
     }
 }

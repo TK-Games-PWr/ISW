@@ -5,19 +5,26 @@ namespace EnemySystem
 {
     public class CoverGuyCombat : EnemyCombat
     {
-        LayerMask playerLayerMask;
         LayerMask _checkCoverMask;
+        CoverGuyCombatConfig _coverConfig;
         
         public CoverGuyCombat(EnemyBrain brain, Transform transform, NavMeshAgent agent, EnemySensors sensors, EnemyMovement movement, EnemyResources resources, CoverGuyCombatConfig config) 
             : base(brain, transform, agent, sensors, movement, resources, config)
         {
             this.config = config;
+            if (brain.Config.coverGuyCombat is CoverGuyCombatConfig coverConfig)
+            {
+                _coverConfig = coverConfig;
+            }
+            else
+            {
+                Debug.LogError("Wrong EnemyConfig provided, expected CoverGuyCombatConfig");
+            }
         }
 
         protected internal override void Init()
         {
             _checkCoverMask = brain.Config.sensors.sightObstaclesMask;
-            _checkCoverMask |= (1 << playerLayerMask);
             base.Init();
         }
         
@@ -30,6 +37,7 @@ namespace EnemySystem
                 if (!IsCovered(playerTransform))
                 {
                     Vector3 coverPos = NavGridSystem.Instance.GetBestCover(agent, _checkCoverMask, playerTransform.position + new Vector3(0, 1, 0));
+                    movement.SetSpeedMultiplier(_coverConfig.hidingSpeedMultiplier);
                     agent.SetDestination(coverPos);
                 }
             }

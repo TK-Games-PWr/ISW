@@ -19,7 +19,7 @@ namespace EnemySystem
         public bool IsDead => _currentHealth <= 0;
         
         [Header("Combat Settings")]
-        public PlayerShootingSystem.Gun currentGun;
+        public Gun currentGun;
         [SerializeField] internal Transform gunPivot;
         [Space(10)]
         [SerializeField] internal Gun glockWeapon;

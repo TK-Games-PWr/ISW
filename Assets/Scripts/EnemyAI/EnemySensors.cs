@@ -14,7 +14,7 @@ namespace EnemySystem
         Transform _transform;
         EnemyBrain _brain;
 
-        float playerEyeLevel => PlayerActionsController.EyeLevel;
+        float PlayerEyeLevel => PlayerActionsController.EyeLevel;
 
         float CurrentVerticalFOV =>
             (_brain != null && _brain.CurrentAgentState != AgentState.Patrol) ? _config.alertedVerticalFOV : _config.verticalFOV;
@@ -46,7 +46,7 @@ namespace EnemySystem
             if (distanceToPlayer > _config.maxSightDistance) return false;
 
             Vector3 rayStartOrigin = _transform.position + Vector3.up * _config.eyeLevel;
-            Vector3 targetPosition = PlayerTransform.position + Vector3.up * playerEyeLevel;
+            Vector3 targetPosition = PlayerTransform.position + Vector3.up * PlayerEyeLevel;
             Vector3 directionToPlayer = (targetPosition - rayStartOrigin).normalized;
 
             Vector3 localDirToPlayer = _transform.InverseTransformDirection(directionToPlayer);
@@ -99,7 +99,7 @@ namespace EnemySystem
             if (PlayerTransform == null || _brain.IsDead) return;
 
             Vector3 rayStartOrigin = _transform.position + Vector3.up * _config.eyeLevel;
-            Vector3 targetPosition = PlayerTransform.position + Vector3.up * playerEyeLevel;
+            Vector3 targetPosition = PlayerTransform.position + Vector3.up * PlayerEyeLevel;
             Vector3 directionToPlayer = (targetPosition - rayStartOrigin).normalized;
 
             Vector3 localDirToPlayer = _transform.InverseTransformDirection(directionToPlayer);

@@ -10,16 +10,16 @@ namespace EnemySystem
         readonly static int Looking = Animator.StringToHash("Looking");
         [SerializeField] Animator animator;
         [SerializeField] Rigidbody[]  rigidbodies;
-        NavMeshAgent agent;
+        NavMeshAgent _agent;
         void Awake()
         {
-            agent = GetComponent<NavMeshAgent>();
+            _agent = GetComponent<NavMeshAgent>();
         }
 
         // Update is called once per frame
         void Update()
         {
-            animator.SetFloat(Speed, agent.velocity.magnitude/5f);
+            animator.SetFloat(Speed, _agent.velocity.magnitude/5f);
         }
         public void AgentLooking(bool looking)
         {

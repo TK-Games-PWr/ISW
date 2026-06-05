@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: EnemyConfig
   m_EditorClassIdentifier: Assembly-CSharp::EnemyConfig
   maxHealth: 20
+  tickRate: 0.1
   movement:
     basePlayerSpeed: 4
     patrolSpeedMultiplier: 1
