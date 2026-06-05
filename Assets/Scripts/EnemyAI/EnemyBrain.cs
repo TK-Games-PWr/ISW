@@ -67,6 +67,9 @@ namespace EnemySystem
             
             ChangeEnemyType(EnemyType.Normal);
             ChangeState(AgentState.Patrol);
+            
+            if (!isActiveAndEnabled) return;
+            Movement.ResumeDefaultMovement();
         }
         
         async void OnEnable()
@@ -85,6 +88,7 @@ namespace EnemySystem
 
         void OnDisable()
         {
+            StopAllCoroutines();
             if (isDeaf) return;
             if (SoundSystem.Instance != null)
             {

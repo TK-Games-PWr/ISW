@@ -43,8 +43,6 @@ namespace EnemySystem
                 };
                 _patrolPoints = new[] { point.transform };
             }
-
-            ResumeDefaultMovement();
         }
 
         internal void SetSpeedMultiplier(float multiplier)
