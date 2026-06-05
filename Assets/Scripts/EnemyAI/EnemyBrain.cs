@@ -44,7 +44,7 @@ namespace EnemySystem
         [ListDrawerSettings(ShowIndexLabels = false)]
         public List<StatOverride> statOverrides = new ();
         
-        internal AgentState currentAgentState = AgentState.Patrol;
+        internal AgentState CurrentAgentState { get; private set; }
 
         void Awake()
         {
@@ -66,6 +66,7 @@ namespace EnemySystem
             _combatState = new CombatState(this);
             
             ChangeEnemyType(EnemyType.Normal);
+            ChangeState(AgentState.Patrol);
         }
         
         async void OnEnable()
@@ -131,10 +132,10 @@ namespace EnemySystem
 
         internal void ChangeState(AgentState newAgentState)
         {
-            if (currentAgentState == newAgentState) return;
+            if (CurrentAgentState == newAgentState || newAgentState == AgentState.None) return;
             _currentState?.Exit();
             
-            currentAgentState = newAgentState;
+            CurrentAgentState = newAgentState;
 
             _currentState = newAgentState switch
             {

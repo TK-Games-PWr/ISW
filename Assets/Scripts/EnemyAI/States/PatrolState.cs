@@ -15,11 +15,11 @@ namespace EnemySystem.States
 
         public void Tick()
         {
+            _brain.Movement.UpdatePatrolState();
         }
 
         public void Update()
         {
-            _brain.Movement.UpdatePatrolState();
         }
 
         public void Exit()

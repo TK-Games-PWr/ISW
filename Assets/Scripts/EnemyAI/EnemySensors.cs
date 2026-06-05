@@ -17,7 +17,7 @@ namespace EnemySystem
         float playerEyeLevel => PlayerActionsController.EyeLevel;
 
         float CurrentVerticalFOV =>
-            (_brain != null && _brain.currentAgentState != AgentState.Patrol) ? _config.alertedVerticalFOV : _config.verticalFOV;
+            (_brain != null && _brain.CurrentAgentState != AgentState.Patrol) ? _config.alertedVerticalFOV : _config.verticalFOV;
 
         public EnemySensors(EnemyBrain brain, Transform transform, SensorConfig config)
         {
@@ -85,7 +85,7 @@ namespace EnemySystem
             foreach (var hitCollider in hitColliders)
             {
                 EnemyBrain nearbyEnemy = hitCollider.GetComponent<EnemyBrain>();
-                if (nearbyEnemy != null && nearbyEnemy != _brain && nearbyEnemy.currentAgentState != AgentState.Combat)
+                if (nearbyEnemy != null && nearbyEnemy != _brain && nearbyEnemy.CurrentAgentState != AgentState.Combat)
                 {
                     nearbyEnemy.AlertSystem.TriggerMultiplier = 2f;
                     nearbyEnemy.AlertSystem.DetermineAlertLevel();

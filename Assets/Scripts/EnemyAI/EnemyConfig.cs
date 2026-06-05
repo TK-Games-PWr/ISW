@@ -12,6 +12,7 @@ public enum EnemyType
 
 public enum AgentState
 {
+    None,
     Patrol,
     Alert,
     Combat
