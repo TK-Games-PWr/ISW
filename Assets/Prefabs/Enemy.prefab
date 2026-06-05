@@ -6236,9 +6236,9 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.17161149
-  m_Height: 0.5720383
+  m_Height: 0.72234565
   m_Direction: 1
-  m_Center: {x: 0, y: 0.28601915, z: 0}
+  m_Center: {x: 6.6657546e-10, y: 0.2930649, z: -0.000000004261475}
 --- !u!54 &6504751814958709024
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -7250,9 +7250,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AICore
   baseConfig: {fileID: 11400000, guid: 74e9ad1c99ac2c7a8ab18c471a7bbe89, type: 2}
   patrolPoints: []
-  tickRate: 0.1
-  statOverrides: []
   isDeaf: 0
+  statOverrides: []
 --- !u!114 &5232498721366191019
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7309,7 +7308,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e00554a8c75ef14c88ed7751f8138ed9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
-  maxHealth: 20
   currentGun: {fileID: 8862762591890864933}
   gunPivot: {fileID: 6296989899685151540}
   glockWeapon: {fileID: 8862762591890864933}
@@ -7444,9 +7442,9 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.17161155
-  m_Height: 0.5720385
+  m_Height: 0.7028386
   m_Direction: 1
-  m_Center: {x: 0, y: 0.28601924, z: 0}
+  m_Center: {x: 6.72082e-11, y: 0.29899976, z: -0.000000006869671}
 --- !u!54 &5739679649851862873
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -18677,8 +18675,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.46640015, y: 0.39166033, z: 0.3819049}
-  m_Center: {x: 0.000000014901161, y: 0.19582991, z: 0.0055389553}
+  m_Size: {x: 0.5851933, y: 0.46743944, z: 0.30203208}
+  m_Center: {x: -5.404965e-16, y: 0.23371969, z: 0.045475267}
 --- !u!54 &2496217048280890391
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -18820,8 +18818,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.46640015, y: 0.36783463, z: 0.37810367}
-  m_Center: {x: 0.000000014901161, y: -0.040133998, z: 0.004516095}
+  m_Size: {x: 0.46640015, y: 0.5147265, z: 0.36325118}
+  m_Center: {x: 0.000000019352157, y: -0.027366225, z: 0.042372923}
 --- !u!54 &3809283380922279368
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -4441,6 +4441,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
       propertyPath: statOverrides.Array.size
       value: 4
       objectReference: {fileID: 0}
@@ -4570,6 +4574,159 @@ Transform:
   - {fileID: 664477732}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &1759053386
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 242277741912297780, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -7.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 242277741912297780, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.49999997
+      objectReference: {fileID: 0}
+    - target: {fileID: 242277741912297780, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 9.68
+      objectReference: {fileID: 0}
+    - target: {fileID: 242277741912297780, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.63377464
+      objectReference: {fileID: 0}
+    - target: {fileID: 242277741912297780, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 242277741912297780, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.77351785
+      objectReference: {fileID: 0}
+    - target: {fileID: 242277741912297780, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 242277741912297780, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 242277741912297780, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -101.342
+      objectReference: {fileID: 0}
+    - target: {fileID: 242277741912297780, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4169945757394515640, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: m_Name
+      value: Enemy (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4169945757394515640, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[1].enumValue
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[0].floatValue
+      value: 9999
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[4].floatValue
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[0].currentType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[1].currentType
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[1].stringValue
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[2].currentType
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[3].currentType
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[4].currentType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[0].variablePath
+      value: maxHealth
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[1].variablePath
+      value: sensors.enemyLayer
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[2].variablePath
+      value: sensors.sightObstaclesMask
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[3].variablePath
+      value: coverGuyCombat.preferredWeapon
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[4].variablePath
+      value: sensors.hearingRadius
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[0].overrideValue
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[1].overrideValue
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[3].enumStringValue
+      value: Shotgun
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[1].layerMaskValue.m_Bits
+      value: 256
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[2].layerMaskValue.m_Bits
+      value: 209
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[1].enumAssemblyQualifiedName
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[3].enumAssemblyQualifiedName
+      value: WeaponType, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
 --- !u!1 &1812638242
 GameObject:
   m_ObjectHideFlags: 0
@@ -5930,6 +6087,7 @@ SceneRoots:
   - {fileID: 2116580209}
   - {fileID: 631392442}
   - {fileID: 1690030570}
+  - {fileID: 1759053386}
   - {fileID: 811993973}
   - {fileID: 1826962371}
   - {fileID: 1541572116}
