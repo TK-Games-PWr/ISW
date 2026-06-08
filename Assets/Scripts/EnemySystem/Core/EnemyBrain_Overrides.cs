@@ -13,12 +13,14 @@ namespace EnemySystem
     [HideReferenceObjectPicker]
     public class StatOverride
     {
-        // which field to show in the Inspector
         [HideInInspector] 
         public OverrideType currentType = OverrideType.None;
         
         [HideInInspector] 
         public string enumAssemblyQualifiedName;
+        
+        [HideInInspector]
+        public string lastLoadedDefaultPath = "";
 
         [HorizontalGroup("Row")] 
         [HideLabel]
@@ -62,7 +64,6 @@ namespace EnemySystem
                     {
                         paths.Add(string.IsNullOrEmpty(currentPath) ? field.Name : $"{currentPath}.{field.Name}");
                     }
-
                     else if (field.FieldType.IsClass || (field.FieldType.IsValueType && !field.FieldType.IsPrimitive && !field.FieldType.IsEnum))
                     {
                         if (field.FieldType.Namespace != null && field.FieldType.Namespace.StartsWith("UnityEngine")) continue;
@@ -71,11 +72,10 @@ namespace EnemySystem
                 }
             }
 
-            BuildPaths(typeof(EnemyConfig), ""); // Make sure this matches base config class
+            BuildPaths(typeof(EnemyConfig), ""); 
             return paths;
         }
 
-        // This builds the dropdown list for custom enums
         IEnumerable<string> GetEnumDropdownChoices()
         {
             if (string.IsNullOrEmpty(enumAssemblyQualifiedName)) return new List<string>();
@@ -92,6 +92,38 @@ namespace EnemySystem
     
     public partial class EnemyBrain
     {
+        [SerializeField, HideInInspector]
+        string gitReadableOverrides;
+        
+        void OnValidate()
+        {
+            if (statOverrides == null || statOverrides.Count == 0)
+            {
+                gitReadableOverrides = "No Overrides";
+                return;
+            }
+            
+            string summary = "";
+            foreach (var stat in statOverrides)
+            {
+                if (string.IsNullOrEmpty(stat.variablePath)) continue;
+
+                string val = stat.currentType switch
+                {
+                    OverrideType.Float => stat.floatValue.ToString(),
+                    OverrideType.Int => stat.intValue.ToString(),
+                    OverrideType.Bool => stat.boolValue.ToString(),
+                    OverrideType.String => stat.stringValue,
+                    OverrideType.Enum => stat.enumStringValue,
+                    _ => "..."
+                };
+
+                summary += $"[{stat.variablePath}: {val}] ";
+            }
+
+            gitReadableOverrides = summary;
+        }
+        
         void ApplyOverrides()
         {
             foreach (var statOverride in statOverrides)
@@ -117,7 +149,6 @@ namespace EnemySystem
                     }
                     else
                     {
-                        // Safely apply the correct value based on what Type the field actually is
                         Type type = currentField.FieldType;
                         if (type == typeof(float)) currentField.SetValue(currentObject, statOverride.floatValue);
                         else if (type == typeof(int)) currentField.SetValue(currentObject, statOverride.intValue);
@@ -131,18 +162,19 @@ namespace EnemySystem
             }
         }
         
-        /// <summary>
-        /// Called automatically by Odin when a designer selects a new path in the dropdown.
-        /// It sets up the UI and pulls the default value.
-        /// </summary>
         public void UpdateOverrideType(string fullPath)
         {
             if (baseConfig == null || string.IsNullOrEmpty(fullPath)) return;
 
-            // Find the specific override in the list that the designer just changed
-            StatOverride target = statOverrides.Find(s => s.variablePath == fullPath);
+            StatOverride target = statOverrides.Find(s => s.variablePath == fullPath && s.lastLoadedDefaultPath != fullPath);
             if (target == null) return;
 
+#if UNITY_EDITOR
+            UnityEditor.Undo.RecordObject(this, "Set Stat Override Default");
+#endif
+            
+            target.lastLoadedDefaultPath = fullPath;
+            
             string[] pathParts = fullPath.Split('.');
             object currentObject = baseConfig; 
             FieldInfo currentField = null;
@@ -162,7 +194,6 @@ namespace EnemySystem
                     object val = currentField.GetValue(currentObject);
                     Type type = currentField.FieldType;
 
-                    // Update the target struct so Odin reveals the correct UI and sets the default data
                     if (type == typeof(float)) { target.currentType = OverrideType.Float; target.floatValue = (float)val; }
                     else if (type == typeof(int)) { target.currentType = OverrideType.Int; target.intValue = (int)val; }
                     else if (type == typeof(bool)) { target.currentType = OverrideType.Bool; target.boolValue = (bool)val; }
@@ -172,10 +203,15 @@ namespace EnemySystem
                     {
                         target.currentType = OverrideType.Enum;
                         target.enumStringValue = val.ToString();
-                        target.enumAssemblyQualifiedName = type.AssemblyQualifiedName;
+                        
+                        target.enumAssemblyQualifiedName = $"{type.FullName}, {type.Assembly.GetName().Name}";
                     }
                 }
             }
+
+#if UNITY_EDITOR
+            UnityEditor.EditorUtility.SetDirty(this);
+#endif
         }
     }
 }

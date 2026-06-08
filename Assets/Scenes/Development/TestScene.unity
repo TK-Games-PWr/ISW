@@ -1921,12 +1921,17 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: gitReadableOverrides
+      value: '[movement.combatAngularSpeed: 300] [sensors.maxSightDistance: 25] [tickRate:
+        0.2] '
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
       propertyPath: patrolPoints.Array.size
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
       propertyPath: statOverrides.Array.size
-      value: 0
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
       propertyPath: 'patrolPoints.Array.data[0]'
@@ -1941,12 +1946,56 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1826962371}
     - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[0].floatValue
+      value: 300
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[1].floatValue
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[2].floatValue
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[3].floatValue
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[0].currentType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[0].stringValue
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[1].currentType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[2].currentType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[3].currentType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
       propertyPath: statOverrides.Array.data[0].variablePath
-      value: sensors.horizontalFOV
+      value: movement.combatAngularSpeed
       objectReference: {fileID: 0}
     - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
       propertyPath: statOverrides.Array.data[1].variablePath
       value: sensors.maxSightDistance
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[2].variablePath
+      value: tickRate
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[3].variablePath
+      value: tickRate
       objectReference: {fileID: 0}
     - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
       propertyPath: statOverrides.Array.data[0].overrideValue
@@ -1955,6 +2004,22 @@ PrefabInstance:
     - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
       propertyPath: statOverrides.Array.data[1].overrideValue
       value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[0].lastLoadedDefaultPath
+      value: movement.combatAngularSpeed
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[1].lastLoadedDefaultPath
+      value: sensors.maxSightDistance
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[2].lastLoadedDefaultPath
+      value: tickRate
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[3].lastLoadedDefaultPath
+      value: tickRate
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4506,6 +4571,11 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: gitReadableOverrides
+      value: '[maxHealth: 1] [sensors.enemyLayer: ...] [sensors.sightObstaclesMask:
+        ...] [coverGuyCombat.preferredWeapon: Pistol] '
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
       propertyPath: statOverrides.Array.size
       value: 4
       objectReference: {fileID: 0}
@@ -4566,12 +4636,28 @@ PrefabInstance:
       value: Pistol
       objectReference: {fileID: 0}
     - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[0].lastLoadedDefaultPath
+      value: maxHealth
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[1].lastLoadedDefaultPath
+      value: sensors.enemyLayer
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
       propertyPath: statOverrides.Array.data[1].layerMaskValue.m_Bits
       value: 256
       objectReference: {fileID: 0}
     - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[2].lastLoadedDefaultPath
+      value: sensors.sightObstaclesMask
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
       propertyPath: statOverrides.Array.data[2].layerMaskValue.m_Bits
       value: 193
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[3].lastLoadedDefaultPath
+      value: coverGuyCombat.preferredWeapon
       objectReference: {fileID: 0}
     - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
       propertyPath: statOverrides.Array.data[1].enumAssemblyQualifiedName
@@ -4579,7 +4665,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
       propertyPath: statOverrides.Array.data[3].enumAssemblyQualifiedName
-      value: WeaponType, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      value: WeaponType, Assembly-CSharp
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4696,6 +4782,11 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: gitReadableOverrides
+      value: '[maxHealth: 999999] [sensors.enemyLayer: ...] [sensors.sightObstaclesMask:
+        ...] [coverGuyCombat.preferredWeapon: Pistol] [sensors.hearingRadius: 0] '
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
       propertyPath: statOverrides.Array.size
       value: 5
       objectReference: {fileID: 0}
@@ -4705,7 +4796,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
       propertyPath: statOverrides.Array.data[0].floatValue
-      value: 9999
+      value: 999999
       objectReference: {fileID: 0}
     - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
       propertyPath: statOverrides.Array.data[4].floatValue
@@ -4765,15 +4856,35 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
       propertyPath: statOverrides.Array.data[3].enumStringValue
-      value: Shotgun
+      value: Pistol
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[0].lastLoadedDefaultPath
+      value: maxHealth
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[1].lastLoadedDefaultPath
+      value: sensors.enemyLayer
       objectReference: {fileID: 0}
     - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
       propertyPath: statOverrides.Array.data[1].layerMaskValue.m_Bits
       value: 256
       objectReference: {fileID: 0}
     - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[2].lastLoadedDefaultPath
+      value: sensors.sightObstaclesMask
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
       propertyPath: statOverrides.Array.data[2].layerMaskValue.m_Bits
-      value: 209
+      value: 193
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[3].lastLoadedDefaultPath
+      value: coverGuyCombat.preferredWeapon
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[4].lastLoadedDefaultPath
+      value: sensors.hearingRadius
       objectReference: {fileID: 0}
     - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
       propertyPath: statOverrides.Array.data[1].enumAssemblyQualifiedName
@@ -4781,7 +4892,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
       propertyPath: statOverrides.Array.data[3].enumAssemblyQualifiedName
-      value: WeaponType, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      value: WeaponType, Assembly-CSharp
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
