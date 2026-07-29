@@ -1,0 +1,7 @@
+OVDF v1.1
+TK_Shared._3DPlayerMovement.PlayerActionsController, Assembly-CSharp
+MetaGuid:2505249dfcce32b07adb23095572cd08
+
+# baseHeadBobbingAmpl
+* [UnityEngine.RangeAttribute]
+	max = 0.1
