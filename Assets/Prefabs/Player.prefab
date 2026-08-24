@@ -1401,7 +1401,6 @@ MonoBehaviour:
   crouchedSpeed: 2
   baseHeadBobbingFreq: 10
   baseHeadBobbingAmpl: 0.032
-  pickCheckInterval: 0.09
   walkingAudioSource: {fileID: 6224119882570213993}
   jumpAudioSource: {fileID: 4931696179106626770}
   fallAudioSource: {fileID: 7495471553801055415}
@@ -1461,10 +1460,14 @@ MonoBehaviour:
   pitchLimit: 85
   CameraTarget: {fileID: 3626531652512954655}
   pickupRange: 4
-  pickupRadius: 0.2
+  pickupRadius: 0.0502
   pickupLayer:
     serializedVersion: 2
     m_Bits: 512
+  occluderLayer:
+    serializedVersion: 2
+    m_Bits: 321
+  pickCheckInterval: 0.09
   gravityScale: 2
   leftLeanInput: 0
   rightLeanInput: 0
@@ -1685,6 +1688,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI.PickInformatorUI
   pickInformation: {fileID: 4644101891208235496}
+  pickText: {fileID: 5663139353654800048}
+  partOfText: 'Press F to pick up: '
 --- !u!1 &3442097954280765814
 GameObject:
   m_ObjectHideFlags: 0

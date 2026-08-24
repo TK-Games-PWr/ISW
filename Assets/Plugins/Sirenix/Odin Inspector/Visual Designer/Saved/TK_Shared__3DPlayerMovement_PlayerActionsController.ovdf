@@ -5,3 +5,8 @@ MetaGuid:2505249dfcce32b07adb23095572cd08
 # baseHeadBobbingAmpl
 * [UnityEngine.RangeAttribute]
 	max = 0.1
+
+# pickupRadius
++ [UnityEngine.RangeAttribute]
+	min = 1E-05
+	max = 0.2
