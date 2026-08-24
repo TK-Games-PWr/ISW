@@ -1,0 +1,86 @@
+name: Auto Builder
+run-name: Auto reviewing ${{ github.ref }} branch.
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [ opened, reopened, synchronize ]
+    branches: [ main ]
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+jobs:
+  ReviewPullRequest:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - targetPlatform: StandaloneLinux64
+            name: Linux
+          - targetPlatform: StandaloneWindows64
+            name: Windows
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.ACCESS_TOKEN }}
+          submodules: true
+      - name: Free disk space
+        run: |
+          sudo swapoff -a
+          sudo rm -f /swapfile
+          sudo apt clean
+          docker rmi $(docker image ls -aq) 2>/dev/null || true
+          df -h
+      - name: Restore Library cache
+        uses: actions/cache@v4
+        with:
+          path: Library
+          key: Library-${{ matrix.targetPlatform }}-${{ hashFiles('ProjectSettings/ProjectSettings.asset') }}
+          restore-keys: |
+            Library-${{ matrix.targetPlatform }}-
+      - name: Set scripting backend to Mono
+        run: sudo mv "ProjectSettings/ProjectSettings-MONO.asset" "ProjectSettings/ProjectSettings.asset" || true
+      - name: Build Unity project
+        uses: game-ci/unity-builder@v4
+        continue-on-error: true
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          targetPlatform: ${{ matrix.targetPlatform }}
+          projectPath: .
+          allowDirtyBuild: true
+      - name: Set unity build check success output
+        if: success()
+        run: |
+          echo $'Unity build status (${{ matrix.name }} Mono):\nSuccess!\nBuild completed without errors.' > UnityBuildBodyFile.txt
+      - name: Set unity build check failure output
+        if: failure()
+        run: |
+          echo $'Unity build status (${{ matrix.name }} Mono):\nFailed\nRead action details for more information.' > UnityBuildBodyFile.txt
+      - name: Find comment for unity build check
+        if: always()
+        uses: peter-evans/find-comment@v2
+        id: FindCommentUnityBuild
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: 'github-actions[bot]'
+          body-includes: Unity build status (${{ matrix.name }} Mono)
+      - name: Create or update comment for unity build check
+        if: always()
+        uses: peter-evans/create-or-update-comment@v3
+        with:
+          comment-id: ${{ steps.FindCommentUnityBuild.outputs.comment-id }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body-file: 'UnityBuildBodyFile.txt'
+          edit-mode: replace
+      - name: Upload built Unity project
+        uses: actions/upload-artifact@v4
+        id: build-artifact
+        continue-on-error: true
+        with:
+          name: BuildedUnityProject-${{ matrix.name }}-Mono
+          path: build
