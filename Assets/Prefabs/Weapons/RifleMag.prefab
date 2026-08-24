@@ -154,6 +154,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad85bb9e7d608b612be55d1395552326, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TK_Shared.ObjectInteractions3D.GrabbableObject
+  displayName: Rifle Magazine
 --- !u!114 &8434207848330849913
 MonoBehaviour:
   m_ObjectHideFlags: 0

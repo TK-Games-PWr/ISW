@@ -1340,6 +1340,7 @@ GameObject:
   - component: {fileID: 6305359070947738222}
   - component: {fileID: 6559365026262274136}
   - component: {fileID: 7119792295786333065}
+  - component: {fileID: -7117775821316560265}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -1399,7 +1400,7 @@ MonoBehaviour:
   sprintSpeed: 6
   crouchedSpeed: 2
   baseHeadBobbingFreq: 10
-  baseHeadBobbingAmpl: 0.002
+  baseHeadBobbingAmpl: 0.032
   walkingAudioSource: {fileID: 6224119882570213993}
   jumpAudioSource: {fileID: 4931696179106626770}
   fallAudioSource: {fileID: 7495471553801055415}
@@ -1451,6 +1452,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 119
   jumpHeight: 2.5
+  lowJumpGravityMultiplier: 2.5
   lookSensitivity: {x: 0.1, y: 0.1}
   cameraNormalFOV: 60
   cameraSprintFOV: 80
@@ -1458,9 +1460,14 @@ MonoBehaviour:
   pitchLimit: 85
   CameraTarget: {fileID: 3626531652512954655}
   pickupRange: 4
+  pickupRadius: 0.0502
   pickupLayer:
     serializedVersion: 2
     m_Bits: 512
+  occluderLayer:
+    serializedVersion: 2
+    m_Bits: 321
+  pickCheckInterval: 0.09
   gravityScale: 2
   leftLeanInput: 0
   rightLeanInput: 0
@@ -1668,6 +1675,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Classification.DetectionDataExtractor
   detectionData: []
   aiData: []
+--- !u!114 &-7117775821316560265
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3395969552154099605}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f90d70514d2942c493d0e6342240f689, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UI.PickInformatorUI
+  pickInformation: {fileID: 4644101891208235496}
+  pickText: {fileID: 5663139353654800048}
+  partOfText: 'Press F to pick up: '
 --- !u!1 &3442097954280765814
 GameObject:
   m_ObjectHideFlags: 0
@@ -1926,6 +1948,143 @@ Transform:
   m_Children: []
   m_Father: {fileID: 7744008168814191168}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4644101891208235496
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1199689267375901762}
+  - component: {fileID: 1670989536989575078}
+  - component: {fileID: 5663139353654800048}
+  m_Layer: 7
+  m_Name: PickInformationText
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!224 &1199689267375901762
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4644101891208235496}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4742668316649132397}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: -38.8}
+  m_SizeDelta: {x: 200, y: 50}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &1670989536989575078
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4644101891208235496}
+  m_CullTransparentMesh: 1
+--- !u!114 &5663139353654800048
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4644101891208235496}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_text: Press F to pick up
+  m_isRightToLeft: 0
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontSharedMaterials: []
+  m_fontMaterial: {fileID: 0}
+  m_fontMaterials: []
+  m_fontColor32:
+    serializedVersion: 2
+    rgba: 1493172460
+  m_fontColor: {r: 0.9245283, g: 0, b: 0, a: 0.34901962}
+  m_enableVertexGradient: 0
+  m_colorMode: 3
+  m_fontColorGradient:
+    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
+    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColorGradientPreset: {fileID: 0}
+  m_spriteAsset: {fileID: 0}
+  m_tintAllSprites: 0
+  m_StyleSheet: {fileID: 0}
+  m_TextStyleHashCode: -1183493901
+  m_overrideHtmlColors: 0
+  m_faceColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontSize: 20.02
+  m_fontSizeBase: 20.02
+  m_fontWeight: 400
+  m_enableAutoSizing: 0
+  m_fontSizeMin: 18
+  m_fontSizeMax: 72
+  m_fontStyle: 0
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 256
+  m_textAlignment: 65535
+  m_characterSpacing: 0
+  m_characterHorizontalScale: 1
+  m_wordSpacing: 0
+  m_lineSpacing: 0
+  m_lineSpacingMax: 0
+  m_paragraphSpacing: 0
+  m_charWidthMaxAdj: 0
+  m_TextWrappingMode: 1
+  m_wordWrappingRatios: 0.4
+  m_overflowMode: 0
+  m_linkedTextComponent: {fileID: 0}
+  parentLinkedComponent: {fileID: 0}
+  m_enableKerning: 0
+  m_ActiveFontFeatures: 6e72656b
+  m_enableExtraPadding: 0
+  checkPaddingRequired: 0
+  m_isRichText: 1
+  m_EmojiFallbackSupport: 1
+  m_parseCtrlCharacters: 1
+  m_isOrthographic: 1
+  m_isCullingEnabled: 0
+  m_horizontalMapping: 0
+  m_verticalMapping: 0
+  m_uvLineOffset: 0
+  m_geometrySortingOrder: 0
+  m_IsTextObjectScaleStatic: 0
+  m_VertexBufferAutoSizeReduction: 0
+  m_useMaxVisibleDescender: 1
+  m_pageToDisplay: 1
+  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_isUsingLegacyAnimationComponent: 0
+  m_isVolumetricText: 0
+  m_hasFontAssetChanged: 0
+  m_baseMaterial: {fileID: 0}
+  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!1 &5029140265844683296
 GameObject:
   m_ObjectHideFlags: 0
@@ -2809,8 +2968,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Classification.ClassificationText
   text: {fileID: 2177106153212300947}
   classifierExeRelativePath: Scripts/Classification/.PythonModule/dist/
-  classifierBinaryName: inference
   modelRelativePath: Scripts/Classification/.PythonModule/
+  classifierBinaryName: inference
   modelFileName: model.joblib
   datapointsFileName: playerdata.csv
   githubRepo: rybydrapiezne/ISW
@@ -2854,6 +3013,7 @@ RectTransform:
   - {fileID: 5301082865228263305}
   - {fileID: 5761769223370494573}
   - {fileID: 3186797425943775436}
+  - {fileID: 1199689267375901762}
   m_Father: {fileID: 7744008168814191168}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
