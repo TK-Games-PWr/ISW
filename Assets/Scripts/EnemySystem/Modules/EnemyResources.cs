@@ -18,6 +18,9 @@ namespace EnemySystem
 
         public bool IsDead => _currentHealth <= 0;
         
+        [Header("General")]
+        public Transform eyes;
+        
         [Header("Combat Settings")]
         public Gun currentGun;
         [SerializeField] internal Transform gunPivot;
