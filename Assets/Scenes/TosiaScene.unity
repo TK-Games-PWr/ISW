@@ -6767,6 +6767,18 @@ PrefabInstance:
       propertyPath: hearingRadius
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: patrolPoints.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: 'patrolPoints.Array.data[0]'
+      value: 
+      objectReference: {fileID: 205450761}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: 'patrolPoints.Array.data[1]'
+      value: 
+      objectReference: {fileID: 1096688275}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -26727,16 +26739,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
       propertyPath: patrolPoints.Array.size
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
       propertyPath: 'patrolPoints.Array.data[0]'
       value: 
-      objectReference: {fileID: 914563503}
+      objectReference: {fileID: 1617599394}
     - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
       propertyPath: 'patrolPoints.Array.data[1]'
       value: 
-      objectReference: {fileID: 458053052}
+      objectReference: {fileID: 220156379}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -85824,16 +85836,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
       propertyPath: patrolPoints.Array.size
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
       propertyPath: 'patrolPoints.Array.data[0]'
       value: 
-      objectReference: {fileID: 914563503}
+      objectReference: {fileID: 372597927}
     - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
       propertyPath: 'patrolPoints.Array.data[1]'
       value: 
-      objectReference: {fileID: 458053052}
+      objectReference: {fileID: 1021159737}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -224315,16 +224327,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
       propertyPath: patrolPoints.Array.size
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
       propertyPath: 'patrolPoints.Array.data[0]'
       value: 
-      objectReference: {fileID: 914563503}
+      objectReference: {fileID: 882433722}
     - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
       propertyPath: 'patrolPoints.Array.data[1]'
       value: 
-      objectReference: {fileID: 458053052}
+      objectReference: {fileID: 1415789001}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -242575,6 +242587,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Enemy (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: patrolPoints.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: 'patrolPoints.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2102880909}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: 'patrolPoints.Array.data[1]'
+      value: 
+      objectReference: {fileID: 918673079}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -267934,6 +267958,34 @@ PrefabInstance:
       propertyPath: maxSightDistance
       value: 20
       objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: patrolPoints.Array.size
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: 'patrolPoints.Array.data[0]'
+      value: 
+      objectReference: {fileID: 422813610}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: 'patrolPoints.Array.data[1]'
+      value: 
+      objectReference: {fileID: 1857870293}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: 'patrolPoints.Array.data[2]'
+      value: 
+      objectReference: {fileID: 1106936187}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: 'patrolPoints.Array.data[3]'
+      value: 
+      objectReference: {fileID: 823726119}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: 'patrolPoints.Array.data[4]'
+      value: 
+      objectReference: {fileID: 1106936187}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: 'patrolPoints.Array.data[5]'
+      value: 
+      objectReference: {fileID: 1857870293}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -277344,16 +277396,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
       propertyPath: patrolPoints.Array.size
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
       propertyPath: 'patrolPoints.Array.data[0]'
       value: 
-      objectReference: {fileID: 914563503}
+      objectReference: {fileID: 1192407220}
     - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
       propertyPath: 'patrolPoints.Array.data[1]'
       value: 
-      objectReference: {fileID: 458053052}
+      objectReference: {fileID: 969039886}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -332867,16 +332919,24 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
       propertyPath: patrolPoints.Array.size
-      value: 0
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
       propertyPath: 'patrolPoints.Array.data[0]'
       value: 
-      objectReference: {fileID: 914563503}
+      objectReference: {fileID: 1671263581}
     - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
       propertyPath: 'patrolPoints.Array.data[1]'
       value: 
-      objectReference: {fileID: 458053052}
+      objectReference: {fileID: 593494446}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: 'patrolPoints.Array.data[2]'
+      value: 
+      objectReference: {fileID: 10473134}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: 'patrolPoints.Array.data[3]'
+      value: 
+      objectReference: {fileID: 2012860426}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -440894,6 +440954,22 @@ PrefabInstance:
       propertyPath: hearingRadius
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: patrolPoints.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: 'patrolPoints.Array.data[0]'
+      value: 
+      objectReference: {fileID: 1949635079}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: 'patrolPoints.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2072082148}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: 'patrolPoints.Array.data[2]'
+      value: 
+      objectReference: {fileID: 646985944}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -467724,6 +467800,42 @@ PrefabInstance:
       propertyPath: m_Name
       value: Enemy (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: gitReadableOverrides
+      value: '[movement.waitTimeAtWaypoint: 3] '
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: patrolPoints.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: 'patrolPoints.Array.data[0]'
+      value: 
+      objectReference: {fileID: 1108415920}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: 'patrolPoints.Array.data[1]'
+      value: 
+      objectReference: {fileID: 1791522548}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[0].floatValue
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[0].currentType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[0].variablePath
+      value: movement.waitTimeAtWaypoint
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
+      propertyPath: statOverrides.Array.data[0].lastLoadedDefaultPath
+      value: movement.waitTimeAtWaypoint
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -480029,16 +480141,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
       propertyPath: patrolPoints.Array.size
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
       propertyPath: 'patrolPoints.Array.data[0]'
       value: 
-      objectReference: {fileID: 914563503}
+      objectReference: {fileID: 438644195}
     - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
       propertyPath: 'patrolPoints.Array.data[1]'
       value: 
-      objectReference: {fileID: 458053052}
+      objectReference: {fileID: 971718172}
     - target: {fileID: 7587119339273579207, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
       propertyPath: maxHealth
       value: 25
@@ -481851,11 +481963,11 @@ PrefabInstance:
     - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
       propertyPath: 'patrolPoints.Array.data[0]'
       value: 
-      objectReference: {fileID: 914563503}
+      objectReference: {fileID: 458053052}
     - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
       propertyPath: 'patrolPoints.Array.data[1]'
       value: 
-      objectReference: {fileID: 458053052}
+      objectReference: {fileID: 914563503}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
