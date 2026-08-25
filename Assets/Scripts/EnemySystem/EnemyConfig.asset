@@ -1,0 +1,80 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a444d05e3c00f31087ae37aa6722afe, type: 3}
+  m_Name: EnemyConfig
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyConfig
+  maxHealth: 20
+  tickRate: 0.1
+  movement:
+    basePlayerSpeed: 4
+    patrolSpeedMultiplier: 1
+    baseAngularSpeed: 120
+    combatAngularSpeed: 360
+    waitTimeAtWaypoint: 2
+    agentStopDistance: 1
+  sensors:
+    playerTag: Player
+    enemyLayer:
+      serializedVersion: 2
+      m_Bits: 256
+    sightObstaclesMask:
+      serializedVersion: 2
+      m_Bits: 193
+    eyeLevel: 1.7
+    horizontalFOV: 90
+    verticalFOV: 45
+    alertedVerticalFOV: 180
+    maxSightDistance: 25
+    hearingRadius: 15
+  alert:
+    alertSensitivity: 5
+    timeToLoseAlertLevel: 3
+    fightDelay: 1
+    triggerMultiplierTimeout: 2
+    endCombatTimeout: 10
+  normalCombat:
+    rid: 4080402104110547108
+  coverGuyCombat:
+    rid: 4080402104110547109
+  rambenemyCombat:
+    rid: 4080402104110547110
+  references:
+    version: 2
+    RefIds:
+    - rid: 4080402104110547108
+      type: {class: NormalCombatConfig, ns: , asm: Assembly-CSharp}
+      data:
+        preferredWeapon: 0
+        weaponRange: 20
+        optimalCombatDistancePct: 0.7
+        combatSpeedMultiplier: 1.3
+        retreatSpeedMultiplier: 0.3
+        singleShotDelay: 0.6
+    - rid: 4080402104110547109
+      type: {class: CoverGuyCombatConfig, ns: , asm: Assembly-CSharp}
+      data:
+        preferredWeapon: 0
+        weaponRange: 20
+        optimalCombatDistancePct: 0.7
+        combatSpeedMultiplier: 1.3
+        retreatSpeedMultiplier: 0.3
+        singleShotDelay: 0.6
+        hidingSpeedMultiplier: 2
+    - rid: 4080402104110547110
+      type: {class: RambenemyCombatConfig, ns: , asm: Assembly-CSharp}
+      data:
+        preferredWeapon: 1
+        weaponRange: 5
+        optimalCombatDistancePct: 0.8
+        combatSpeedMultiplier: 1.3
+        retreatSpeedMultiplier: 0.3
+        singleShotDelay: 1

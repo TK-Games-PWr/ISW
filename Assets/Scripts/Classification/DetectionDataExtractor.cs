@@ -13,12 +13,12 @@ namespace Classification
         public List<float> detectionData;
 
         [SerializeField]
-        List<AICore> aiData;
+        List<EnemyBrain> aiData;
 
         List<int> _toRemove = new List<int>();
         void Awake()
         {
-            aiData = FindObjectsByType<AICore>(FindObjectsSortMode.None).ToList();
+            aiData = FindObjectsByType<EnemyBrain>(FindObjectsSortMode.None).ToList();
         }
 
         void Start()
@@ -37,7 +37,7 @@ namespace Classification
                     {
                         if (aiData[i] && !_toRemove.Contains(i))
                         {
-                            detection += aiData[i].triggerMultiplier;
+                            detection += aiData[i].AlertSystem.TriggerMultiplier;
                         }
                         else
                         {

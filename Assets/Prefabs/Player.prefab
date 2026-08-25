@@ -1619,7 +1619,7 @@ MonoBehaviour:
   meleeInfo: {fileID: 11400000, guid: 4959894a42797baadb33a352db6b74fb, type: 2}
   meleeRange: 2.5
   meleeAnim: {fileID: 7529757729605098505}
-  stealthKillBehindThreshold: -0.4
+  stealthKillBehindThreshold: -0.2
   throwForce: 15
   throwUpwardForce: 5
   holdPivot: {fileID: 1844550111215921797}

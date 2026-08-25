@@ -11,6 +11,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/TosiaScene.unity
     guid: bcb095e3f4480b649b636636ea4af7fd
+  - enabled: 1
+    path: Assets/Scenes/TosiaScene 1.unity
+    guid: 59b3287e1c940974fa1939efe6de1802
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 1227e9703ee2b203aae6d1692abc2101, type: 3}
   m_UseUCBPForAssetBundles: 0
