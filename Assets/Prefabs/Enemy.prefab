@@ -7097,6 +7097,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad85bb9e7d608b612be55d1395552326, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  displayName: 
 --- !u!114 &7783720580576294447
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7225,8 +7226,6 @@ GameObject:
   m_Component:
   - component: {fileID: 242277741912297780}
   - component: {fileID: 6540825745156625354}
-  - component: {fileID: 5232498721366191019}
-  - component: {fileID: 3394472783275146617}
   - component: {fileID: 7587119339273579207}
   - component: {fileID: 2558848397387947386}
   - component: {fileID: 4083881536312824282}
@@ -7272,50 +7271,6 @@ MonoBehaviour:
   isDeaf: 0
   statOverrides: []
   gitReadableOverrides: No Overrides
---- !u!114 &5232498721366191019
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4169945757394515640}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c67cc0fddc17e56189b12221f5528a63, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemySensors
-  playerTag: Player
-  enemyLayer:
-    serializedVersion: 2
-    m_Bits: 256
-  sightObstaclesMask:
-    serializedVersion: 2
-    m_Bits: 193
-  eyeLevel: 1.7
-  horizontalFOV: 90
-  verticalFOV: 45
-  alertedVerticalFOV: 180
-  maxSightDistance: 25
-  hearingRadius: 15
---- !u!114 &3394472783275146617
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4169945757394515640}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ed46fecc61c1565bd8163cfe88b658da, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyMovement
-  basePlayerVelocity: 4
-  patrolSpeedMultiplier: 1
-  baseAngularSpeed: 120
-  combatAngularSpeed: 360
-  patrolPoints: []
-  waitTimeAtWaypoint: 2
-  agentStopDistance: 1
 --- !u!114 &7587119339273579207
 MonoBehaviour:
   m_ObjectHideFlags: 0
