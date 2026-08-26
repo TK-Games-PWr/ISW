@@ -292,6 +292,37 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!1 &5053042602701615992
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2159651498695139882}
+  m_Layer: 9
+  m_Name: rHandGrip
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2159651498695139882
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5053042602701615992}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.6873541, y: -0.16596493, z: -0.16596495, w: 0.6873541}
+  m_LocalPosition: {x: -0.095, y: -0.098, z: 0.275}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5686522580117225250}
+  m_LocalEulerAnglesHint: {x: -90, y: 0, z: -27.149}
 --- !u!1 &5508192184010589520
 GameObject:
   m_ObjectHideFlags: 0
@@ -730,6 +761,8 @@ Transform:
   - {fileID: 6524570424516755776}
   - {fileID: 1850992705059875349}
   - {fileID: 950972994988055188}
+  - {fileID: 418865061127969817}
+  - {fileID: 2159651498695139882}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &6507239515347527644
@@ -812,6 +845,8 @@ MonoBehaviour:
   reloadStartSound: {fileID: 5044819488481388210}
   reloadEndSound: {fileID: 5443336829390512844}
   animator: {fileID: 3342870654971506683}
+  lHandGrip: {fileID: 418865061127969817}
+  rHandGrip: {fileID: 2159651498695139882}
   recoilAmount: 15
   recoilSide: 5
   recoilSpeed: 10
@@ -847,6 +882,37 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!1 &8678141230543431474
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 418865061127969817}
+  m_Layer: 9
+  m_Name: lHandGrip
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &418865061127969817
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8678141230543431474}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.7883832, y: 0.55457914, z: -0.09371563, w: 0.24922153}
+  m_LocalPosition: {x: 0.0453, y: -0.0305, z: -0.0437}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5686522580117225250}
+  m_LocalEulerAnglesHint: {x: -163.201, y: -26.302002, z: 74.2}
 --- !u!1001 &6353526902151358776
 PrefabInstance:
   m_ObjectHideFlags: 0

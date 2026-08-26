@@ -4791,10 +4791,6 @@ PrefabInstance:
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
-      propertyPath: statOverrides.Array.data[1].enumValue
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
       propertyPath: statOverrides.Array.data[0].floatValue
       value: 999999
       objectReference: {fileID: 0}
@@ -4845,14 +4841,6 @@ PrefabInstance:
     - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
       propertyPath: statOverrides.Array.data[4].variablePath
       value: sensors.hearingRadius
-      objectReference: {fileID: 0}
-    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
-      propertyPath: statOverrides.Array.data[0].overrideValue
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
-      propertyPath: statOverrides.Array.data[1].overrideValue
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
       propertyPath: statOverrides.Array.data[3].enumStringValue
@@ -6050,22 +6038,6 @@ PrefabInstance:
       propertyPath: 'patrolPoints.Array.data[2]'
       value: 
       objectReference: {fileID: 1541572116}
-    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
-      propertyPath: statOverrides.Array.data[0].variablePath
-      value: sensors.horizontalFOV
-      objectReference: {fileID: 0}
-    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
-      propertyPath: statOverrides.Array.data[1].variablePath
-      value: sensors.maxSightDistance
-      objectReference: {fileID: 0}
-    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
-      propertyPath: statOverrides.Array.data[0].overrideValue
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
-      propertyPath: statOverrides.Array.data[1].overrideValue
-      value: 50
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

@@ -8,6 +8,7 @@ namespace PlayerShootingSystem
 {
     public class Gun : MonoBehaviour
     {
+        [Header("General")]
         static readonly int ReloadAnimation = Animator.StringToHash("Reload");
         public GunInfo gunInfo;
         public int ammoInMag;
@@ -18,6 +19,10 @@ namespace PlayerShootingSystem
         [SerializeField] AudioSource reloadStartSound;
         [SerializeField] AudioSource reloadEndSound;
         [SerializeField] Animator animator;
+
+        [Header("Helpers")]
+        [SerializeField] internal Transform lHandGrip;
+        [SerializeField] internal Transform rHandGrip;
         
         [Header("Gun Recoil")]
         public float recoilAmount = 8f;       

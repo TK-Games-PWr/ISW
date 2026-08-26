@@ -3,6 +3,7 @@ using System;
 using PlayerShootingSystem;
 using TK_Shared._3DPlayerMovement;
 using UnityEngine.AI;
+using UnityEngine.Animations.Rigging;
 
 namespace EnemySystem
 {
@@ -19,7 +20,20 @@ namespace EnemySystem
         public bool IsDead => _currentHealth <= 0;
         
         [Header("General")]
-        public Transform eyes;
+        [Tooltip("Use for vision origin, raycasts etc.")]
+        [SerializeField] internal Transform eyes;
+
+        Transform _currentLeftGrip;
+        Transform _currentRightGrip;
+        
+        [SerializeField] Transform rHandIdleTarget;
+        [SerializeField] Transform lHandIdleTarget;
+        
+        [SerializeField] Transform rHandTarget;
+        [SerializeField] Transform lHandTarget;
+        
+        [SerializeField] Transform rFootTarget;
+        [SerializeField] Transform lFootTarget;
         
         [Header("Combat Settings")]
         public Gun currentGun;
@@ -39,6 +53,18 @@ namespace EnemySystem
            _animController = GetComponent<AIAnimationController>();
         }
 
+        void LateUpdate()
+        {
+            if (_currentRightGrip != null)
+            {
+                rHandTarget.SetPositionAndRotation(_currentRightGrip.position, _currentRightGrip.rotation);
+            }
+            if (_currentLeftGrip != null)
+            {
+                lHandTarget.SetPositionAndRotation(_currentLeftGrip.position, _currentLeftGrip.rotation);
+            }
+        }
+
         public void SwitchWeapon(WeaponType weaponType)
         {
             currentGun.gameObject.SetActive(false);
@@ -49,6 +75,13 @@ namespace EnemySystem
                 WeaponType.Pistol => glockWeapon,
                 _ => glockWeapon // Default fallback
             };
+            
+            _currentRightGrip = rHandIdleTarget;
+            _currentLeftGrip = lHandIdleTarget;
+            
+            if(currentGun.rHandGrip != null) _currentRightGrip = currentGun.rHandGrip;
+            if(currentGun.lHandGrip != null) _currentLeftGrip = currentGun.lHandGrip;
+            
             
             currentGun.gameObject.SetActive(true);
         }
