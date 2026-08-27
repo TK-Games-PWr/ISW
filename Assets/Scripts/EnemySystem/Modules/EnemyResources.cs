@@ -2,8 +2,9 @@ using UnityEngine;
 using System;
 using PlayerShootingSystem;
 using TK_Shared._3DPlayerMovement;
+using TK_Shared.ObjectInteractions3D;
 using UnityEngine.AI;
-using UnityEngine.Animations.Rigging;
+using UnityEngine.Serialization;
 
 namespace EnemySystem
 {
@@ -22,22 +23,10 @@ namespace EnemySystem
         [Header("General")]
         [Tooltip("Use for vision origin, raycasts etc.")]
         [SerializeField] internal Transform eyes;
-
-        Transform _currentLeftGrip;
-        Transform _currentRightGrip;
-        
-        [SerializeField] Transform rHandIdleTarget;
-        [SerializeField] Transform lHandIdleTarget;
-        
-        [SerializeField] Transform rHandTarget;
-        [SerializeField] Transform lHandTarget;
-        
-        [SerializeField] Transform rFootTarget;
-        [SerializeField] Transform lFootTarget;
         
         [Header("Combat Settings")]
         public Gun currentGun;
-        [SerializeField] internal Transform gunPivot;
+        [FormerlySerializedAs("gunPivot")] [SerializeField] internal Transform gunParent;
         [Space(10)]
         [SerializeField] internal Gun glockWeapon;
         [SerializeField] internal Gun shotgunWeapon;
@@ -51,18 +40,7 @@ namespace EnemySystem
             _maxHealth = _brain.Config.maxHealth;
             _currentHealth = _maxHealth;
            _animController = GetComponent<AIAnimationController>();
-        }
-
-        void LateUpdate()
-        {
-            if (_currentRightGrip != null)
-            {
-                rHandTarget.SetPositionAndRotation(_currentRightGrip.position, _currentRightGrip.rotation);
-            }
-            if (_currentLeftGrip != null)
-            {
-                lHandTarget.SetPositionAndRotation(_currentLeftGrip.position, _currentLeftGrip.rotation);
-            }
+           _animController.brain = _brain;
         }
 
         public void SwitchWeapon(WeaponType weaponType)
@@ -76,12 +54,8 @@ namespace EnemySystem
                 _ => glockWeapon // Default fallback
             };
             
-            _currentRightGrip = rHandIdleTarget;
-            _currentLeftGrip = lHandIdleTarget;
-            
-            if(currentGun.rHandGrip != null) _currentRightGrip = currentGun.rHandGrip;
-            if(currentGun.lHandGrip != null) _currentLeftGrip = currentGun.lHandGrip;
-            
+            _animController.humanoidAnimator.SetLeftHandTarget(currentGun.lHandGrip);
+            _animController.humanoidAnimator.SetRightHandTarget(currentGun.rHandGrip);
             
             currentGun.gameObject.SetActive(true);
         }
@@ -115,9 +89,14 @@ namespace EnemySystem
             OnEnemyDied?.Invoke(this);
             Lobotomize();
             _animController.SetRagdoll(true);
+            
+            currentGun.GetComponent<GrabbableObject>().Drop();
+            Destroy(currentGun.GetComponent<GrabbableObject>()); // so weapon is not pickable
+            
             GetComponent<Collider>().enabled = false;
             int deadLayer = LayerMask.NameToLayer("EnemyFainted");
             SetLayerRecursively(gameObject, deadLayer);
+            
             //Rigidbody rb = gameObject.AddComponent<Rigidbody>();
             //rb.AddForceAtPosition(Vector3.back * 2, transform.position + new Vector3(0, 0.5f, 0), ForceMode.Impulse);
             // uncomment if is supposed to disappear, maybe add some delay

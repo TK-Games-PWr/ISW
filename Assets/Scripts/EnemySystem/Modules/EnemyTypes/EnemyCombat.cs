@@ -51,7 +51,7 @@ namespace EnemySystem
                     resources.currentGun.gameObject.SetActive(true);
                 }
                 
-                grabbable.Grab(resources.gunPivot);
+                grabbable.Grab(resources.gunParent);
                 
                 if(shouldDisable) resources.currentGun.gameObject.SetActive(false);
             }
@@ -127,7 +127,7 @@ namespace EnemySystem
             currentAmmo--;
             resources.currentGun.PerformShoot();
 
-            Vector3 rayOrigin = resources.gunPivot.position;
+            Vector3 rayOrigin = resources.gunParent.position;
             
             Vector3 targetPosition = sensors.PlayerTransform.position + Vector3.up * PlayerActionsController.EyeLevel;
             
