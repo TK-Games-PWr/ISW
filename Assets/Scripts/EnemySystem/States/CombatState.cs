@@ -43,7 +43,7 @@ namespace EnemySystem.States
         public void Update()
         {
             _timeInCombat += Time.deltaTime;
-            if (_sensors.PlayerTransform == null || Combat.IsReloading) return;
+            if (_sensors.PlayerTransform == null) return;
 
             _hasLos = _sensors.IsPlayerVisible;
             Combat.RotateTowardsPlayer(_sensors.PlayerTransform);
@@ -67,7 +67,7 @@ namespace EnemySystem.States
             }
 
             // Handle Shooting
-            if (_distanceToPlayer <= Combat.WeaponRange && _hasLos)
+            if (_distanceToPlayer <= Combat.WeaponRange && _hasLos && !Combat.IsReloading)
             {
                 Combat.CombatAction();
             }

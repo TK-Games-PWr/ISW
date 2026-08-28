@@ -17,6 +17,7 @@ namespace EnemySystem
         protected EnemyMovement movement;
         protected EnemyResources resources;
         protected EnemyBrain brain;
+        readonly protected AIAnimationController animationController;
 
         protected int availableAmmo;
 
@@ -29,7 +30,7 @@ namespace EnemySystem
         protected int currentAmmo;
         protected float nextFireTime = 0f;
         
-        public EnemyCombat(EnemyBrain brain, Transform transform, NavMeshAgent agent, EnemySensors sensors, EnemyMovement movement, EnemyResources resources, CombatConfig config)
+        public EnemyCombat(EnemyBrain brain, Transform transform, NavMeshAgent agent, EnemySensors sensors, EnemyMovement movement, EnemyResources resources, AIAnimationController animationController, CombatConfig config)
         {
             this.brain = brain;
             this.transform = transform;
@@ -37,6 +38,7 @@ namespace EnemySystem
             this.sensors = sensors;
             this.movement = movement;
             this.resources = resources;
+            this.animationController = animationController;
             this.config = config;
         }
 
@@ -51,7 +53,7 @@ namespace EnemySystem
                     resources.currentGun.gameObject.SetActive(true);
                 }
                 
-                grabbable.Grab(resources.gunParent);
+                grabbable.Grab(resources.gunParent, true);
                 
                 if(shouldDisable) resources.currentGun.gameObject.SetActive(false);
             }
@@ -186,9 +188,11 @@ namespace EnemySystem
         {
             IsReloading = true;
             agent.isStopped = true;
-
+            animationController.SetState(brain.CurrentAgentState, true);
+            
             yield return new WaitForSeconds(GunInfo.reloadTime);
-
+            
+            animationController.SetState(brain.CurrentAgentState, false);
             currentAmmo = availableAmmo > GunInfo.maxAmmo ?  GunInfo.maxAmmo : availableAmmo;
             availableAmmo -= currentAmmo;
             IsReloading = false;

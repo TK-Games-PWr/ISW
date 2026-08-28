@@ -91,6 +91,7 @@ namespace EnemySystem
             _brain.StopAllCoroutines();
             _isWaiting = false;
             _animationController.AgentLooking(false);
+            _animationController.StopAllCoroutines();
         }
 
         internal void StartLookAround(float duration, EnemyBrain brain)
@@ -108,7 +109,7 @@ namespace EnemySystem
             _isWaiting = true;
             _agent.isStopped = true;
             _animationController.AgentLooking(true);
-            yield return _brain.StartCoroutine(SweepRotationRoutine(_config.waitTimeAtWaypoint, false, 30));
+            yield return _brain.StartCoroutine(_animationController.SweepRotationRoutine(_config.waitTimeAtWaypoint, false, 30f));
             _animationController.AgentLooking(false);
             _agent.isStopped = false;
             GoToNextPatrolPoint();
@@ -119,7 +120,7 @@ namespace EnemySystem
         IEnumerator LookAroundRoutine(float duration, EnemyBrain brain)
         {
             _agent.isStopped = true;
-            yield return _brain.StartCoroutine(SweepRotationRoutine(duration, _sensors.IsPlayerVisible));
+            yield return _brain.StartCoroutine(_animationController.SweepRotationRoutine(duration, _sensors.IsPlayerVisible));
             _agent.isStopped = false;
             brain.ChangeState(AgentState.Patrol);
         }
@@ -136,48 +137,10 @@ namespace EnemySystem
             if (!_agent.pathPending && _agent.remainingDistance <= _agent.stoppingDistance) _agent.velocity = Vector3.zero;
             
             _agent.isStopped = true;
-            yield return _brain.StartCoroutine(SweepRotationRoutine(duration, false, 70f));
+            yield return _brain.StartCoroutine(_animationController.SweepRotationRoutine(duration, false, 70f));
 
             _agent.isStopped = false; 
             brain.AlertSystem.DetermineAlertLevel(0.2f);
-        }
-
-        IEnumerator SweepRotationRoutine(float duration, bool trackLastKnownPosition, float lookAngle = 70f)
-        {
-            float timer = 0f;
-            bool lookingLeft = true;
-            Quaternion centerRotation = _transform.rotation;
-
-            while (timer < duration)
-            {
-                if (trackLastKnownPosition)
-                {
-                    Vector3 direction = (_sensors.LastKnownPosition - _transform.position).normalized;
-                    if (direction != Vector3.zero)
-                        centerRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
-
-                    if (_sensors.IsPlayerVisible)
-                    {
-                        timer = 0f;
-                        _transform.rotation = Quaternion.RotateTowards(_transform.rotation, centerRotation,
-                            _agent.angularSpeed * Time.deltaTime);
-                        yield return null;
-                        continue;
-                    }
-                }
-                else
-                {
-                    if (_sensors.IsPlayerVisible) break;
-                }
-
-                timer += Time.deltaTime;
-                Quaternion targetSweep = centerRotation * Quaternion.Euler(0, lookingLeft ? -lookAngle : lookAngle, 0);
-                _transform.rotation = Quaternion.RotateTowards(_transform.rotation, targetSweep,
-                    _agent.angularSpeed * Time.deltaTime / 2f);
-
-                if (Quaternion.Angle(_transform.rotation, targetSweep) < 1f) lookingLeft = !lookingLeft;
-                yield return null;
-            }
         }
 
         IEnumerator FixRotationRoutine(Quaternion targetRotation, float duration)

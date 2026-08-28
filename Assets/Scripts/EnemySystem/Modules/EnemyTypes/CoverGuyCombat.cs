@@ -8,8 +8,8 @@ namespace EnemySystem
         readonly LayerMask _checkCoverMask;
         readonly CoverGuyCombatConfig _coverConfig;
         
-        public CoverGuyCombat(EnemyBrain brain, Transform transform, NavMeshAgent agent, EnemySensors sensors, EnemyMovement movement, EnemyResources resources, CoverGuyCombatConfig config) 
-            : base(brain, transform, agent, sensors, movement, resources, config)
+        public CoverGuyCombat(EnemyBrain brain, Transform transform, NavMeshAgent agent, EnemySensors sensors, EnemyMovement movement, EnemyResources resources, AIAnimationController animationController, CoverGuyCombatConfig config) 
+            : base(brain, transform, agent, sensors, movement, resources, animationController, config)
         {
             _checkCoverMask = brain.Config.sensors.sightObstaclesMask;
             

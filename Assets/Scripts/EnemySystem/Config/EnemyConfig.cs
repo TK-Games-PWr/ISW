@@ -96,8 +96,7 @@ public class SensorConfig
 
     [Header("Vision Settings")]
     public LayerMask sightObstaclesMask;
-
-    public float eyeLevel = 1.7f;
+    
     public float horizontalFOV = 100f;
     public float verticalFOV = 40f;
 
@@ -139,24 +138,24 @@ public abstract class CombatConfig
     [Tooltip("Extra delay added between shots for semi-automatic weapons to simulate an AI's trigger finger.")]
     public float singleShotDelay = 0.6f;
 
-    public abstract EnemyCombat CreateCombatInstance(EnemyBrain brain, Transform transform, NavMeshAgent agent, EnemySensors sensors, EnemyMovement movement, EnemyResources resources);
+    public abstract EnemyCombat CreateCombatInstance(EnemyBrain brain, Transform transform, NavMeshAgent agent, EnemySensors sensors, EnemyMovement movement, EnemyResources resources, AIAnimationController animationController);
 }
 
 [System.Serializable]
 public class NormalCombatConfig : CombatConfig
 {
-    public override EnemyCombat CreateCombatInstance(EnemyBrain brain, Transform transform, NavMeshAgent agent, EnemySensors sensors, EnemyMovement movement, EnemyResources resources)
+    public override EnemyCombat CreateCombatInstance(EnemyBrain brain, Transform transform, NavMeshAgent agent, EnemySensors sensors, EnemyMovement movement, EnemyResources resources, AIAnimationController animationController)
     {
-        return new EnemyCombat(brain, transform, agent, sensors, movement, resources, this);
+        return new EnemyCombat(brain, transform, agent, sensors, movement, resources, animationController, this);
     }
 }
 
 [System.Serializable]
 public class RambenemyCombatConfig : CombatConfig
 {
-    public override EnemyCombat CreateCombatInstance(EnemyBrain brain, Transform transform, NavMeshAgent agent, EnemySensors sensors, EnemyMovement movement, EnemyResources resources)
+    public override EnemyCombat CreateCombatInstance(EnemyBrain brain, Transform transform, NavMeshAgent agent, EnemySensors sensors, EnemyMovement movement, EnemyResources resources, AIAnimationController animationController)
     {
-        return new RamberCombat(brain, transform, agent, sensors, movement, resources, this);
+        return new RamberCombat(brain, transform, agent, sensors, movement, resources, animationController, this);
     }
 }
 
@@ -166,8 +165,8 @@ public class CoverGuyCombatConfig : CombatConfig
     [Header("Cover Guy Specific")]
     public float hidingSpeedMultiplier = 2f;
 
-    public override EnemyCombat CreateCombatInstance(EnemyBrain brain, Transform transform, NavMeshAgent agent, EnemySensors sensors, EnemyMovement movement, EnemyResources resources)
+    public override EnemyCombat CreateCombatInstance(EnemyBrain brain, Transform transform, NavMeshAgent agent, EnemySensors sensors, EnemyMovement movement, EnemyResources resources, AIAnimationController animationController)
     {
-        return new CoverGuyCombat(brain, transform, agent, sensors, movement, resources, this);
+        return new CoverGuyCombat(brain, transform, agent, sensors, movement, resources, animationController, this);
     }
 }

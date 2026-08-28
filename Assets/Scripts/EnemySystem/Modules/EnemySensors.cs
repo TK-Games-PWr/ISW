@@ -5,10 +5,11 @@ namespace EnemySystem
 {
     public class EnemySensors
     {
-        internal Transform PlayerTransform { get; private set; }
-        internal Vector3 LastKnownPosition { get; private set; }
-        internal PlayerResources PlayerResources { get; private set; }
+        internal Transform PlayerTransform { get; }
+        Transform EyesTransform { get; }
+        internal PlayerResources PlayerResources { get; }
         internal bool IsPlayerVisible { get; private set; }
+        internal Vector3 LastKnownPosition { get; private set; }
 
         readonly SensorConfig _config;
         readonly Transform _transform;
@@ -19,11 +20,12 @@ namespace EnemySystem
         float CurrentVerticalFOV =>
             (_brain != null && _brain.CurrentAgentState != AgentState.Patrol) ? _config.alertedVerticalFOV : _config.verticalFOV;
 
-        public EnemySensors(EnemyBrain brain, Transform transform, SensorConfig config)
+        public EnemySensors(EnemyBrain brain, Transform transform, Transform eyesTransform, SensorConfig config)
         {
             _brain = brain;
             _transform = transform;
             _config = config;
+            EyesTransform = eyesTransform;
 
             GameObject player = GameObject.FindGameObjectWithTag(_config.playerTag);
             if (player != null)
@@ -45,11 +47,11 @@ namespace EnemySystem
             float distanceToPlayer = Vector3.Distance(_transform.position, PlayerTransform.position);
             if (distanceToPlayer > _config.maxSightDistance) return false;
 
-            Vector3 rayStartOrigin = _transform.position + Vector3.up * _config.eyeLevel;
+            Vector3 rayStartOrigin = EyesTransform.position;
             Vector3 targetPosition = PlayerTransform.position + Vector3.up * PlayerEyeLevel;
             Vector3 directionToPlayer = (targetPosition - rayStartOrigin).normalized;
 
-            Vector3 localDirToPlayer = _transform.InverseTransformDirection(directionToPlayer);
+            Vector3 localDirToPlayer = EyesTransform.InverseTransformDirection(directionToPlayer);
 
             float horizontalAngle = Mathf.Abs(Mathf.Atan2(localDirToPlayer.x, localDirToPlayer.z) * Mathf.Rad2Deg);
 
@@ -94,15 +96,15 @@ namespace EnemySystem
         }
 
 #if UNITY_EDITOR
-        void OnDrawGizmos()
+        internal void OnDrawGizmos()
         {
             if (PlayerTransform == null || _brain.IsDead) return;
 
-            Vector3 rayStartOrigin = _transform.position + Vector3.up * _config.eyeLevel;
+            Vector3 rayStartOrigin = EyesTransform.position;
             Vector3 targetPosition = PlayerTransform.position + Vector3.up * PlayerEyeLevel;
             Vector3 directionToPlayer = (targetPosition - rayStartOrigin).normalized;
 
-            Vector3 localDirToPlayer = _transform.InverseTransformDirection(directionToPlayer);
+            Vector3 localDirToPlayer = EyesTransform.InverseTransformDirection(directionToPlayer);
 
             float horizontalAngle = Mathf.Abs(Mathf.Atan2(localDirToPlayer.x, localDirToPlayer.z) * Mathf.Rad2Deg);
             float flatDistance = Mathf.Sqrt(localDirToPlayer.x * localDirToPlayer.x + localDirToPlayer.z * localDirToPlayer.z);
@@ -121,19 +123,19 @@ namespace EnemySystem
             }
         }
 
-        void OnDrawGizmosSelected()
+        internal void OnDrawGizmosSelected()
         {
-            Vector3 rayStartOrigin = _transform.position + Vector3.up * _config.eyeLevel;
+            Vector3 rayStartOrigin = EyesTransform.position;
 
             Gizmos.color = new Color(1f, 1f, 0f, 0.5f);
 
             float halfV = _config.verticalFOV / 2f;
             float halfH = _config.horizontalFOV / 2f;
 
-            Vector3 topLeftDir = _transform.rotation * Quaternion.Euler(-halfV, -halfH, 0) * Vector3.forward;
-            Vector3 topRightDir = _transform.rotation * Quaternion.Euler(-halfV, halfH, 0) * Vector3.forward;
-            Vector3 bottomLeftDir = _transform.rotation * Quaternion.Euler(halfV, -halfH, 0) * Vector3.forward;
-            Vector3 bottomRightDir = _transform.rotation * Quaternion.Euler(halfV, halfH, 0) * Vector3.forward;
+            Vector3 topLeftDir = EyesTransform.rotation * Quaternion.Euler(-halfV, -halfH, 0) * Vector3.forward;
+            Vector3 topRightDir = EyesTransform.rotation * Quaternion.Euler(-halfV, halfH, 0) * Vector3.forward;
+            Vector3 bottomLeftDir = EyesTransform.rotation * Quaternion.Euler(halfV, -halfH, 0) * Vector3.forward;
+            Vector3 bottomRightDir = EyesTransform.rotation * Quaternion.Euler(halfV, halfH, 0) * Vector3.forward;
 
             Vector3 topLeft = rayStartOrigin + topLeftDir * _config.maxSightDistance;
             Vector3 topRight = rayStartOrigin + topRightDir * _config.maxSightDistance;
@@ -155,7 +157,7 @@ namespace EnemySystem
             // visibility shadow
             UnityEditor.Handles.color = new Color(0f, 0f, 0f, 0.1f);
 
-            Vector3 flatForward = _transform.forward;
+            Vector3 flatForward = EyesTransform.forward;
             flatForward.y = 0;
 
             if (flatForward.sqrMagnitude > 0.001f)

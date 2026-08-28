@@ -25,9 +25,9 @@ public class DamageEffect : MonoBehaviour
     
     public void OnPlayerHit(float damage)
     {
-        if (damage < lowDmgAmount) return;
+        if (damage <= 0f) return;
         StopAllCoroutines(); 
-        StartCoroutine(FadeOutVignette(damage));
+        StartCoroutine(FadeOutVignette(Mathf.Max(lowDmgAmount, damage)));
     }
 
     IEnumerator FadeOutVignette(float damage)

@@ -529,6 +529,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TK_Shared.ObjectInteractions3D.GrabbableObject
   displayName: Pistol
+  thirdPersonPositionOffset: {x: -0.05, y: 0, z: 0}
+  thirdPersonRotationOffset: {x: 0, y: -5, z: 0}
 --- !u!65 &6180968850391576225
 BoxCollider:
   m_ObjectHideFlags: 0

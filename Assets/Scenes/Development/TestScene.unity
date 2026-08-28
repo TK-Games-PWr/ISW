@@ -1958,10 +1958,6 @@ PrefabInstance:
       value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
-      propertyPath: statOverrides.Array.data[3].floatValue
-      value: 0.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
       propertyPath: statOverrides.Array.data[0].currentType
       value: 1
       objectReference: {fileID: 0}
@@ -1978,10 +1974,6 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
-      propertyPath: statOverrides.Array.data[3].currentType
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
       propertyPath: statOverrides.Array.data[0].variablePath
       value: movement.combatAngularSpeed
       objectReference: {fileID: 0}
@@ -1994,18 +1986,6 @@ PrefabInstance:
       value: tickRate
       objectReference: {fileID: 0}
     - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
-      propertyPath: statOverrides.Array.data[3].variablePath
-      value: tickRate
-      objectReference: {fileID: 0}
-    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
-      propertyPath: statOverrides.Array.data[0].overrideValue
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
-      propertyPath: statOverrides.Array.data[1].overrideValue
-      value: 50
-      objectReference: {fileID: 0}
-    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
       propertyPath: statOverrides.Array.data[0].lastLoadedDefaultPath
       value: movement.combatAngularSpeed
       objectReference: {fileID: 0}
@@ -2015,10 +1995,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
       propertyPath: statOverrides.Array.data[2].lastLoadedDefaultPath
-      value: tickRate
-      objectReference: {fileID: 0}
-    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
-      propertyPath: statOverrides.Array.data[3].lastLoadedDefaultPath
       value: tickRate
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -4692,10 +4668,6 @@ PrefabInstance:
       value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
-      propertyPath: statOverrides.Array.data[1].enumValue
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
       propertyPath: statOverrides.Array.data[0].floatValue
       value: 1
       objectReference: {fileID: 0}
@@ -4734,14 +4706,6 @@ PrefabInstance:
     - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
       propertyPath: statOverrides.Array.data[3].variablePath
       value: coverGuyCombat.preferredWeapon
-      objectReference: {fileID: 0}
-    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
-      propertyPath: statOverrides.Array.data[0].overrideValue
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
-      propertyPath: statOverrides.Array.data[1].overrideValue
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6540825745156625354, guid: de332b1f07dc0c80d915bef4f1271cc7, type: 3}
       propertyPath: statOverrides.Array.data[3].enumStringValue
@@ -6191,10 +6155,6 @@ PrefabInstance:
     - target: {fileID: 379227340926306092, guid: 6cd1fa7741d8df6a18f79341cf97b992, type: 3}
       propertyPath: m_LocalRotation.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4006821671577702440, guid: 6cd1fa7741d8df6a18f79341cf97b992, type: 3}
-      propertyPath: wallDampingMultiplier
-      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7202533678562181328, guid: 6cd1fa7741d8df6a18f79341cf97b992, type: 3}
       propertyPath: m_Name

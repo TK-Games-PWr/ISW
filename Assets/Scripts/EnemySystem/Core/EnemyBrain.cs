@@ -26,6 +26,8 @@ namespace EnemySystem
         public EnemyCombat Combat { get; private set; }
         public EnemyResources Resources { get; private set; }
         public EnemyAlertSystem AlertSystem { get; private set; }
+
+        AIAnimationController _animController;
         
         // --- States ---
         IEnemyState _currentState;
@@ -55,10 +57,10 @@ namespace EnemySystem
             Resources.Init();
             
             NavMeshAgent agent = GetComponent<NavMeshAgent>();
-            AIAnimationController animController = GetComponent<AIAnimationController>();
+            _animController = GetComponent<AIAnimationController>();
             
-            Sensors = new EnemySensors(this, transform, Config.sensors);
-            Movement = new EnemyMovement(this, transform, agent, Sensors, animController, Config.movement, patrolPoints);
+            Sensors = new EnemySensors(this, transform, Resources.eyes, Config.sensors);
+            Movement = new EnemyMovement(this, transform, agent, Sensors, _animController, Config.movement, patrolPoints);
             AlertSystem = new EnemyAlertSystem(this, Sensors, Config.alert);
             
             _patrolState = new PatrolState(this);
@@ -153,6 +155,8 @@ namespace EnemySystem
             {
                 Combat.ResetCombatState();
             }
+            
+            _animController.SetState(CurrentAgentState);
 
             _currentState?.Enter();
         }
@@ -164,9 +168,23 @@ namespace EnemySystem
             Resources.SwitchWeapon(selectedConfig.preferredWeapon);
             
             NavMeshAgent agent = GetComponent<NavMeshAgent>();
-            Combat = selectedConfig.CreateCombatInstance(this, transform, agent, Sensors, Movement, Resources);
+            Combat = selectedConfig.CreateCombatInstance(this, transform, agent, Sensors, Movement, Resources, _animController);
             
             Combat.Init();
         }
+        
+#if UNITY_EDITOR
+        void OnDrawGizmos()
+        {
+            if (Sensors == null) return;
+            Sensors.OnDrawGizmos();
+        }
+
+        void OnDrawGizmosSelected()
+        {
+            if (Sensors == null) return;
+            Sensors.OnDrawGizmosSelected();
+        }
+#endif
     }
 }

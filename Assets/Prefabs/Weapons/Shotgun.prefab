@@ -826,6 +826,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   displayName: Shotgun
+  thirdPersonPositionOffset: {x: -0.07, y: 0, z: 0.07}
+  thirdPersonRotationOffset: {x: 0, y: -8, z: 0}
 --- !u!114 &8385023179783006478
 MonoBehaviour:
   m_ObjectHideFlags: 0
